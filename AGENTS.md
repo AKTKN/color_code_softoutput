@@ -367,6 +367,11 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-27 — Completed Task 01 YAML configuration and sweep planning with
+strict option validation, immutable point identities, native noise mapping,
+semantic hash and path-collision preflight. Focused and legacy regression
+tests pass. Next task: worker adapters; no sampling or runner changes yet.
+
 2026-09-27 — Audited the current simulation architecture and local decoder API
 for the staged YAML workflow refactor. The plan is
 `src/SIMULATION_WORKFLOW_REFACTOR_PLAN.md`; no runner, scheduler, or storage
@@ -530,6 +535,9 @@ The primary crossing is unresolved at the upper grid endpoint; numerical
 limitations and the missing dual certificate remain explicit in the review.
 
 ## Next task
+
+Implement the staged workflow worker adapters after the Task 01 planning
+layer, preserving paired shots and existing soft-output definitions.
 
 Circuit DEM-Y is ready for bounded use via the feature worktree
 `examples/circuit_dem_y_gap.py`; see `notes/support/CIRCUIT_DEM_Y.md`. Review

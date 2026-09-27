@@ -1,5 +1,24 @@
 # Reproducible paired code-capacity study
 
+## YAML workflow planning API
+
+The staged YAML workflow currently provides configuration and sweep planning
+only. `load_workflow_config(path)` and `parse_workflow_config(mapping)` return
+an immutable `WorkflowConfig`; `plan_points(config)` returns immutable
+`ResolvedPoint` records after checking every per-point directory name for
+collisions. `make_noise_model(name, p)` maps `bitflip`, `depol`, and `uniform`
+to the corresponding native `color_code_stim.NoiseModel` constructor.
+`point_directory_name(point)` gives the exact point component, and
+`run_directory_name(config, timestamp)` formats
+`YY_MM_DD_HH_MM_SS_{hash8}`. Planning does not create directories or sample.
+
+The eight-character run hash covers the validated semantic configuration,
+including shots, worker/chunk settings, decoder options, verbose, and a
+relative `output_root`. A relative root is an intentional destination choice;
+an absolute root is excluded from the hash so equivalent configurations on
+different machines retain the same identity. YAML comments and key order have
+no effect. Duplicate expanded point paths are rejected before execution.
+
 The saved-data notebook
 `notebooks/circuit_level_swim_selection_strategies.ipynb` compares four
 three-color circuit-level output strategies: ordinary selected color, minimum,

@@ -1,5 +1,15 @@
 # STATUS.md
 
+## YAML workflow planning stage — 2026-09-27
+
+Implemented strict YAML parsing, immutable resolved settings/points, exact
+native noise mapping, Cartesian sweep expansion, semantic hash and point/run
+path naming. Planning rejects option conflicts, unsupported correlated SWIM
+requests and path collisions before creating output. No worker, scheduler,
+storage, runner or sampling change was made. Focused planning tests: 28 passed;
+full main-package suite: 213 passed.
+Next stage: worker adapters, preserving current decode and pairing semantics.
+
 ## Simulation workflow architecture audit — 2026-09-27
 
 Completed the read-only architecture and local API audit for the planned YAML
