@@ -1,5 +1,17 @@
 # STATUS.md
 
+## Cluster environment and PBS setup — 2026-09-27
+
+`environment.yml` now records the direct Python, analysis and build-tool
+versions from the working `color_code_so` environment. The root README uses
+the merged default branches of the decoder forks and clones PyMatching's
+`pybind11` submodule. `scripts/pbs_run_experiment.sh` provides a single-node
+PBS entry point with explicit Anaconda activation and single-threaded BLAS.
+Conda's linux-64 dry run, YAML and shell syntax checks, and local `pip check`
+pass. The PBS script completed the 64-shot example in a simulated PBS shell.
+Cluster execution remains to be checked on the target site's PBS and Anaconda
+installation.
+
 ## Original stage-2 SWIM in ensemble YAML workflow — 2026-09-27
 
 The original growth-cluster stage-2 SWIM metric is now opt-in for ordinary,
