@@ -97,8 +97,10 @@ def run_experiment(config: CircuitLevelMemoryConfig, *, analyze: bool = False) -
         status='preprocessing',completed_shots=0,completed_batches=0)
     note = PROJECT_ROOT/'notes/support/circuit_level_swim_algorithm.tex'
     manifest['algorithm_note_sha256'] = hashlib.sha256(note.read_bytes()).hexdigest()
-    additional = [note, PROJECT_ROOT/'notes/support/circuit_level_theory.tex',
-                  PROJECT_ROOT/'prompts/CODEX_CIRCUIT_LEVEL_SWIM_IMPLEMENTATION_PROMPT.md']
+    additional = [note, PROJECT_ROOT/'notes/support/circuit_level_theory.tex']
+    prompt = PROJECT_ROOT/'prompts/CODEX_CIRCUIT_LEVEL_SWIM_IMPLEMENTATION_PROMPT.md'
+    if prompt.is_file():
+        additional.append(prompt)
     additional += list((PROJECT_ROOT/'tests/circuit_level').glob('*.py'))
     notebook = PROJECT_ROOT/'notebooks/circuit_level_getting_started.ipynb'
     if notebook.exists():

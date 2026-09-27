@@ -367,11 +367,17 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-27 — Completed the staged YAML workflow through Task 06. The
+pipeline made checkpoint commits through `45da8ba`. A follow-up portability
+fix makes the Git-ignored historical circuit-memory prompt optional in its
+source snapshot; both end-to-end cases pass. Next task: review the branch.
+
 2026-09-27 — Completed Task 06 regression, canonical-workflow README,
 duplicate-seed cleanup and final audit. Main suite: 246 passes; focused
 workflow: 61 passes; local color-code-stim: 127 passes/two existing skips.
 The 32-shot shell smoke completed. See
-`notes/support/SIMULATION_WORKFLOW_FINAL_AUDIT.md`. No campaign or commit.
+`notes/support/SIMULATION_WORKFLOW_FINAL_AUDIT.md`. No campaign; the outer
+pipeline created the checkpoint commit.
 Next task: pipeline review.
 
 2026-09-27 — Completed Task 05 canonical YAML runner, single JSON log, CLI,

@@ -1,5 +1,13 @@
 # STATUS.md
 
+## Circuit-memory provenance portability — 2026-09-27
+
+The historical circuit-memory source snapshot now includes the local
+implementation prompt when it exists. Because `prompts/` is Git-ignored, a
+fresh checkout may lack that prompt; the run and its source archive still
+complete using the available tracked sources. The end-to-end test passes both
+with and without the prompt (two parameterized cases).
+
 ## YAML workflow final regression and audit — 2026-09-27
 
 Task 06 regression, README and cleanup audit completed. The canonical YAML
@@ -19,8 +27,9 @@ decoder tests passed with two existing skips. The 32-shot shell example
 completed at `results/26_09_27_13_21_20_574e38e7/`. An eight-shot
 d=3,5 by p=.001,.002 sweep completed under
 `/tmp/color_code_task06_results/26_09_27_13_21_43_2d6fa82b/`. Both runs
-have one JSON log, exact point files and no surviving `.buffer/`. No large campaign or
-Git history operation was performed.
+have one JSON log, exact point files and no surviving `.buffer/`. No large
+campaign was performed. The outer pipeline made a checkpoint commit after
+each successful stage; no push or merge was performed.
 
 ## YAML workflow runner stage — 2026-09-27
 

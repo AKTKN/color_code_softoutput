@@ -100,4 +100,8 @@ final file and its correlated point has four aligned 16-row final files. The
 file each. Both runs have one JSON log and no surviving `.buffer/` directory.
 
 The two decoder skips are pre-existing. No mathematical definition, decoder
-source, legacy research data, or Git history was changed.
+source, or legacy research data was changed. The outer pipeline created
+checkpoint commits; no push or merge was performed. The historical
+circuit-memory source snapshot includes the implementation prompt when it is
+available locally and also runs without it in a fresh checkout, where
+`prompts/` is Git-ignored. Both end-to-end cases pass.
