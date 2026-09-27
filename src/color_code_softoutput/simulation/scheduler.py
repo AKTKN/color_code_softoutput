@@ -9,15 +9,12 @@ from __future__ import annotations
 
 from concurrent.futures import FIRST_COMPLETED, ProcessPoolExecutor, wait
 from dataclasses import dataclass
-import hashlib
 import math
 from multiprocessing import get_context
 from time import monotonic
 from typing import Callable, Sequence
 
-import numpy as np
-
-from .config import ChunkingSettings, WorkflowConfig
+from .config import ChunkingSettings, WorkflowConfig, batch_seed
 from .task import ResolvedPoint
 from .worker import WorkerInput, WorkerResult, run_chunk
 
@@ -32,9 +29,7 @@ def chunk_seed(master_seed: int, point_id: str, chunk_id: int) -> int:
         raise ValueError("master_seed and chunk_id must be nonnegative integers")
     if not isinstance(point_id, str) or not point_id:
         raise ValueError("point_id must be a nonempty string")
-    digest = hashlib.sha256(point_id.encode("utf-8")).digest()
-    words = np.frombuffer(digest, dtype="<u4").tolist()
-    return int(np.random.SeedSequence([master_seed, *words, chunk_id]).generate_state(1, dtype=np.uint64)[0])
+    return batch_seed(master_seed, point_id, chunk_id)
 
 
 def update_seconds_per_shot(previous: float | None, elapsed_seconds: float,
@@ -126,7 +121,7 @@ def progress_line(points: Sequence[PointProgress], active_workers: int,
     eta_text = "estimating..." if eta is None else f"~ {_duration(eta)}"
     return (f"{completed}/{total} shots ({100 * completed / total if total else 100:.1f}%), "
             f"workers {active_workers}/{workers}, points {done_points}/{len(points)}, "
-            f"elapsed {_duration(elapsed_seconds)}, ETA {eta_text}")
+            f"elapsed {_duration(elapsed_seconds)}, ETA: {eta_text}")
 
 
 @dataclass

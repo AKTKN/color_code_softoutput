@@ -367,6 +367,13 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-27 — Completed Task 06 regression, canonical-workflow README,
+duplicate-seed cleanup and final audit. Main suite: 246 passes; focused
+workflow: 61 passes; local color-code-stim: 127 passes/two existing skips.
+The 32-shot shell smoke completed. See
+`notes/support/SIMULATION_WORKFLOW_FINAL_AUDIT.md`. No campaign or commit.
+Next task: pipeline review.
+
 2026-09-27 — Completed Task 05 canonical YAML runner, single JSON log, CLI,
 shell command and tiny example. Preflight constructs all points before creating
 the run root; callback finalizes each completed point. Focused smoke and

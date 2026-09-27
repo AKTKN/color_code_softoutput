@@ -1,10 +1,101 @@
 # color-code-softoutput
 
-The canonical YAML simulation command is
-`./scripts/run_experiment.sh configs/example.yaml` in `color_code_so`.
-It creates a timestamped run under `results/` with one `run_log.json` and
-per-point Parquet metrics. The example is a tiny smoke run; see the package
-README for the runner contract.
+## Canonical YAML simulation
+
+Run in the `color_code_so` environment. This minimal configuration sweeps two
+distances at one physical error rate:
+
+```yaml
+simulation:
+  output_root: results
+  shots: 1000
+  workers: 4
+  master_seed: 20260927
+  buffer_shots: 5000
+  verbose: true
+
+chunking:
+  calibration_shots: 8
+  target_chunk_seconds: 1.0
+  min_chunk_shots: 1
+  max_chunk_shots: 4096
+  throughput_ema_alpha: 0.25
+
+sweep:
+  distance: [3, 5]
+  physical_error_rate: [0.001]
+  noise_model: [uniform]
+  rounds: distance
+  circuit_type: [tri]
+  cnot_schedule: [tri_optimal]
+
+color_code_options:
+  temp_bdry_type: Z
+
+decoders:
+  - type: concat_mwpm
+    options:
+      enable_colorcorrelated_decoding: false
+      comparative_decoding: false
+    decode_options:
+      colors: all
+```
+
+Save it as `configs/example.yaml` (the repository's example file is a smaller
+ordinary/correlated smoke), then run:
+
+```bash
+./scripts/run_experiment.sh configs/example.yaml
+```
+
+Sweep axes accept scalar or list values; `rounds: distance` sets rounds to each
+point's distance. Named decoder configurations are selected with `decoders`.
+Noise is passed to the native decoder exactly as follows:
+
+```text
+bitflip -> NoiseModel(bitflip=p)
+depol   -> NoiseModel(depol=p)
+uniform -> NoiseModel.uniform_circuit_noise(p)
+```
+
+The run root is `YY_MM_DD_HH_MM_SS_{hash8}` under `output_root`, where the
+hash covers the validated semantic configuration. Each point directory is:
+
+```text
+decoder_type={decoder_type},circuit_type={circuit_type},d={distance},r={rounds},p={physical_error_rate},noisemodel={noise_model},cnot_schedule={cnot_schedule}
+```
+
+Ordinary points produce only `logical_error.parquet`. Correlated points produce
+that file plus `default_logical_error.parquet`,
+`better_weight_by_color_correlated_decoding.parquet`, and
+`effect_by_color_correlated_decoding.parquet`. Every final file has exactly two
+nonnull columns: `shot_index: int64` and its filename's metric column.
+`logical_error` and `default_logical_error` are Boolean;
+`better_weight_by_color_correlated_decoding` and
+`effect_by_color_correlated_decoding` are uint8. Indices cover `0..shots-1`
+in every file. Files are per point, never per chunk. The main process uses
+bounded temporary parts under `.buffer/` and removes that directory after a
+successful point finalization. A run creates one `run_log.json`.
+
+Each point starts with a calibration chunk. Measured `seconds_per_shot` is
+updated by an exponential moving average with `throughput_ema_alpha`.
+Subsequent chunk size is `min(remaining, clamp(round(target_chunk_seconds /
+seconds_per_shot), min_chunk_shots, max_chunk_shots))`, also capped by
+`buffer_shots`. Free worker slots are refilled as chunks finish. With
+`simulation.verbose: true`, progress prints completed/total shots, percent,
+active/configured workers, completed/total points, elapsed time, and ETA.
+Before all unfinished points have timing information it prints
+`ETA: estimating...`; the displayed `ETA: ~ HH:MM:SS` thereafter is estimated
+from measured runtime, not a guaranteed completion time. Set `verbose: false`
+to suppress routine progress.
+
+Each chunk seed is a uint64 NumPy `SeedSequence` output from
+`[master_seed, *little_endian_uint32(SHA256(point_id)), chunk_id]`. Seeds are
+deterministic for assigned chunk identities. Adaptive chunk boundaries depend
+on runtime, so machines or worker counts can produce a different exact random
+stream. The scientific soft-output implementations remain available through
+their existing APIs; this minimal canonical storage writes only the required
+experiment metrics.
 
 Research code for paired color-code soft-output experiments and analysis. The
 Python package is in `src/color_code_softoutput/`; reproducible workflows are in

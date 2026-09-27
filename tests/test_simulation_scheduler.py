@@ -7,7 +7,7 @@ import pytest
 
 from color_code_softoutput.simulation import scheduler
 from color_code_softoutput.simulation.config import (ChunkingSettings, DecoderSettings,
-    SimulationSettings, SweepSettings, WorkflowConfig)
+    SimulationSettings, SweepSettings, WorkflowConfig, batch_seed)
 from color_code_softoutput.simulation.task import ResolvedPoint
 from color_code_softoutput.simulation.worker import WorkerResult
 
@@ -96,6 +96,7 @@ def test_chunk_formula_and_ema():
 
 def test_seed_is_stable_and_identity_dependent():
     a = scheduler.chunk_seed(42, "point", 0)
+    assert a == batch_seed(42, "point", 0)
     assert a == scheduler.chunk_seed(42, "point", 0)
     assert len({a, scheduler.chunk_seed(43, "point", 0),
                 scheduler.chunk_seed(42, "other", 0),
@@ -105,12 +106,12 @@ def test_seed_is_stable_and_identity_dependent():
 def test_eta_and_progress():
     uncalibrated = scheduler.PointProgress("p", 10, 2, 2, 1, None, False, 0)
     assert scheduler.estimate_eta_seconds((uncalibrated,), 2) is None
-    assert "ETA estimating..." in scheduler.progress_line((uncalibrated,), 0, 2, 1)
+    assert "ETA: estimating..." in scheduler.progress_line((uncalibrated,), 0, 2, 1)
     early = scheduler.PointProgress("p", 10, 2, 2, 1, 2., True, 0)
     late = scheduler.PointProgress("p", 10, 8, 8, 2, 2., True, 0)
     assert scheduler.estimate_eta_seconds((early,), 2) == 8
     assert scheduler.estimate_eta_seconds((late,), 2) == 2
-    assert "ETA ~ 00:00:08" in scheduler.progress_line((early,), 1, 2, 1)
+    assert "ETA: ~ 00:00:08" in scheduler.progress_line((early,), 1, 2, 1)
 
 
 @pytest.mark.parametrize("verbose", [False, True])
@@ -152,7 +153,7 @@ def test_scheduler_intervals_fairness_refill_and_reporting(monkeypatch, verbose)
     assert len(received) == len(executor.submitted)
     if verbose:
         assert len(lines) == len(received) + 1
-        assert "ETA estimating..." in lines[0]
+        assert "ETA: estimating..." in lines[0]
         assert "40/40 shots" in lines[-1] and "points 2/2" in lines[-1]
     else:
         assert lines == []

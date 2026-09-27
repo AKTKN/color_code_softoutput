@@ -42,10 +42,11 @@ validated `WorkflowConfig` and expanded `ResolvedPoint` records. It uses a
 each chunk finishes. The callback must consume or persist the bounded result
 before returning. The scheduler writes no files and retains at most `workers`
 chunk results. Its return value is a tuple of immutable `PointProgress` records.
-This stage does not provide the final storage or CLI runner.
+The canonical runner connects this callback to `PointStorage` and finalizes
+each point when its complete shot interval is available.
 
 Scheduling visits ready points round robin. Each point first runs
-`min(calibration_shots, shots)` shots; only after that result returns can it
+`min(calibration_shots, shots, buffer_shots)` shots; only after that result returns can it
 receive more work, including concurrent disjoint chunks. For later chunks,
 `observed_sps = elapsed_seconds / shot_count` and
 `sps = alpha * observed_sps + (1 - alpha) * previous_sps` (the first valid
@@ -54,12 +55,12 @@ retains the previous estimate or falls back to
 `target_chunk_seconds / calibration_shots`. Chunk size is
 `min(remaining_unscheduled, clamp(round(target_chunk_seconds / sps),
 min_chunk_shots, max_chunk_shots))`, additionally capped by `buffer_shots` per
-returned result. The initial calibration chunk follows `calibration_shots`
-even if it exceeds `buffer_shots`.
+returned result. The initial calibration chunk is also capped by `buffer_shots`.
 
 With `simulation.verbose=True`, one reporter prints aggregate progress after
 each completed chunk and an estimated remaining time. ETA is unavailable
-until every unfinished point has a timing estimate. Thereafter it is the sum
+until every unfinished point has a timing estimate and displays
+`ETA: estimating...`. Thereafter it is the sum
 of `remaining_shots * seconds_per_shot` divided by
 `min(workers, total remaining shots)`, an approximate worker capacity, not a
 deadline. `verbose=False` suppresses routine progress output.
@@ -88,8 +89,8 @@ the best of the three ordinary candidates under that same prior using exact
 `default_logical_error & ~logical_error`.
 
 The worker holds at most four circuit/decoder pairs in a per-process LRU cache
-and writes no files. A future scheduler must use multiprocessing `spawn` and
-bound submitted chunks; scheduling and final storage are not part of this API.
+and writes no files. The scheduler uses multiprocessing `spawn` and bounds
+submitted chunks to the configured worker count.
 
 ## YAML workflow planning API
 

@@ -1,5 +1,27 @@
 # STATUS.md
 
+## YAML workflow final regression and audit — 2026-09-27
+
+Task 06 regression, README and cleanup audit completed. The canonical YAML
+workflow retains one parser, point/run naming implementation, shared seed
+recipe and adaptive scheduler. Historical fixed-grid shard experiments remain
+separate because their saved-data and analysis schemas differ. The root README
+now specifies the full minimal YAML, exact noise/output contracts, adaptive
+scheduling, ETA and reproducibility limit. The package README's stale stage
+statements and calibration-cap description were corrected. Progress displays
+`ETA: estimating...` before all unfinished points have timing estimates.
+Scientific soft-output logic and legacy data were unchanged. See
+`notes/support/SIMULATION_WORKFLOW_FINAL_AUDIT.md` for architecture, schemas,
+formulas and acceptance evidence.
+
+Validation: 246 main tests passed; 61 focused workflow tests passed; 127 local
+decoder tests passed with two existing skips. The 32-shot shell example
+completed at `results/26_09_27_13_21_20_574e38e7/`. An eight-shot
+d=3,5 by p=.001,.002 sweep completed under
+`/tmp/color_code_task06_results/26_09_27_13_21_43_2d6fa82b/`. Both runs
+have one JSON log, exact point files and no surviving `.buffer/`. No large campaign or
+Git history operation was performed.
+
 ## YAML workflow runner stage — 2026-09-27
 
 Integrated the validated planner, native-constructor preflight, spawn scheduler,

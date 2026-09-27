@@ -59,8 +59,8 @@ def test_runner_end_to_end(tmp_path, noise, workers, verbose):
             assert table.num_rows == 5
             assert table.column("shot_index").to_pylist() == list(range(5))
     if verbose:
-        assert any("ETA estimating..." in line for line in messages)
-        assert any("ETA ~" in line for line in messages)
+        assert any("ETA: estimating..." in line for line in messages)
+        assert any("ETA: ~" in line for line in messages)
         assert any("run directory:" in line and "configured workers:" in line for line in messages)
     else:
         assert messages == []
