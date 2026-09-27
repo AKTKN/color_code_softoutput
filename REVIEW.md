@@ -1,5 +1,31 @@
 # REVIEW.md
 
+## Ensemble stage-2 SWIM integration audit — 2026-09-27
+
+The `ba6f7dc` color-code-stim stage-2 backend and PyMatching `83cee05cc`
+labelled metric graph were compared with the legacy PyMatching
+`color-code-so` `SoftOutputDijkstra::reweight` path. Both use matching-growth
+radii to reduce cluster-covered edge costs before a shortest path; the new
+adapter preserves the two physical stage-2 terminals and does not use the
+path-gap correction-edge zeroing path. The historical
+`selected_swim_distance` contract is retained for old Phase 2B sampling;
+the new same-logical-class minimum is exposed separately and is the YAML
+sidecar value. Every candidate metric uses the original base stage-2 prior.
+The circuit integration routes closed triangular `rounds=d` points through
+the existing completed-graph cut/cover scorer. It uses each generated
+stage-1 hypothesis for original-prior stage-2 matching and growth, then
+uses the generated correction parity for the same-class reduction. The
+bit-flip, depolarizing and uniform DEMs pass bounded d=3 checks for ordinary
+and ensemble strategies. Other custom DEMs still need to pass the graph and
+probability gates; open windows and family-wide topology correctness are
+not established.
+For perturbation, a base-prior rematch of the candidate's stage-1 hypothesis
+can have a different stage-2 correction from the generated perturbed-prior
+candidate; the metric is associated by the generated correction's observable
+parity. This convention is explicit and should be revisited if interpreting
+candidate-specific matching clusters becomes the scientific objective.
+No theorem relates this ensemble reduction to a forced gap or posterior.
+
 ## Circuit DEM-Y audit — 2026-09-19
 
 Separate same-agent source/proof review with independent set/path enumeration,

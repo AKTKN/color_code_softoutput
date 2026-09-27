@@ -4,6 +4,24 @@ Last audit: 2026-09-19. Source keys and edition-specific locations are in [refs/
 
 ## 1. Conventions and physical code
 
+### Canonical YAML ensemble SWIM score (2026-09-27)
+
+For each generated concatenated-matching candidate `a`, `phi_a` is the
+original stage-2 growth-cluster terminal distance evaluated on that
+candidate's stage-2 syndrome with the unmodified matching prior. Let `L_a`
+be the observable parity of its generated correction and `L_*` the parity of
+the hard correction finally selected by the decoder. The canonical YAML
+`swim_distance.parquet` value is `min{phi_a : L_a = L_*}`. This is distinct
+from the historical decoder `selected_swim_distance`, which is `phi` of the
+single hard-selected candidate. The decoder exposes the new reduction as
+`class_min_swim_distance`. In perturbation, the base-prior stage-2 matcher
+is run on the perturbed member's stage-1 hypothesis to obtain `phi_a`.
+For a closed `rounds=d` circuit memory, `phi_a` uses the existing completed
+effective stage-2 graph: base-prior growth radii, residual edge weights and
+the minimum odd-logical-support path in its cut or logical cover. The
+generated candidate's original-DEM correction still supplies `L_a`.
+Both metrics are soft-output proxies and have no LLR claim.
+
 ### Circuit DEM-Y signed gap (2026-09-19)
 
 The new circuit metric uses local notation in `notes/support/CIRCUIT_DEM_Y.md`:

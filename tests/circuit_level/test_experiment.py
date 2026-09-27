@@ -1,6 +1,7 @@
 """Shared infrastructure, physical pairing, raw data, figures and replay acceptance."""
 from dataclasses import replace
 import json
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
@@ -87,7 +88,23 @@ def test_comparative_candidate_sidecar_reconstructs_existing_decoder():
         validate_comparative_candidate_shots(broken)
 
 
-def test_end_to_end_run_notebook_workflow_and_corrupt_schema(tmp_path):
+@pytest.mark.parametrize("hide_prompt", [False, True])
+def test_end_to_end_run_notebook_workflow_and_corrupt_schema(
+    tmp_path, monkeypatch, hide_prompt,
+):
+    prompt = Path(__file__).resolve().parents[2] / (
+        "prompts/CODEX_CIRCUIT_LEVEL_SWIM_IMPLEMENTATION_PROMPT.md"
+    )
+    prompt_available = prompt.is_file() and not hide_prompt
+    if hide_prompt:
+        original_is_file = Path.is_file
+
+        def without_optional_prompt(path):
+            if path.name == "CODEX_CIRCUIT_LEVEL_SWIM_IMPLEMENTATION_PROMPT.md":
+                return False
+            return original_is_file(path)
+
+        monkeypatch.setattr(Path, "is_file", without_optional_prompt)
     result = run_experiment(small(output_root=tmp_path,num_workers=1))
     dataset = CircuitLevelDataset(result.run_directory)
     assert result.shots == 24
@@ -105,6 +122,8 @@ def test_end_to_end_run_notebook_workflow_and_corrupt_schema(tmp_path):
     assert (result.run_directory / 'comparative_correction_color_summary.parquet').exists()
     assert standard_memory_analysis(dataset,style=RevtexFigureStyle(test_mode=True))['plot_families'] == 3
     metadata = json.loads((result.run_directory/'metadata.json').read_text())
+    prompt_key = 'prompts/CODEX_CIRCUIT_LEVEL_SWIM_IMPLEMENTATION_PROMPT.md'
+    assert (prompt_key in metadata['source_hashes']) == prompt_available
     assert metadata['method_branch_shots'] == {'two_boundary':72,'logical_cover':0}
     assert metadata['hard_output_invariance']['mismatches'] == 0
     assert metadata['models']['3']['uniform_noise_resolved']['cnot'] == .003

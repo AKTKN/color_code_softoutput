@@ -1,5 +1,22 @@
 # PROJECT_DETAIL.md
 
+## Ensemble SWIM numerical integration — 2026-09-27
+
+The user-authorized canonical YAML extension evaluates the original
+one-round triangular data-only stage-2 growth-cluster distance, or its
+previously implemented closed `rounds=d` circuit-level extension, on every
+generated stage-2 hypothesis with the unchanged prior. The circuit path uses
+the actual effective DEM for bit-flip, depolarizing and uniform noise,
+subject to structural gates. Its selection map is
+generated correction → observable parity → selected hard parity → minimum
+distance over that class. This reduction is an empirical soft-output proxy;
+the fixed-fiber representative inequality is not transferred to the ensemble
+or to a posterior LLR. Ordinary comparative decoding produces its existing
+decoder logical gap as a separate saved metric. The new filter/group analysis
+estimates score distributions and exact retained-error curves from completed
+run sidecars. Existing historical Phase 2B selected-branch scores retain
+their original meaning and schema.
+
 ## Circuit DEM-Y signed-gap implementation — 2026-09-19
 
 The new authorization implements a distinct circuit-level logical support

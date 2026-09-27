@@ -1,0 +1,88 @@
+simulation:
+  # Parent of a new timestamped run directory; existing runs are not reused.
+  output_root: results
+  # Shots per expanded (sweep values x decoder) point.
+  shots: 16
+  # Parallel worker processes and the seed used to derive per-chunk seeds.
+  workers: 2
+  master_seed: 20260927
+  # Maximum shots held for an out-of-order point before writing a buffer part.
+  buffer_shots: 8
+  # Show progress and ETA after throughput calibration.
+  verbose: true
+chunking:
+  # Small values keep this example suitable for a smoke run.
+  calibration_shots: 4
+  target_chunk_seconds: 1.0
+  min_chunk_shots: 1
+  max_chunk_shots: 8
+  throughput_ema_alpha: 0.5
+sweep:
+  # Each list creates a Cartesian-product axis; scalars select one value.
+  distance: 3
+  physical_error_rate: 0.001
+  # uniform = native uniform circuit noise; bitflip and depol are also accepted.
+  noise_model: uniform
+  # "distance" uses rounds=d; an integer or list of integers is also accepted.
+  rounds: distance
+  # Superdense is an extraction-circuit option, not a circuit_type value.
+  circuit_type: tri
+  cnot_schedule: superdense_default
+color_code_options:
+  temp_bdry_type: Z
+  superdense_circuit: true
+  # For the ordinary space-multiplexing circuit instead, use
+  # superdense_circuit: false and cnot_schedule: tri_optimal above.
+# Each decoder entry is a separate sweep point. Put ColorCode constructor
+# arguments in options; put ColorCode.decode arguments in decode_options.
+# Advanced modes are mutually exclusive within one entry. For each entry,
+# the type and its enable_* option must agree.
+# Tesseract uses its own TesseractConfig options and the original X/Z DEM.
+decoders:
+  - type: concat_mwpm
+    # Optional: rank the three ordinary corrections under the original X/Z DEM.
+    # Omit for the historical stage-2 matching-weight selection.
+    options:
+      color_correlated_weight_basis: original_dem
+    decode_options:
+      colors: all
+
+  - type: concat_mwpm_stage2_base
+    options:
+      color_correlated_weight_basis: stage2
+    decode_options:
+      colors: all
+
+  - type: color_correlated
+    options:
+      enable_colorcorrelated_decoding: true
+      # q -> q^(1/b) for guide-selected original DEM mechanisms in stage 1.
+      color_correlated_b: 2.0
+      # Guided stage 2 and final selection use unchanged original priors.
+      color_correlated_weight_basis: original_dem
+
+  # For a separate ordinary-circuit run, set superdense_circuit: false and
+  # cnot_schedule: tri_optimal above, then enable this relifting entry.
+  # The superdense example's full stage-1 decomposition is not graphlike for
+  # relifting; that mode raises an explicit unsupported-configuration error.
+  # - type: relifting
+  #   options:
+  #     enable_cross_color_relifting: true
+  #     remove_non_edge_like_errors: false
+  #     color_correlated_weight_basis: original_dem
+
+  - type: perturbation
+    options:
+      enable_prior_perturbation: true
+      # M includes the unperturbed baseline member (member 0).
+      perturbation_ensemble_size: 4
+      perturbation_alpha: 0.25
+      perturbation_seed: 20260927
+      color_correlated_weight_basis: original_dem
+
+  # Requires the optional tesseract_decoder Python package.
+  # - type: tesseract
+  #   options:
+  #     det_beam: 5
+  #     beam_climbing: false
+  #     num_det_orders: 20

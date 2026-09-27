@@ -5,6 +5,7 @@ import hashlib
 import json
 import math
 import numpy as np
+import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DISTANCES = (5, 7, 9, 11, 13, 15)
@@ -127,3 +128,257 @@ def batch_tasks(config: Phase2ATestConfig, experiment_id: str):
                 yield BatchTask(experiment_id, identity, distance, probability, batch_id, offset,
                                 min(config.batch_size, config.shots_per_point-offset),
                                 batch_seed(config.master_seed, identity, batch_id))
+
+
+# The YAML workflow is independent of the historical fixed-grid config above.
+_SWEEP_KEYS = frozenset({"distance", "physical_error_rate", "noise_model", "rounds", "circuit_type", "cnot_schedule"})
+_CONSTRUCTOR_KEYS = frozenset({"temp_bdry_type", "superdense_circuit", "perfect_logical_initialization",
+    "perfect_logical_measurement", "perfect_first_syndrome_extraction", "perfect_init_final",
+    "remove_non_edge_like_errors", "comparative_decoding", "enable_colorcorrelated_decoding",
+    "enable_cross_color_relifting", "enable_prior_perturbation", "perturbation_ensemble_size",
+    "perturbation_alpha", "perturbation_seed",
+    "color_correlated_weight_basis", "color_correlated_b",
+    "exclude_non_essential_pauli_detectors"})
+_DECODE_KEYS = frozenset({"colors", "compute_swim_distance", "full_output", "check_validity", "verbose"})
+_BOOLEAN_OPTIONS = (_CONSTRUCTOR_KEYS - {"temp_bdry_type", "color_correlated_weight_basis", "color_correlated_b",
+    "perturbation_ensemble_size", "perturbation_alpha", "perturbation_seed"}) | (_DECODE_KEYS - {"colors"})
+_SWEEP_ALIASES = frozenset({"d", "rounds", "circuit_type", "cnot_schedule", "noise_model",
+    "p_bitflip", "p_depol", "p_reset", "p_meas", "p_cnot", "p_idle", "p_circuit"})
+
+
+def _mapping(value, name, *, allowed=None, required=()):
+    if not isinstance(value, dict):
+        raise ValueError(f"{name} must be a mapping")
+    if allowed is not None and (extra := set(value) - set(allowed)):
+        raise ValueError(f"Unknown {name} keys: {sorted(extra)}")
+    if missing := set(required) - set(value):
+        raise ValueError(f"Missing {name} keys: {sorted(missing)}")
+    return value
+
+
+def _positive_int(value, name, *, zero=False):
+    if type(value) is not int or value < (0 if zero else 1):
+        raise ValueError(f"{name} must be {'nonnegative' if zero else 'positive'} integer")
+    return value
+
+
+def _positive_number(value, name):
+    if type(value) not in (int, float) or not math.isfinite(value) or value <= 0:
+        raise ValueError(f"{name} must be a positive finite number")
+    return float(value)
+
+
+def _axis(value, name, validate):
+    values = value if isinstance(value, list) else [value]
+    if not values:
+        raise ValueError(f"{name} must not be empty")
+    return tuple(validate(v) for v in values)
+
+
+def _probability(value):
+    if type(value) not in (int, float) or not math.isfinite(value) or not 0 <= value <= 1:
+        raise ValueError("physical_error_rate must be finite and in [0, 1]")
+    return float(value)
+
+
+def _distance(value):
+    if type(value) is not int or value < 3 or value % 2 != 1:
+        raise ValueError("distance must be an odd integer >= 3")
+    return value
+
+
+def _string(value, name):
+    if (not isinstance(value, str) or not value or value != value.strip()
+            or any(c in value for c in '/\\,=') or any(ord(c) < 32 for c in value)):
+        raise ValueError(f"{name} must be a nonempty filesystem-safe string")
+    return value
+
+
+def _freeze(value, name):
+    """Keep arbitrary option values JSON-compatible and immutable."""
+    if value is None or type(value) in (bool, int, str):
+        return value
+    if type(value) is float and math.isfinite(value):
+        return value
+    if isinstance(value, list):
+        return tuple(_freeze(v, name) for v in value)
+    raise ValueError(f"{name} must contain only finite JSON scalar/list values")
+
+
+def _options(value, name, allowed):
+    value = _mapping(value, name)
+    if bad := set(value) & _SWEEP_ALIASES:
+        raise ValueError(f"{name} conflicts with sweep: {sorted(bad)}")
+    if bad := set(value) - allowed:
+        raise ValueError(f"Unsupported {name} keys: {sorted(bad)}")
+    for key in set(value) & _BOOLEAN_OPTIONS:
+        if type(value[key]) is not bool:
+            raise ValueError(f"{name}.{key} must be boolean")
+    if "temp_bdry_type" in value and value["temp_bdry_type"] not in (None, "X", "Y", "Z", "x", "y", "z"):
+        raise ValueError(f"{name}.temp_bdry_type must be X, Y, Z or null")
+    if ("color_correlated_weight_basis" in value
+            and value["color_correlated_weight_basis"] not in ("stage2", "original_dem")):
+        raise ValueError(f"{name}.color_correlated_weight_basis must be stage2 or original_dem")
+    if "color_correlated_b" in value:
+        _positive_number(value["color_correlated_b"], "color_correlated_b")
+    if "perturbation_ensemble_size" in value:
+        _positive_int(value["perturbation_ensemble_size"], "perturbation_ensemble_size")
+    if "perturbation_alpha" in value and _probability(value["perturbation_alpha"]) != value["perturbation_alpha"]:
+        raise ValueError("invalid perturbation_alpha")
+    if "perturbation_seed" in value and value["perturbation_seed"] is not None:
+        _positive_int(value["perturbation_seed"], "perturbation_seed", zero=True)
+    if "colors" in value:
+        colors = value["colors"]
+        if colors != "all" and colors not in ("r", "g", "b") and not (
+            isinstance(colors, list) and bool(colors) and all(c in ("r", "g", "b") for c in colors)
+            and len(set(colors)) == len(colors)
+        ):
+            raise ValueError(f"{name}.colors must be 'all', a color, or a unique color list")
+    return tuple((k, _freeze(v, name)) for k, v in sorted(value.items()))
+
+
+@dataclass(frozen=True)
+class SimulationSettings:
+    output_root: Path
+    shots: int
+    workers: int
+    master_seed: int
+    buffer_shots: int
+    verbose: bool
+
+
+@dataclass(frozen=True)
+class ChunkingSettings:
+    calibration_shots: int
+    target_chunk_seconds: float
+    min_chunk_shots: int
+    max_chunk_shots: int
+    throughput_ema_alpha: float
+
+
+@dataclass(frozen=True)
+class SweepSettings:
+    distance: tuple[int, ...]
+    physical_error_rate: tuple[float, ...]
+    noise_model: tuple[str, ...]
+    rounds: tuple[int, ...] | str
+    circuit_type: tuple[str, ...]
+    cnot_schedule: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class DecoderSettings:
+    type: str
+    options: tuple[tuple[str, object], ...]
+    decode_options: tuple[tuple[str, object], ...]
+
+
+@dataclass(frozen=True)
+class WorkflowConfig:
+    simulation: SimulationSettings
+    chunking: ChunkingSettings
+    sweep: SweepSettings
+    color_code_options: tuple[tuple[str, object], ...]
+    decoders: tuple[DecoderSettings, ...]
+
+    def semantic_dict(self) -> dict:
+        """Return validated values for hashing, retaining relative output_root.
+
+        Relative roots participate because they are an intentional destination
+        choice. Absolute roots are excluded: machine-specific locations must
+        not change an otherwise equivalent run hash.
+        """
+        sim = asdict(self.simulation)
+        root = self.simulation.output_root
+        sim["output_root"] = root.as_posix() if not root.is_absolute() else None
+        return {"simulation": sim, "chunking": asdict(self.chunking), "sweep": asdict(self.sweep),
+                "color_code_options": dict(self.color_code_options),
+                "decoders": [{"type": d.type, "options": dict(d.options),
+                              "decode_options": dict(d.decode_options)} for d in self.decoders]}
+
+    @property
+    def hash8(self) -> str:
+        encoded = json.dumps(self.semantic_dict(), sort_keys=True, separators=(",", ":"),
+                             allow_nan=False).encode("utf-8")
+        return hashlib.sha256(encoded).hexdigest()[:8]
+
+
+def parse_workflow_config(data: dict) -> WorkflowConfig:
+    """Validate and resolve a YAML mapping without touching output paths."""
+    data = _mapping(data, "config", allowed={"simulation", "chunking", "sweep", "color_code_options", "decoders"},
+                    required={"simulation", "chunking", "sweep", "decoders"})
+    sim = _mapping(data["simulation"], "simulation", allowed={"output_root", "shots", "workers", "master_seed", "buffer_shots", "verbose"},
+                   required={"output_root", "shots", "workers", "master_seed", "buffer_shots", "verbose"})
+    if not isinstance(sim["output_root"], str) or not sim["output_root"].strip():
+        raise ValueError("simulation.output_root must be a nonempty path")
+    if type(sim["verbose"]) is not bool:
+        raise ValueError("simulation.verbose must be boolean")
+    simulation = SimulationSettings(Path(sim["output_root"]), _positive_int(sim["shots"], "shots"),
+        _positive_int(sim["workers"], "workers"), _positive_int(sim["master_seed"], "master_seed", zero=True),
+        _positive_int(sim["buffer_shots"], "buffer_shots"), sim["verbose"])
+    chunk = _mapping(data["chunking"], "chunking", allowed={"calibration_shots", "target_chunk_seconds", "min_chunk_shots", "max_chunk_shots", "throughput_ema_alpha"},
+                     required={"calibration_shots", "target_chunk_seconds", "min_chunk_shots", "max_chunk_shots", "throughput_ema_alpha"})
+    chunking = ChunkingSettings(_positive_int(chunk["calibration_shots"], "calibration_shots"),
+        _positive_number(chunk["target_chunk_seconds"], "target_chunk_seconds"),
+        _positive_int(chunk["min_chunk_shots"], "min_chunk_shots"),
+        _positive_int(chunk["max_chunk_shots"], "max_chunk_shots"),
+        _positive_number(chunk["throughput_ema_alpha"], "throughput_ema_alpha"))
+    if chunking.min_chunk_shots > chunking.max_chunk_shots or chunking.throughput_ema_alpha > 1:
+        raise ValueError("Invalid chunk size bounds or EMA alpha")
+    sweep = _mapping(data["sweep"], "sweep", allowed=_SWEEP_KEYS, required=_SWEEP_KEYS)
+    rounds = sweep["rounds"]
+    if rounds != "distance":
+        rounds = _axis(rounds, "rounds", lambda v: _positive_int(v, "rounds"))
+    noise_names = _axis(sweep["noise_model"], "noise_model", lambda v: _string(v, "noise_model"))
+    from .noise import NOISE_NAMES
+    if unknown := set(noise_names) - NOISE_NAMES:
+        raise ValueError(f"Unknown noise model: {sorted(unknown)}")
+    sweep_settings = SweepSettings(_axis(sweep["distance"], "distance", _distance),
+        _axis(sweep["physical_error_rate"], "physical_error_rate", _probability), noise_names, rounds,
+        _axis(sweep["circuit_type"], "circuit_type", lambda v: _string(v, "circuit_type")),
+        _axis(sweep["cnot_schedule"], "cnot_schedule", lambda v: _string(v, "cnot_schedule")))
+    common = _options(data.get("color_code_options", {}), "color_code_options", _CONSTRUCTOR_KEYS)
+    raw_decoders = data["decoders"]
+    if not isinstance(raw_decoders, list) or not raw_decoders:
+        raise ValueError("decoders must be a nonempty list")
+    decoders = []
+    for raw in raw_decoders:
+        raw = _mapping(raw, "decoder", allowed={"type", "options", "decode_options"}, required={"type"})
+        label = _string(raw["type"], "decoder.type")
+        if label == "tesseract":
+            from .tesseract import OPTIONS
+            options = _options(raw.get("options", {}), "decoder.options", OPTIONS)
+            if raw.get("decode_options"):
+                raise ValueError("tesseract does not accept ColorCode decode_options")
+            decode_options = ()
+            if dict(common).get("temp_bdry_type", "Z") in ("Y", "y"):
+                raise ValueError("tesseract XYZ decoding is not supported")
+            if any(dict(common).get(key, False) for key in
+                   ("enable_colorcorrelated_decoding", "enable_cross_color_relifting",
+                    "enable_prior_perturbation", "comparative_decoding")):
+                raise ValueError("tesseract requires ordinary ColorCode circuit options")
+        else:
+            options = _options(raw.get("options", {}), "decoder.options", _CONSTRUCTOR_KEYS)
+            decode_options = _options(raw.get("decode_options", {}), "decoder.decode_options", _DECODE_KEYS)
+        if overlap := set(dict(common)) & set(dict(options)):
+            raise ValueError(f"Ambiguous constructor options in color_code_options and decoder.options: {sorted(overlap)}")
+        merged = dict(common) | dict(options)
+        if merged.get("enable_colorcorrelated_decoding", False) and merged.get(
+                "color_correlated_weight_basis", "original_dem") != "original_dem":
+            raise ValueError("color-correlated decoding requires original_dem selection basis")
+        if label == "concat_mwpm_stage2_base" and merged.get(
+                "color_correlated_weight_basis", "stage2") != "stage2":
+            raise ValueError("concat_mwpm_stage2_base requires color_correlated_weight_basis: stage2")
+        advanced = ("enable_colorcorrelated_decoding", "enable_cross_color_relifting", "enable_prior_perturbation")
+        if sum(bool(merged.get(key, False)) for key in advanced) > 1:
+            raise ValueError("advanced decoder modes are mutually exclusive")
+        if merged.get("enable_cross_color_relifting", False) and merged.get("remove_non_edge_like_errors", False):
+            raise ValueError("cross-color relifting requires remove_non_edge_like_errors=False")
+        decoders.append(DecoderSettings(label, options, decode_options))
+    return WorkflowConfig(simulation, chunking, sweep_settings, common, tuple(decoders))
+
+
+def load_workflow_config(path: str | Path) -> WorkflowConfig:
+    """Read a YAML file and return a validated immutable configuration."""
+    with Path(path).open(encoding="utf-8") as stream:
+        return parse_workflow_config(yaml.safe_load(stream))

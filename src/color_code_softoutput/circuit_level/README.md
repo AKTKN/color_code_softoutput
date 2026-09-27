@@ -21,7 +21,13 @@ actual public H1/H2 matrices reads growth through the existing PyMatching API;
 every selected hard prediction, ordinary weight, color and correction must
 match. This extra decoding work is intentional and included in runtime.
 The old external `ColorCode.decode(compute_swim_distance=True)` remains the
-code-capacity API; circuit callers use `CircuitLevelDecoder`.
+code-capacity API; direct circuit callers use `CircuitLevelDecoder`. The
+canonical YAML workflow now applies the same original-prior circuit backend
+to every generated ordinary or ensemble stage-2 hypothesis when
+`decode_options.compute_swim_distance: true` and `rounds=d`. It saves the
+same-logical-class minimum in `swim_distance.parquet`. The circuit backend
+uses the supplied effective DEM and accepts the workflow's bit-flip,
+depolarizing and uniform noise models when its graph/probability gates pass.
 
 `dem_adapter.py` validates the actual retained effective matrices, observable
 projection, source selection, probability sorting and detector metadata.

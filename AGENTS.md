@@ -1,5 +1,16 @@
 # AGENTS.md
 
+## Current power-guide color-correlated rule (2026-09-27)
+
+The latest user request supersedes the older hard-conditioning guide rule
+below. A guide-selected original X/Z DEM source probability becomes
+`q**(1/color_correlated_b)` for stage 1 only. Stage 2 uses the original target
+color decomposition and final selection uses original X/Z DEM log odds.
+Avoid per-shot DEM reconstruction and re-decomposition; retain the bounded
+symbolic-prior and matching caches. See
+`notes/support/COLOR_CORRELATED_POWER_GUIDE.md` and STATUS.md. Older saved
+color-correlated runs are not results of this rule.
+
 ## GitHub publication (2026-09-27)
 
 The workspace root is now its own Git repository, published publicly at
@@ -9,6 +20,28 @@ tracks the package, tests, notebooks, prompts and research notes. The root
 build artifacts, caches, source-audit paper copies and extracted paper text.
 The decoder repositories remain independent Git repositories. See README.md
 for installation and the limits of optional feature checkouts.
+
+## Corrected color-correlated guide conditioning (2026-09-27)
+
+The user clarified that each extra candidate must condition guide-selected
+mechanisms in the pre-decomposition X/Z DEM, then decompose that updated DEM
+again for its target color and rerun both matching stages. Do not restore the
+earlier rule that directly updated decomposed columns using a maximum of
+single-source conditionals. Keep original mechanism indices aligned when
+mapping candidates back for unchanged-prior comparison. The corrected decoder
+is `7a1eff0` on `external_libs/color-code-stim/` branch
+`phase2a/swim-distance`; the root workflow integration is on
+`codex/workflow-refactor`. Saved runs from the earlier rule cannot be
+reinterpreted as corrected results. See
+`notes/support/COLOR_CORRELATED_ORIGINAL_DEM.md` and `STATUS.md`.
+
+The follow-up decoder scheduling rule compares the three ordinary corrections
+in original DEM mechanism order before running guided candidates. Equal
+triples run none; one equal pair runs only the three nonredundant guides;
+three distinct corrections run all nine. The YAML workflow stores one
+`color_correlated_run.parquet` value per shot: 0, 1 or 2 respectively.
+The decoder scheduling change is commit `fdf330d` on
+`origin/phase2a/swim-distance`.
 
 ## Current color-correlated decoder authorization (2026-09-27)
 
@@ -367,6 +400,144 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-27 — Extended canonical YAML SWIM to the existing closed `rounds=d`
+circuit-level scorer for bit-flip, depolarizing and uniform noise, preserving
+the one-round spatial path. The actual DEM must pass the circuit graph and
+probability gates. Ensemble candidate hypotheses are exposed on request and
+scored under the unchanged stage-2 prior. Root suite: 282 passes; local
+decoder: 161 passes/two skips; PyMatching focused: 19 passes. Related commits
+`ea851ab` (decoder) and `7a26e6a8e` (PyMatching) are pushed. Next task: review
+the pushed root commit and choose a bounded experimental grid.
+
+
+2026-09-27 — Integrated original stage-2 growth-cluster SWIM with the
+canonical YAML ordinary and ensemble decoders, saving the same-logical-class
+minimum in `swim_distance.parquet`. Ordinary comparative decoding saves
+`logical_gap.parquet`. Added filtered/grouped distribution and post-selection
+analysis plus a notebook. Historical `selected_swim_distance` keeps its
+selected-branch meaning; the new decoder key is `class_min_swim_distance`.
+The initial spatial integration retained the one-round triangular data-only
+bit-flip scope. Next task: extend the established circuit scorer.
+
+
+2026-09-27 — Added optional Tesseract decoder to the canonical YAML simulation
+workflow. It receives the unchanged original X/Z DEM and saves only its hard
+solution's `logical_error.parquet`. The local decoder checkout is unchanged;
+a bounded native wheel smoke and focused tests pass. Next task: review the
+integration and select a paired same-shot comparison only if needed.
+
+2026-09-27 — Aligned new paired ablation runs with the current
+color-correlated decoder: `original_dem` is required, and `stage2` fails
+before a run root is created. Three focused benchmark tests pass; older saved
+reports remain readable. The full root suite passes 273 tests. Next task:
+publish the current root commit.
+
+2026-09-27 — Saved-run `effect_table` adds worsened-shot and signed net-effect
+counts from the paired baseline/new failures and rescue sidecar. The current
+18-point analysis notebook was re-executed to show the new columns. Eight
+analysis tests pass; no new simulation. Next task: review the updated table.
+
+2026-09-27 — Fixed live-notebook analysis after adding `color_correlated_b`:
+analysis resolves the parser through the config module, and the notebook's
+first cell reloads both modules. The reported six-point run loads, plots 12
+LER rows and both six-row flag tables. Eight focused tests pass. Next task:
+rerun the notebook cells in the existing kernel to replace stale outputs.
+
+2026-09-27 — Replaced color-correlated hard conditioning by guide-power
+stage-1 reweighting, fixed stage-2 base matching and original X/Z DEM final
+scoring. Bounded priors/matchers/maps caches remove per-shot re-decomposition.
+Decoder and focused root tests: 213 passed/two existing skips; final focused
+26-test check passed. Next task: user review of `b` and any new experiment;
+historical runs cannot be reinterpreted.
+
+2026-09-27 — Added the `concat_mwpm_stage2_base` YAML point label so ordinary
+original-DEM and stage-2 selection can coexist in one run. The label requires
+the stage-2 basis. Focused runner/planning tests: 31 passed, including an
+end-to-end two-point check. The points use different sampling seeds; same
+`master_seed` does not pair shots. Next task: review whether a paired sampler
+is needed for the comparison.
+
+2026-09-27 — Ordinary `concat_mwpm` now supports the
+`color_correlated_weight_basis: original_dem` constructor option in the decoder
+and YAML workflow. The default remains stage-2 matching weight. Decoder tests:
+158 passed/two existing skips; focused integration: 33 passed. In the bounded
+one-round bit-flip check, both bases selected the same corrections at d=5,9.
+Next task: compare bases only in conditions where their candidate scores can
+differ; no campaign was launched.
+
+2026-09-27 — Extended canonical YAML paired metrics to relifting and
+perturbation using already computed ordinary candidates. Saved-run analysis
+supports both, deduplicates plotted baselines by physical condition, and
+filters the two flag tables independently. Full tests: 267 root passes,
+156 decoder passes/two existing skips; final six-test analysis check passes.
+Next task: review new-run plots and
+tables; historical runs are unchanged.
+
+2026-09-27 — Stage 06 adaptive ablation benchmark records paired accuracy,
+actual call counts, runtime, run-class outcomes, relift early exits, and
+perturbation diversity with basis-labelled report plots. Both score bases and
+a reduced grid pass bounded smoke tests; no campaign was launched. See
+`notes/support/ADAPTIVE_ABLATION_BENCHMARK.md`. Next task: user review of
+the stage 06 report and decision on any larger study.
+
+2026-09-27 — Stage 05 adaptive benchmark integration adds a separate
+`adaptive_v2` same-shot result root, both run-class sidecars, relifting
+runtime diagnostics, candidate-weight audit and per-class analysis.
+Bounded smoke only. Next task: stage 06 final audit; no campaign.
+
+2026-09-27 — Added saved-run color-correlated analysis and a notebook for
+filtered LER curves and per-condition flag counts. The 36-point saved run
+loads successfully; two focused tests and five notebook cells pass. No new
+sampling was performed. The plot now has an optional log axis and independent
+boxed legend grid above the main axes. Next task: user review of the plots
+and tables.
+
+2026-09-27 — Completed the staged YAML workflow through Task 06. The
+pipeline made checkpoint commits through `45da8ba`. A follow-up portability
+fix makes the Git-ignored historical circuit-memory prompt optional in its
+source snapshot; both end-to-end cases pass. Next task: review the branch.
+
+2026-09-27 — Completed Task 06 regression, canonical-workflow README,
+duplicate-seed cleanup and final audit. Main suite: 246 passes; focused
+workflow: 61 passes; local color-code-stim: 127 passes/two existing skips.
+The 32-shot shell smoke completed. See
+`notes/support/SIMULATION_WORKFLOW_FINAL_AUDIT.md`. No campaign; the outer
+pipeline created the checkpoint commit.
+Next task: pipeline review.
+
+2026-09-27 — Completed Task 05 canonical YAML runner, single JSON log, CLI,
+shell command and tiny example. Preflight constructs all points before creating
+the run root; callback finalizes each completed point. Focused smoke and
+regression are recorded in STATUS.md. Historical experiment entry points stay
+unchanged. Next task: pipeline review; no campaign.
+
+2026-09-27 — Completed Task 04 bounded point storage and final Parquet files.
+Out-of-order chunks spool in `.buffer/`; final metric files carry explicit
+int64 shot indices and validated exact dtypes. Focused tests pass. Next task:
+top-level runner and CLI integration; no campaign.
+
+2026-09-27 — Completed Task 03 adaptive scheduler and progress/ETA. Spawn
+workers dispatch by round robin; per-point calibration feeds EWMA chunk sizing.
+Results stream to a main-process callback with no final storage. Synthetic and
+real-spawn tests pass. Next task: final storage and CLI runner; no campaign.
+
+2026-09-27 — Completed Task 02 worker-side sampling and required metrics.
+The worker uses a bounded per-process cache and pairs ordinary/correlated
+decisions on one sample. Public contract and tests are recorded in the package
+README and STATUS. Next task: scheduler and storage integration; no campaign.
+
+2026-09-27 — Completed Task 01 YAML configuration and sweep planning with
+strict option validation, immutable point identities, native noise mapping,
+semantic hash and path-collision preflight. Focused and legacy regression
+tests pass. Next task: worker adapters; no sampling or runner changes yet.
+
+2026-09-27 — Audited the current simulation architecture and local decoder API
+for the staged YAML workflow refactor. The plan is
+`src/SIMULATION_WORKFLOW_REFACTOR_PLAN.md`; no runner, scheduler, or storage
+refactor was implemented. Correlated decoding plus matching-growth SWIM is
+an explicitly unsupported combination. Next task: implement and test strict
+configuration/sweep planning and capability validation before worker changes.
+
 2026-09-27 — Published the root package as public
 `AKTKN/color_code_softoutput` on GitHub. The initial source commit is
 `cdea414`; generated results, local checkouts, build/cache files and
@@ -523,6 +694,24 @@ The primary crossing is unresolved at the upper grid endpoint; numerical
 limitations and the missing dual certificate remain explicit in the review.
 
 ## Next task
+
+Review the updated `effect_table` columns in the saved-run analysis notebook;
+positive `net_effect_count` means fewer logical failures than the paired
+ordinary baseline.
+
+Review the power-guide `color_correlated_b` choice before launching a new
+campaign. Existing saved color-correlated data use earlier guide semantics.
+
+For same-shot comparison of the two ordinary selection bases, add an explicit
+paired sampling path if requested; the two YAML point labels currently use
+different point-derived seeds.
+
+For ordinary concat-MWPM, use the new original-DEM basis option and first
+identify circuit/noise conditions with candidate-score disagreement before
+running a larger performance comparison.
+
+Review the new paired YAML outputs and saved-run plots/tables. Historical
+Parquet runs do not gain the newly added metrics automatically.
 
 Circuit DEM-Y is ready for bounded use via the feature worktree
 `examples/circuit_dem_y_gap.py`; see `notes/support/CIRCUIT_DEM_Y.md`. Review
