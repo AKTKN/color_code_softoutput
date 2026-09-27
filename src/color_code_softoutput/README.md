@@ -1,5 +1,41 @@
 # Reproducible paired code-capacity study
 
+## YAML workflow scheduler API
+
+`simulation.scheduler.run_scheduler(config, points, on_result)` accepts the
+validated `WorkflowConfig` and expanded `ResolvedPoint` records. It uses a
+`spawn` process pool and calls `on_result(WorkerResult)` in the main process as
+each chunk finishes. The callback must consume or persist the bounded result
+before returning. The scheduler writes no files and retains at most `workers`
+chunk results. Its return value is a tuple of immutable `PointProgress` records.
+This stage does not provide the final storage or CLI runner.
+
+Scheduling visits ready points round robin. Each point first runs
+`min(calibration_shots, shots)` shots; only after that result returns can it
+receive more work, including concurrent disjoint chunks. For later chunks,
+`observed_sps = elapsed_seconds / shot_count` and
+`sps = alpha * observed_sps + (1 - alpha) * previous_sps` (the first valid
+observation initializes `sps`). Zero, nonfinite, or sub-resolution timing
+retains the previous estimate or falls back to
+`target_chunk_seconds / calibration_shots`. Chunk size is
+`min(remaining_unscheduled, clamp(round(target_chunk_seconds / sps),
+min_chunk_shots, max_chunk_shots))`, additionally capped by `buffer_shots` per
+returned result. The initial calibration chunk follows `calibration_shots`
+even if it exceeds `buffer_shots`.
+
+With `simulation.verbose=True`, one reporter prints aggregate progress after
+each completed chunk and an estimated remaining time. ETA is unavailable
+until every unfinished point has a timing estimate. Thereafter it is the sum
+of `remaining_shots * seconds_per_shot` divided by
+`min(workers, total remaining shots)`, an approximate worker capacity, not a
+deadline. `verbose=False` suppresses routine progress output.
+
+Chunk seeds use SHA256 of the point ID, then NumPy `SeedSequence` over the
+master seed, digest words, and chunk ID. Shot intervals follow scheduling
+decisions, and seeds are deterministic once chunk IDs are assigned. Machine
+load, worker count, and timing can change adaptive chunk boundaries and the
+exact random sample stream; schedule-independent bitwise replay is not claimed.
+
 ## YAML workflow worker API
 
 `simulation.worker.WorkerInput(point_id, chunk_id, shot_start, shot_count,

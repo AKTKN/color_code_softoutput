@@ -1,5 +1,16 @@
 # STATUS.md
 
+## YAML workflow scheduler stage — 2026-09-27
+
+Added a spawn-based main-process adaptive scheduler with per-point calibration,
+EWMA throughput, bounded in-flight jobs, round-robin dispatch, deterministic
+chunk seeds, progress and approximate ETA. It streams completed worker results
+to a caller callback and writes no files. Synthetic scheduling and real-spawn
+tests pass (44 focused; 229 full package). The scheduler formula
+and reproducibility limit are in `src/color_code_softoutput/README.md`.
+Final Parquet storage and the complete CLI runner remain the next stage. No
+large simulation, decoder change, commit or publication was performed.
+
 ## YAML workflow worker stage — 2026-09-27
 
 Added an isolated one-chunk worker with a four-entry process-local decoder

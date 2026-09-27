@@ -367,6 +367,11 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-27 — Completed Task 03 adaptive scheduler and progress/ETA. Spawn
+workers dispatch by round robin; per-point calibration feeds EWMA chunk sizing.
+Results stream to a main-process callback with no final storage. Synthetic and
+real-spawn tests pass. Next task: final storage and CLI runner; no campaign.
+
 2026-09-27 — Completed Task 02 worker-side sampling and required metrics.
 The worker uses a bounded per-process cache and pairs ordinary/correlated
 decisions on one sample. Public contract and tests are recorded in the package
