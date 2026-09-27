@@ -1,5 +1,27 @@
 # Reproducible paired code-capacity study
 
+## YAML workflow point storage
+
+`simulation.storage.PointStorage(point, point_dir, buffer_shots)` creates one
+new point directory whose name matches `point_directory_name(point)`.
+Call `accept(WorkerResult)` in the scheduler's main-process callback and
+`finalize()` after all point chunks complete. No runner is wired up yet.
+Overlapping or duplicate intervals are rejected. Out-of-order chunks spool
+under `.buffer/`, while contiguous rows flush as numbered `part_*.parquet`
+files at `buffer_shots` rows per part. Each temporary part has nonnull
+`shot_index: int64` plus all metrics for the point: `logical_error: bool`
+always, and for color-correlated decoding also
+`default_logical_error: bool`,
+`better_weight_by_color_correlated_decoding: uint8`, and
+`effect_by_color_correlated_decoding: uint8`.
+
+Finalization streams parts into one two-column Parquet file per metric, with
+the metric name as filename and data column. Every file has explicit nonnull
+`shot_index: int64` covering `0..shots-1`, no pandas index, and the same metric
+type as the temporary table. Final files are validated before publication;
+`.buffer/` remains on failure and is removed on success. Point directories
+and final files are never intentionally overwritten.
+
 ## YAML workflow scheduler API
 
 `simulation.scheduler.run_scheduler(config, points, on_result)` accepts the

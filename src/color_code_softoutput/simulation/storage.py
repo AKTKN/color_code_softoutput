@@ -75,3 +75,7 @@ def write_shard(frame: pd.DataFrame, path: Path, config_hash: str, *,
     temporary = path.with_suffix(".parquet.tmp")
     pq.write_table(table, temporary, compression="zstd")
     os.replace(temporary, path)
+
+
+# Staged YAML workflow storage; the legacy shard API above remains stable.
+from .workflow_storage import PointStorage  # noqa: E402

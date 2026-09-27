@@ -1,5 +1,17 @@
 # STATUS.md
 
+## YAML workflow storage stage — 2026-09-27
+
+Added bounded main-process point storage in
+`src/color_code_softoutput/simulation/workflow_storage.py`, exported via
+`simulation.storage.PointStorage`. Out-of-order chunks spool under `.buffer/`;
+contiguous rows flush to numbered temporary parts. Finalization streams parts
+to explicit two-column per-metric Parquet files, validates schemas, counts,
+indices and correlated effect, then publishes and removes `.buffer/`. Legacy
+shard storage is unchanged. Focused storage, worker, scheduler and planning
+tests pass (56 total); the full root test suite passes (241 tests).
+No top-level runner, CLI or campaign was run.
+
 ## YAML workflow scheduler stage — 2026-09-27
 
 Added a spawn-based main-process adaptive scheduler with per-point calibration,

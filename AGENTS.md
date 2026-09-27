@@ -367,6 +367,11 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-27 — Completed Task 04 bounded point storage and final Parquet files.
+Out-of-order chunks spool in `.buffer/`; final metric files carry explicit
+int64 shot indices and validated exact dtypes. Focused tests pass. Next task:
+top-level runner and CLI integration; no campaign.
+
 2026-09-27 — Completed Task 03 adaptive scheduler and progress/ETA. Spawn
 workers dispatch by round robin; per-point calibration feeds EWMA chunk sizing.
 Results stream to a main-process callback with no final storage. Synthetic and
