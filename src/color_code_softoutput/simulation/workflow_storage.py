@@ -19,6 +19,7 @@ _METRIC_TYPES = {
     "default_logical_error": pa.bool_(),
     "better_weight_by_color_correlated_decoding": pa.uint8(),
     "effect_by_color_correlated_decoding": pa.uint8(),
+    "color_correlated_run": pa.uint8(),
 }
 _CORRELATED = tuple(_METRIC_TYPES)
 
@@ -39,7 +40,9 @@ def _check_table(table: pa.Table, schema: pa.Schema, start: int) -> None:
         default = table.column("default_logical_error").to_numpy()
         effect = table.column("effect_by_color_correlated_decoding").to_numpy()
         better = table.column("better_weight_by_color_correlated_decoding").to_numpy()
-        if not np.array_equal(effect, (default & ~logical).astype(np.uint8)) or np.any(better > 1):
+        category = table.column("color_correlated_run").to_numpy()
+        if (not np.array_equal(effect, (default & ~logical).astype(np.uint8))
+                or np.any(better > 1) or np.any(category > 2)):
             raise ValueError("correlated metrics are inconsistent")
 
 

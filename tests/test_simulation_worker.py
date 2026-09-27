@@ -37,6 +37,14 @@ def test_common_prior_comparison(baseline, selected, expected):
     assert worker.better_common_prior_weight(extra, 1).tolist() == [expected]
 
 
+def test_common_prior_comparison_ignores_unrun_candidates():
+    weights = np.full((1, 12, 1), np.inf)
+    weights[0, :3, 0] = [3., 4., 5.]
+    weights[0, 4, 0] = 2.
+    extra = {"candidate_weights": weights, "weights": np.array([2.])}
+    assert worker.better_common_prior_weight(extra, 1).tolist() == [1]
+
+
 def test_chunk_same_shots_metrics_and_interval(monkeypatch):
     seen = []
 
@@ -57,6 +65,7 @@ def test_chunk_same_shots_metrics_and_interval(monkeypatch):
             return np.array([0, 0, 1], dtype=bool), {
                 "candidate_weights": weights, "weights": np.array([4., 4., 4.]),
                 "candidate_generation_weights": np.full_like(weights, -100.),
+                "color_correlated_run": np.array([0, 1, 2], dtype=np.int8),
             }
 
     monkeypatch.setattr(worker, "_codes", lambda _: worker._CodePair(FakeCode(True), FakeCode(False)))
@@ -70,6 +79,7 @@ def test_chunk_same_shots_metrics_and_interval(monkeypatch):
     assert result.metrics["default_logical_error"].tolist() == [False, True, True]
     assert result.metrics["effect_by_color_correlated_decoding"].tolist() == [0, 1, 1]
     assert result.metrics["better_weight_by_color_correlated_decoding"].tolist() == [1, 1, 1]
+    assert result.metrics["color_correlated_run"].tolist() == [0, 1, 2]
     assert result.metrics["effect_by_color_correlated_decoding"].dtype == np.uint8
 
 
@@ -96,10 +106,12 @@ def test_real_tiny_worker(correlated, weight_basis):
     expected = {"logical_error"}
     if correlated:
         expected |= {"default_logical_error", "better_weight_by_color_correlated_decoding",
-                     "effect_by_color_correlated_decoding"}
+                     "effect_by_color_correlated_decoding", "color_correlated_run"}
     assert set(out.metrics) == expected
     assert all(arr.shape == (2,) for arr in out.metrics.values())
     if correlated:
         np.testing.assert_array_equal(out.metrics["effect_by_color_correlated_decoding"],
             (out.metrics["default_logical_error"] & ~out.metrics["logical_error"]).astype(np.uint8))
+        assert out.metrics["color_correlated_run"].dtype == np.uint8
+        assert np.all(out.metrics["color_correlated_run"] <= 2)
     worker._CODE_CACHE.clear()

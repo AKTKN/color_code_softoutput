@@ -24,7 +24,8 @@ def _result(start, count, *, correlated=False, chunk_id=None):
         default = (np.arange(start, start + count) % 2 == 0)
         metrics.update(default_logical_error=default,
                        better_weight_by_color_correlated_decoding=np.ones(count, dtype=np.uint8),
-                       effect_by_color_correlated_decoding=(default & ~logical).astype(np.uint8))
+                       effect_by_color_correlated_decoding=(default & ~logical).astype(np.uint8),
+                       color_correlated_run=(np.arange(start, start + count) % 3).astype(np.uint8))
     return WorkerResult("point", start if chunk_id is None else chunk_id,
                         start, count, .01, metrics)
 
@@ -46,7 +47,7 @@ def test_scrambled_chunks_exact_schema_and_cleanup(tmp_path, order, correlated):
          for name in store.names])
     outputs = store.finalize()
     assert not store.buffer_dir.exists()
-    assert len(outputs) == (4 if correlated else 1)
+    assert len(outputs) == (5 if correlated else 1)
     assert sorted(p.name for p in store.point_dir.iterdir()) == sorted(p.name for p in outputs)
     for path in outputs:
         table = pq.read_table(path)
@@ -88,6 +89,10 @@ def test_bad_metric_and_effect_rejected(tmp_path):
         store.accept(bad)
     bad = _result(0, 2, correlated=True)
     bad.metrics["effect_by_color_correlated_decoding"][:] = 1
+    with pytest.raises(ValueError, match="inconsistent"):
+        store.accept(bad)
+    bad = _result(0, 2, correlated=True)
+    bad.metrics["color_correlated_run"][0] = 3
     with pytest.raises(ValueError, match="inconsistent"):
         store.accept(bad)
 

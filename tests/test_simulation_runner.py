@@ -46,7 +46,8 @@ def test_runner_end_to_end(tmp_path, noise, workers, verbose):
                            ("color_correlated", {"logical_error": pa.bool_(),
                              "default_logical_error": pa.bool_(),
                              "better_weight_by_color_correlated_decoding": pa.uint8(),
-                             "effect_by_color_correlated_decoding": pa.uint8()})):
+                             "effect_by_color_correlated_decoding": pa.uint8(),
+                             "color_correlated_run": pa.uint8()})):
         point_dir = root / (f"decoder_type={name},circuit_type=tri,d=3,r=3,p=0.001,"
                             f"noisemodel={noise},cnot_schedule=tri_optimal")
         assert point_dir.is_dir()
@@ -58,6 +59,8 @@ def test_runner_end_to_end(tmp_path, noise, workers, verbose):
                                                pa.field(metric, dtype, nullable=False)])
             assert table.num_rows == 5
             assert table.column("shot_index").to_pylist() == list(range(5))
+            if metric == "color_correlated_run":
+                assert set(table.column(metric).to_pylist()) <= {0, 1, 2}
     if verbose:
         assert any("ETA: estimating..." in line for line in messages)
         assert any("ETA: ~" in line for line in messages)

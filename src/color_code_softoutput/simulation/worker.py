@@ -114,8 +114,10 @@ def better_common_prior_weight(extra: dict, shots: int) -> np.ndarray:
     are deliberately ignored.
     """
     weights = np.asarray(extra["candidate_weights"], dtype=float)
-    if weights.ndim != 3 or weights.shape[1:] != (12, shots) or not np.isfinite(weights).all():
-        raise ValueError("expected finite common-prior weights shaped (classes, 12, shots)")
+    if (weights.ndim != 3 or weights.shape[1:] != (12, shots)
+            or not np.isfinite(weights[:, :3, :]).all()
+            or np.isnan(weights).any() or np.isneginf(weights).any()):
+        raise ValueError("expected finite ordinary weights and finite/+inf candidate weights shaped (classes, 12, shots)")
     ordinary = np.min(weights[:, :3, :], axis=(0, 1))
     selected = np.asarray(extra["weights"], dtype=float)
     if selected.shape != (shots,) or not np.isfinite(selected).all():
@@ -149,10 +151,16 @@ def run_chunk(task: WorkerInput) -> WorkerResult:
         baseline_options = decode_options | {"full_output": False}
         default_pred = pair.ordinary.decode(detectors, **baseline_options)
         default_fail = logical_errors(default_pred, actual, task.shot_count)
+        run_category = np.asarray(extra["color_correlated_run"])
+        if (run_category.shape != (task.shot_count,)
+                or not np.issubdtype(run_category.dtype, np.integer)
+                or np.any(run_category > 2) or np.any(run_category < 0)):
+            raise ValueError("color_correlated_run must contain 0, 1, or 2 per shot")
         metrics.update(
             default_logical_error=default_fail,
             better_weight_by_color_correlated_decoding=better_common_prior_weight(extra, task.shot_count),
             effect_by_color_correlated_decoding=(default_fail & ~final_fail).astype(np.uint8),
+            color_correlated_run=run_category.astype(np.uint8),
         )
     return WorkerResult(task.point_id, task.chunk_id, task.shot_start, task.shot_count,
                         perf_counter() - started, metrics)

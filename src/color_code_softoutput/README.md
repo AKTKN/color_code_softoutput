@@ -52,7 +52,11 @@ files at `buffer_shots` rows per part. Each temporary part has nonnull
 always, and for color-correlated decoding also
 `default_logical_error: bool`,
 `better_weight_by_color_correlated_decoding: uint8`, and
-`effect_by_color_correlated_decoding: uint8`.
+`effect_by_color_correlated_decoding: uint8`, and
+`color_correlated_run: uint8`.
+The last value is 0 when the three ordinary original-DEM corrections agree,
+1 when exactly two agree, and 2 when all differ. These cases run 0, 3 and 9
+extra guided candidates, respectively.
 
 Finalization streams parts into one two-column Parquet file per metric, with
 the metric name as filename and data column. Every file has explicit nonnull
@@ -109,7 +113,8 @@ of 1D arrays in shot order for `[shot_start, shot_start + shot_count)`.
 `logical_error` is always boolean. If the resolved constructor enables color
 correlated decoding, the result also contains boolean `default_logical_error`
 and uint8 `better_weight_by_color_correlated_decoding` and
-`effect_by_color_correlated_decoding`. The ordinary baseline decodes the same
+`effect_by_color_correlated_decoding` and `color_correlated_run`. The ordinary
+baseline decodes the same
 detectors. The weight flag compares the selected common-prior candidate with
 the best of the three ordinary candidates under that same prior using exact
 `<`; temporary candidate-generation weights are excluded. Effect is exactly

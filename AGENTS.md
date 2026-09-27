@@ -24,6 +24,14 @@ is `7a1eff0` on `external_libs/color-code-stim/` branch
 reinterpreted as corrected results. See
 `notes/support/COLOR_CORRELATED_ORIGINAL_DEM.md` and `STATUS.md`.
 
+The follow-up decoder scheduling rule compares the three ordinary corrections
+in original DEM mechanism order before running guided candidates. Equal
+triples run none; one equal pair runs only the three nonredundant guides;
+three distinct corrections run all nine. The YAML workflow stores one
+`color_correlated_run.parquet` value per shot: 0, 1 or 2 respectively.
+The decoder scheduling change is commit `fdf330d` on
+`origin/phase2a/swim-distance`.
+
 ## Current color-correlated decoder authorization (2026-09-27)
 
 The user requested `codex_color_correlated_decoder_prompt.md`. The opt-in

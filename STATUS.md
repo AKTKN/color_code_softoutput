@@ -1,10 +1,28 @@
 # STATUS.md
 
+## Color-correlated candidate scheduling and run category — 2026-09-27
+
+The decoder now compares its three ordinary corrections after mapping them
+to original X/Z DEM mechanism order. It executes 0 extra guided candidates
+if all three agree, 3 if exactly two agree, and 9 if all differ. For an equal
+pair, the two repeated-color targets use the distinct-color guide; the
+distinct-color target uses the first repeated color in r/g/b order. Skipped
+candidate slots have +inf comparison weights and a false execution mask.
+The selected logical class's category is exported as `color_correlated_run`
+and streamed to a per-shot uint8 `color_correlated_run.parquet` file with
+values 0, 1 or 2. Erasure-predecoded shots have no three-way comparison and
+remain outside the YAML writer's supported options. The previous saved runs
+do not contain this metric and are not modified.
+Validation: 131 decoder tests passed with two existing skips; 254 main-package
+tests passed. A deterministic 96-shot uniform-circuit test exercised all
+three categories and measured exactly 0, 3 or 9 re-decompositions per shot.
+Decoder commit `fdf330d` was pushed to `origin/phase2a/swim-distance`.
+
 ## Original-DEM candidate-weight option — 2026-09-27
 
 The color-correlated decoder now accepts
 `color_correlated_weight_basis="original_dem"` through `ColorCode` and YAML
-decoder options. It maps each of the twelve stage-2 candidates to the
+decoder options. It maps each executed stage-2 candidate to the
 pre-decomposition X/Z DEM (`dem_xz`) and scores the mapped correction using
 that DEM's unchanged log-odds prior. Candidate selection, reported weights,
 comparative logical gaps, and the workflow's better-weight flag use the
