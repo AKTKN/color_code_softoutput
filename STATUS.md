@@ -1,5 +1,16 @@
 # STATUS.md
 
+## GitHub source publication — 2026-09-27
+
+Initialized the workspace root as a separate Git repository and published
+`AKTKN/color_code_softoutput` publicly on `main`. The initial source commit
+`cdea414` contains 129 files (package source, tests, notebooks, prompts and
+research notes). `.gitignore` excludes `external_libs/`, saved `results/`,
+implementation and surface artifacts, caches, builds, reference PDFs and
+source-audit paper text. A staged-content scan found no credential patterns;
+the pushed commit and remote `main` matched. See README.md for setup using
+the independent decoder forks. No PyPI release was made.
+
 ## Color-correlated concatenated MWPM — 2026-09-27
 
 Implemented `codex_color_correlated_decoder_prompt.md` in the currently checked

@@ -1,5 +1,15 @@
 # AGENTS.md
 
+## GitHub publication (2026-09-27)
+
+The workspace root is now its own Git repository, published publicly at
+`https://github.com/AKTKN/color_code_softoutput` on `main`. Its source release
+tracks the package, tests, notebooks, prompts and research notes. The root
+`.gitignore` excludes separate external decoder repositories, generated runs,
+build artifacts, caches, source-audit paper copies and extracted paper text.
+The decoder repositories remain independent Git repositories. See README.md
+for installation and the limits of optional feature checkouts.
+
 ## Current color-correlated decoder authorization (2026-09-27)
 
 The user requested `codex_color_correlated_decoder_prompt.md`. The opt-in
@@ -234,7 +244,8 @@ proof checks may also live in `notes/support/`. Historical prompts under
 The canonical bibliography remains `refs/REFERENCES.md`; do not create root
 duplicates of supporting research summaries or the bibliography.
 
-Phase-2 directory inspection: the workspace root has no Git repository.
+Historical Phase-2 directory inspection: the workspace root had no Git
+repository before the 2026-09-27 GitHub publication.
 `external_libs/PyMatching/` and `external_libs/color-code-stim/` are separate
 Git repositories; both use the dedicated `phase2a/swim-distance` branch.
 The supplied implementation documents live under `src/`, not the root.
@@ -355,6 +366,11 @@ Whenever work is completed:
 - Update the `Last update` and `Next task` fields below.
 
 ## Last update
+
+2026-09-27 — Published the root package as public
+`AKTKN/color_code_softoutput` on GitHub. The initial source commit is
+`cdea414`; generated results, local checkouts, build/cache files and
+third-party reference papers are ignored. See STATUS.md and README.md.
 
 2026-09-27 — Implemented the color-correlated concatenated decoder in the
 existing SWIM checkout. The flag defaults off; 12-candidate selection uses

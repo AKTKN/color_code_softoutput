@@ -38,7 +38,8 @@ circuit experiments. The package-level usage guide is
 
 This repository tracks source code, tests, notebook documents, prompts, and
 research notes. Local decoder checkouts, build outputs, caches, saved results,
-and third-party reference PDFs are excluded by `.gitignore`. Generated notebook
+and third-party reference PDFs and extracted paper text are excluded by
+`.gitignore`. Generated notebook
 outputs already embedded in the notebook documents are retained. The TeX source
 for project notes is included; generated PDFs are not. GitHub publication is a
 source release, not a PyPI upload or a claim of calibrated confidence scores.
