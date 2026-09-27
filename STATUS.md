@@ -1,5 +1,29 @@
 # STATUS.md
 
+## Original stage-2 SWIM in ensemble YAML workflow — 2026-09-27
+
+The original growth-cluster stage-2 SWIM metric is now opt-in for ordinary,
+perturbation, color-correlated and relifting YAML points via
+`decode_options.compute_swim_distance`. Each generated stage-2 hypothesis is
+scored on the original stage-2 matching prior. The saved final value is the
+minimum score among candidates with the selected correction's observable
+parity; generated hard corrections and their unchanged-prior selection rule
+are unchanged. Perturbation's temporary stage-2 graph is not used for the
+metric. The spatial path retains its one-round triangular data-only bit-flip
+scope. The existing closed `rounds=d` circuit-level growth/residual scorer now
+handles bit-flip, depolarizing and uniform noise using the actual effective
+DEM, subject to graph and probability gates checked before run creation.
+Ordinary comparative decoding writes its own
+`logical_gap.parquet` when enabled. `WorkflowSoftOutputRun` and
+`notebooks/workflow_swim_soft_output.ipynb` cover distributions and exact
+post-selection curves with filters/groups. This is a proxy comparison, not an
+LLR or an unrestricted circuit-noise claim. The complete root suite passes
+282 tests; the local decoder suite passes 161 tests with two existing skips.
+PyMatching SWIM and path-gap focused suites pass 19 tests. The related
+decoder commit `ea851ab` and PyMatching commit `7a26e6a8e` were pushed to
+their `phase2a/swim-distance` branches. No sampling campaign was launched.
+See package README and tests.
+
 ## Tesseract YAML decoder integration — 2026-09-27
 
 The canonical simulation workflow accepts `decoders[].type: tesseract` with

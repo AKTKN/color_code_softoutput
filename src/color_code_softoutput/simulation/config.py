@@ -374,8 +374,6 @@ def parse_workflow_config(data: dict) -> WorkflowConfig:
             raise ValueError("advanced decoder modes are mutually exclusive")
         if merged.get("enable_cross_color_relifting", False) and merged.get("remove_non_edge_like_errors", False):
             raise ValueError("cross-color relifting requires remove_non_edge_like_errors=False")
-        if any(merged.get(key, False) for key in advanced) and dict(decode_options).get("compute_swim_distance", False):
-            raise ValueError("advanced decoding cannot compute matching-growth SWIM")
         decoders.append(DecoderSettings(label, options, decode_options))
     return WorkflowConfig(simulation, chunking, sweep_settings, common, tuple(decoders))
 

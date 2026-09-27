@@ -400,6 +400,26 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-27 — Extended canonical YAML SWIM to the existing closed `rounds=d`
+circuit-level scorer for bit-flip, depolarizing and uniform noise, preserving
+the one-round spatial path. The actual DEM must pass the circuit graph and
+probability gates. Ensemble candidate hypotheses are exposed on request and
+scored under the unchanged stage-2 prior. Root suite: 282 passes; local
+decoder: 161 passes/two skips; PyMatching focused: 19 passes. Related commits
+`ea851ab` (decoder) and `7a26e6a8e` (PyMatching) are pushed. Next task: review
+the pushed root commit and choose a bounded experimental grid.
+
+
+2026-09-27 — Integrated original stage-2 growth-cluster SWIM with the
+canonical YAML ordinary and ensemble decoders, saving the same-logical-class
+minimum in `swim_distance.parquet`. Ordinary comparative decoding saves
+`logical_gap.parquet`. Added filtered/grouped distribution and post-selection
+analysis plus a notebook. Historical `selected_swim_distance` keeps its
+selected-branch meaning; the new decoder key is `class_min_swim_distance`.
+The initial spatial integration retained the one-round triangular data-only
+bit-flip scope. Next task: extend the established circuit scorer.
+
+
 2026-09-27 — Added optional Tesseract decoder to the canonical YAML simulation
 workflow. It receives the unchanged original X/Z DEM and saves only its hard
 solution's `logical_error.parquet`. The local decoder checkout is unchanged;

@@ -45,6 +45,34 @@ PYTHONPATH=src:external_libs/color-code-stim/src python -m color_code_softoutput
 
 ## Canonical YAML simulation
 
+For the original stage-2 cluster SWIM metric, set
+`decoders[].decode_options.compute_swim_distance: true`. The workflow writes
+`swim_distance.parquet` alongside each decoder's `logical_error.parquet`.
+Ordinary `concat_mwpm` can separately set
+`decoders[].options.comparative_decoding: true` to write `logical_gap.parquet`.
+These options require separate runs. The one-round spatial stage-2 SWIM path
+supports triangular Z-memory with data-only bit-flip noise. The established
+closed-memory circuit-level extension supplies the metric for triangular
+`rounds=d`, `tri_optimal` Z-memory with bit-flip, depolarizing or uniform
+circuit noise. The circuit path consumes the actual X/Z-separated DEM and
+checks the graph structure and probabilities before a run starts. Other
+circuit geometries, schedules and open temporal boundaries remain outside
+the current metric. SWIM scores every generated stage-2 hypothesis
+on the unchanged base-prior stage-2 graph, then reports the smallest score
+among candidates whose mapped correction has the selected hard decision's
+observable parity. For perturbation, this evaluation rematches that
+hypothesis on the base graph; its generated hard correction still comes from
+the perturbed member. The distance is an exploratory proxy, not a posterior
+LLR or a full-decoder logical gap.
+
+`analysis.workflow_soft_output.WorkflowSoftOutputRun(run_path)` provides
+`plot_distribution(metric="swim_distance", filter=..., group_by=...)` and
+`plot_postselection(...)`. Set `metric="logical_gap"` for a comparative run.
+Both methods return a Matplotlib figure and a table. The second method retains
+scores at or above each threshold and plots abort rate versus the retained
+hard-decision logical error rate. The table retains exact zero-failure rates.
+See `notebooks/workflow_swim_soft_output.ipynb` for editable examples.
+
 Run `./scripts/run_experiment.sh configs/example.yaml` in `color_code_so`, or
 `python -m color_code_softoutput.simulation.cli --config configs/example.yaml`.
 The example requests 16 shots for each of three d=3 superdense uniform-noise

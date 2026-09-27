@@ -73,7 +73,17 @@ hash covers the validated semantic configuration. Each point directory is:
 decoder_type={decoder_type},circuit_type={circuit_type},d={distance},r={rounds},p={physical_error_rate},noisemodel={noise_model},cnot_schedule={cnot_schedule}
 ```
 
-Ordinary points produce only `logical_error.parquet`. Correlated points produce
+Ordinary points produce `logical_error.parquet`. Set
+`decoders[].decode_options.compute_swim_distance: true` to additionally write
+`swim_distance.parquet`. This accepts one-round triangular data-only bit-flip
+points and closed triangular `rounds=distance` memory points with any of the
+workflow's bit-flip, depolarizing or uniform noise models, subject to the
+original DEM's graph and probability checks.
+Set `decoders[].options.comparative_decoding: true` on ordinary concat MWPM
+to write `logical_gap.parquet` instead. See
+[the analysis notebook](notebooks/workflow_swim_soft_output.ipynb) for score
+distributions and abort-rate versus post-selection LER with filters and groups.
+Correlated points produce
 that file plus `default_logical_error.parquet`,
 `better_weight_by_color_correlated_decoding.parquet`, and
 `effect_by_color_correlated_decoding.parquet`. Every final file has exactly two

@@ -36,7 +36,15 @@ def _preflight_point(point: ResolvedPoint) -> None:
             raise ValueError(f"decoder type and {flag} option disagree: {point.decoder_type}")
     if point.decoder_type != "tesseract":
         inspect.signature(ColorCode.decode).bind(None, None, **dict(point.decode_options))
-    _construct(point)
+    if dict(point.decode_options).get("compute_swim_distance", False):
+        if correlated.get("comparative_decoding", False):
+            raise ValueError("swim distance and comparative decoding cannot be combined")
+    pair = _construct(point)
+    if dict(point.decode_options).get("compute_swim_distance", False):
+        if pair.circuit_swim is None:
+            from color_code_stim.soft_output.pymatching_backend import Stage2Backend
+            for color in "rgb":
+                Stage2Backend(pair.configured.dem_manager, color)
 
 
 def _write_log(path: Path, record: dict) -> None:

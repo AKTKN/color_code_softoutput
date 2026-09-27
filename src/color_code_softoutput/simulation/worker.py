@@ -55,6 +55,7 @@ class _CodePair:
     configured: ColorCode
     ordinary: ColorCode | None
     tesseract_decoder: object | None = None
+    circuit_swim: object | None = None
 
 
 _CODE_CACHE: OrderedDict[tuple, _CodePair] = OrderedDict()
@@ -91,7 +92,11 @@ def _construct(point: ResolvedPoint) -> _CodePair:
     if is_tesseract:
         from .tesseract import compile_tesseract
         return _CodePair(configured, None, compile_tesseract(configured.dem_xz, point.decoder_options))
-    return _CodePair(configured, ordinary)
+    circuit_swim = None
+    if dict(point.decode_options).get("compute_swim_distance", False) and not configured.dem_manager.swim_data_only:
+        from .circuit_swim import CircuitCandidateSwim
+        circuit_swim = CircuitCandidateSwim(configured)
+    return _CodePair(configured, ordinary, circuit_swim=circuit_swim)
 
 
 def _codes(point: ResolvedPoint) -> _CodePair:
@@ -162,7 +167,13 @@ def run_chunk(task: WorkerInput) -> WorkerResult:
     options = dict(task.point.color_code_options) | dict(task.point.decoder_options)
     relifting = options.get("enable_cross_color_relifting", False)
     perturbation = options.get("enable_prior_perturbation", False)
-    if correlated or relifting or perturbation:
+    swim = decode_options.get("compute_swim_distance", False)
+    comparative = options.get("comparative_decoding", False)
+    circuit_swim = swim and pair.circuit_swim is not None
+    if circuit_swim:
+        decode_options["compute_swim_distance"] = False
+        decode_options["return_candidate_data"] = True
+    if correlated or relifting or perturbation or swim or comparative:
         # The common-prior comparison requires the public full-output fields.
         decode_options["full_output"] = True
     configured_result = pair.configured.decode(detectors, **decode_options)
@@ -172,6 +183,18 @@ def run_chunk(task: WorkerInput) -> WorkerResult:
         prediction, extra = configured_result, None
     final_fail = logical_errors(prediction, actual, task.shot_count)
     metrics = {"logical_error": final_fail}
+    if swim:
+        distance = np.asarray(
+            pair.circuit_swim.score(detectors, prediction, extra) if circuit_swim
+            else extra["class_min_swim_distance"], dtype=np.float64)
+        if distance.shape != (task.shot_count,) or not np.isfinite(distance).all() or np.any(distance < 0):
+            raise ValueError("invalid selected swim distance")
+        metrics["swim_distance"] = distance
+    if comparative:
+        gap = np.asarray(extra["logical_gaps"], dtype=np.float64)
+        if gap.shape != (task.shot_count,) or not np.isfinite(gap).all() or np.any(gap < 0):
+            raise ValueError("invalid comparative logical gap")
+        metrics["logical_gap"] = gap
     if relifting:
         run_category = np.asarray(extra["relift_run_class"])
         if (run_category.shape != (task.shot_count,)
@@ -181,7 +204,8 @@ def run_chunk(task: WorkerInput) -> WorkerResult:
         metrics["relift_run"] = run_category.astype(np.uint8)
     if correlated or relifting or perturbation:
         if correlated:
-            baseline_options = decode_options | {"full_output": False}
+            baseline_options = decode_options | {"full_output": False,
+                                                 "return_candidate_data": False}
             default_pred = pair.ordinary.decode(detectors, **baseline_options)
         else:
             default_pred = extra["baseline_predictions"]

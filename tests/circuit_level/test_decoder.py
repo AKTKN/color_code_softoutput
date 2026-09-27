@@ -32,6 +32,11 @@ def test_all_hard_outputs_and_branch_replay(configured):
         # The private methods are an independent test oracle, never production dependencies.
         stage1 = code.concat_matching_decoder._decode_stage1(shots, c)
         corr, weights = code.concat_matching_decoder._decode_stage2(shots, stage1, c)
+        supplied = decoder.backends[c].decode_hypotheses(shots, stage1)
+        np.testing.assert_array_equal(supplied.corrections, branch.corrections)
+        np.testing.assert_array_equal(supplied.radii, branch.radii)
+        np.testing.assert_array_equal([r.phi for r in supplied.results],
+                                      [r.phi for r in branch.results])
         np.testing.assert_array_equal(stage1, branch.stage1_predictions)
         np.testing.assert_array_equal(corr, branch.corrections)
         np.testing.assert_array_equal(weights, branch.solution_weights)

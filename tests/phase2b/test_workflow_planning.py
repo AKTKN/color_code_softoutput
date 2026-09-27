@@ -139,8 +139,8 @@ def test_formatted_probability_path_collision(raw):
 def test_correlated_swim_capability(raw):
     raw["decoders"][0]["options"]["enable_colorcorrelated_decoding"] = True
     raw["decoders"][0]["decode_options"]["compute_swim_distance"] = True
-    with pytest.raises(ValueError, match="cannot compute"):
-        parse_workflow_config(raw)
+    config = parse_workflow_config(raw)
+    assert dict(config.decoders[0].decode_options)["compute_swim_distance"] is True
 
 
 def test_decoder_boolean_option_validation(raw):

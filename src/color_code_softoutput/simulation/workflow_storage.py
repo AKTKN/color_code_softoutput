@@ -21,6 +21,8 @@ _METRIC_TYPES = {
     "effect_by_color_correlated_decoding": pa.uint8(),
     "color_correlated_run": pa.uint8(),
     "relift_run": pa.uint8(),
+    "swim_distance": pa.float64(),
+    "logical_gap": pa.float64(),
 }
 _PAIRED = ("logical_error", "default_logical_error",
            "better_weight_by_color_correlated_decoding",
@@ -52,6 +54,11 @@ def _check_table(table: pa.Table, schema: pa.Schema, start: int) -> None:
         raise ValueError("correlated run class is inconsistent")
     if "relift_run" in schema.names and np.any(table.column("relift_run").to_numpy() > 2):
         raise ValueError("relift run class is inconsistent")
+    for name in ("swim_distance", "logical_gap"):
+        if name in schema.names:
+            values = table.column(name).to_numpy()
+            if not np.isfinite(values).all() or np.any(values < 0):
+                raise ValueError(f"invalid {name} values")
 
 
 @dataclass(frozen=True)
@@ -78,10 +85,13 @@ class PointStorage:
             raise ValueError("point directory does not match planned name")
         self.buffer_shots = buffer_shots
         options = dict(point.color_code_options) | dict(point.decoder_options)
-        self.names = (_CORRELATED if options.get("enable_colorcorrelated_decoding", False)
+        base_names = (_CORRELATED if options.get("enable_colorcorrelated_decoding", False)
                       else _RELIFTING if options.get("enable_cross_color_relifting", False)
                       else _PAIRED if options.get("enable_prior_perturbation", False)
                       else ("logical_error",))
+        self.names = base_names + (("swim_distance",) if dict(point.decode_options).get(
+            "compute_swim_distance", False) else ()) + (("logical_gap",) if options.get(
+            "comparative_decoding", False) else ())
         self.schema = _schema(self.names)
         self.point_dir.mkdir(parents=True, exist_ok=False)
         self.buffer_dir = self.point_dir / ".buffer"
@@ -104,7 +114,9 @@ class PointStorage:
                          result.shot_start + result.shot_count, dtype=np.int64))}
         for name in self.names:
             values = result.metrics[name]
-            dtype = np.dtype("bool") if pa.types.is_boolean(_METRIC_TYPES[name]) else np.dtype("uint8")
+            dtype = (np.dtype("bool") if pa.types.is_boolean(_METRIC_TYPES[name]) else
+                     np.dtype("float64") if pa.types.is_floating(_METRIC_TYPES[name]) else
+                     np.dtype("uint8"))
             if not isinstance(values, np.ndarray) or values.ndim != 1 or len(values) != result.shot_count or values.dtype != dtype:
                 raise ValueError(f"invalid worker metric dtype or shape: {name}")
             columns[name] = pa.array(values, type=_METRIC_TYPES[name])

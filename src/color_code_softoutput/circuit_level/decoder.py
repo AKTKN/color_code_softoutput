@@ -101,6 +101,24 @@ class Stage2GrowthBackend:
         if shots.ndim != 2 or shots.shape[1] != self._num_detectors or not np.isin(shots, [0, 1]).all():
             raise ValueError("Binary (shots, physical detectors) array required")
         stage1 = self._matcher1.decode_batch(shots[:, self._keep1])
+        return self.decode_hypotheses(shots, stage1, return_witness=return_witness)
+
+    def decode_hypotheses(self, detector_outcomes: ArrayLike,
+                          stage1_hypotheses: ArrayLike, *,
+                          return_witness: bool = False) -> BranchBatch:
+        """Score supplied stage-1 candidates on this frozen original-prior H2.
+
+        The supplied hypotheses may have been generated with another prior.
+        Stage-2 matching, growth, residual edge weights and topology all use
+        the unchanged base decomposition held by this backend.
+        """
+        shots = np.asarray(detector_outcomes)
+        stage1 = np.asarray(stage1_hypotheses, dtype=np.uint8)
+        if (shots.ndim != 2 or shots.shape[1] != self._num_detectors
+                or not np.isin(shots, [0, 1]).all()
+                or stage1.shape != (len(shots), self._H1.shape[1])
+                or not np.isin(stage1, [0, 1]).all()):
+            raise ValueError("Aligned binary detectors and stage-1 hypotheses required")
         if not np.array_equal(stage1.astype(np.uint8) @ self._H1[self._keep1, :].T % 2,
                               shots[:, self._keep1]):
             raise ValueError("Stage-1 correction violates restricted syndrome")
