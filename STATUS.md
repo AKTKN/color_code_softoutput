@@ -34,6 +34,8 @@ All 253 main-package tests pass. The corrected TeX source compiles with its
 bibliography. Saved runs were not changed and no new sampling campaign ran.
 Decoder implementation was committed as `7a1eff0` and pushed to
 `origin/phase2a/swim-distance` in the separate color-code-stim repository.
+The tracked correction specification is
+`notes/support/COLOR_CORRELATED_ORIGINAL_DEM.md`.
 
 ## Saved color-correlated decoding analysis — 2026-09-27
 

@@ -10,6 +10,20 @@ build artifacts, caches, source-audit paper copies and extracted paper text.
 The decoder repositories remain independent Git repositories. See README.md
 for installation and the limits of optional feature checkouts.
 
+## Corrected color-correlated guide conditioning (2026-09-27)
+
+The user clarified that each extra candidate must condition guide-selected
+mechanisms in the pre-decomposition X/Z DEM, then decompose that updated DEM
+again for its target color and rerun both matching stages. Do not restore the
+earlier rule that directly updated decomposed columns using a maximum of
+single-source conditionals. Keep original mechanism indices aligned when
+mapping candidates back for unchanged-prior comparison. The corrected decoder
+is `7a1eff0` on `external_libs/color-code-stim/` branch
+`phase2a/swim-distance`; the root workflow integration is on
+`codex/workflow-refactor`. Saved runs from the earlier rule cannot be
+reinterpreted as corrected results. See
+`notes/support/COLOR_CORRELATED_ORIGINAL_DEM.md` and `STATUS.md`.
+
 ## Current color-correlated decoder authorization (2026-09-27)
 
 The user requested `codex_color_correlated_decoder_prompt.md`. The opt-in
