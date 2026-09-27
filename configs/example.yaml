@@ -40,18 +40,22 @@ color_code_options:
 # Tesseract uses its own TesseractConfig options and the original X/Z DEM.
 decoders:
   - type: concat_mwpm
-    # Optional: rank the three ordinary corrections under the original X/Z DEM.
-    # Omit for the historical stage-2 matching-weight selection.
+    # Comparative decoding writes logical_gap.parquet for ordinary concat MWPM.
+    # This point is kept separate from SWIM scoring (the options cannot be
+    # enabled together for one decoder point).
     options:
+      comparative_decoding: true
       color_correlated_weight_basis: original_dem
     decode_options:
       colors: all
 
   - type: concat_mwpm_stage2_base
+    # SWIM distance writes swim_distance.parquet for this baseline point.
     options:
       color_correlated_weight_basis: stage2
     decode_options:
       colors: all
+      compute_swim_distance: true
 
   - type: color_correlated
     options:
@@ -60,6 +64,9 @@ decoders:
       color_correlated_b: 2.0
       # Guided stage 2 and final selection use unchanged original priors.
       color_correlated_weight_basis: original_dem
+    decode_options:
+      colors: all
+      compute_swim_distance: true
 
   # For a separate ordinary-circuit run, set superdense_circuit: false and
   # cnot_schedule: tri_optimal above, then enable this relifting entry.
@@ -79,6 +86,9 @@ decoders:
       perturbation_alpha: 0.25
       perturbation_seed: 20260927
       color_correlated_weight_basis: original_dem
+    decode_options:
+      colors: all
+      compute_swim_distance: true
 
   # Requires the optional tesseract_decoder Python package.
   # - type: tesseract
