@@ -1,5 +1,25 @@
 # STATUS.md
 
+## Saved color-correlated decoding analysis — 2026-09-27
+
+Added `analysis/color_correlated.py` and the editable
+`notebooks/color_correlated_decoding.ipynb`. The module reconstructs planned
+conditions from the saved run log, checks bounded Parquet metric batches,
+computes per-condition LER and correlated-flag counts, and plots filtered
+physical versus logical error rates. Up to two `group_by` keys control line
+color and marker. The specified 36-point, 360,000-shot run loads and plots as
+six series. Two focused tests pass; all five notebook code cells execute.
+The figure is saved under the run's `analysis/` directory. No sampling ran.
+The plot now supports a logarithmic vertical axis and a boxed legend grid
+above a plot region with fixed physical dimensions. The notebook exposes
+editable size and font controls; zero-failure rates remain zero in tables.
+The plot also accepts `baseline_compare=True`: each color-correlated point's
+`default_logical_error.parquet` supplies a paired `decoder_type=baseline`
+series, with source and metric recorded in the returned table. The existing
+36-point run now yields nine series and a 3-by-3 legend; three focused tests
+pass and all five notebook cells execute. The baseline figure is saved as
+`analysis/color_correlated_ler_with_baseline.png`, without new sampling.
+
 ## Circuit-memory provenance portability — 2026-09-27
 
 The historical circuit-memory source snapshot now includes the local

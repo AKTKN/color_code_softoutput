@@ -11,6 +11,27 @@ bounded point storage, and finalizes each point when its shots are complete.
 Successful points contain one Parquet file per metric and no `.buffer/`.
 Existing notebook experiment entry points remain historical and unchanged.
 
+## Saved color-correlated run analysis
+
+`analysis.color_correlated.ColorCorrelatedRun(run_path)` reads the canonical
+`run_log.json` and planned point directories. `catalog` previews available
+conditions; `summary(filter=...)` streams each selected Parquet metric into
+per-point shot/failure counts and logical error rates. `count_table(filter=...)`
+reports the two color-correlated flags per experiment condition, with missing
+values for ordinary decoder points. `plot_ler(filter=..., group_by=[...])`
+plots physical versus logical error rate with 99% Wilson bands. The first
+group key controls color and the optional second key controls marker. The
+legend is a boxed grid above a separately sized plot. Set `yscale="log"`
+or `"linear"`; zero-failure points use 0.5/shots only for log-axis display,
+while the returned table keeps their measured rate of zero. Other varying
+conditions must be fixed by `filter`. See
+`notebooks/color_correlated_decoding.ipynb` for an editable example.
+With `baseline_compare=True` and `decoder_type` in `group_by`, the plot also
+adds `decoder_type=baseline` from each selected color-correlated point's
+`default_logical_error.parquet`. This uses the same shots as that point's
+`logical_error.parquet`; the returned plot table records `metric` and
+`source_decoder_type`. Ordinary `concat_mwpm` points remain separate samples.
+
 ## YAML workflow point storage
 
 `simulation.storage.PointStorage(point, point_dir, buffer_shots)` creates one

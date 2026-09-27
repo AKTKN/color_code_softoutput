@@ -1,0 +1,26 @@
+simulation:
+  output_root: results
+  shots: 100000
+  workers: 4
+  master_seed: 20260927
+  buffer_shots: 1000
+  verbose: true
+chunking:
+  calibration_shots: 4
+  target_chunk_seconds: 1.0
+  min_chunk_shots: 1
+  max_chunk_shots: 1000
+  throughput_ema_alpha: 0.5
+sweep:
+  distance: [3, 5, 7]
+  physical_error_rate: [0.04, 0.03, 0.02, 0.01,]
+  noise_model: bitflip
+  rounds: 1
+  circuit_type: tri
+  cnot_schedule: tri_optimal
+color_code_options:
+  temp_bdry_type: Z
+decoders:
+  - type: color_correlated
+    options:
+      enable_colorcorrelated_decoding: true

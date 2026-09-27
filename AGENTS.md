@@ -367,6 +367,13 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-27 — Added saved-run color-correlated analysis and a notebook for
+filtered LER curves and per-condition flag counts. The 36-point saved run
+loads successfully; two focused tests and five notebook cells pass. No new
+sampling was performed. The plot now has an optional log axis and independent
+boxed legend grid above the main axes. Next task: user review of the plots
+and tables.
+
 2026-09-27 — Completed the staged YAML workflow through Task 06. The
 pipeline made checkpoint commits through `45da8ba`. A follow-up portability
 fix makes the Git-ignored historical circuit-memory prompt optional in its
