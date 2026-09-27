@@ -108,9 +108,10 @@ def logical_errors(prediction: np.ndarray, actual: np.ndarray, shots: int) -> np
 def better_common_prior_weight(extra: dict, shots: int) -> np.ndarray:
     """Strict improvement over the ordinary three candidates in common prior.
 
-    The first three candidates are the ordinary r/g/b matchings, rescored by
-    the same base stage-2 prior used to select among all 12 candidates. The
-    generation weights come from temporary priors and are deliberately ignored.
+    The first three candidates are the ordinary r/g/b matchings. All twelve
+    candidate_weights use the selected common basis: unchanged color stage-2
+    priors or unchanged original X/Z DEM priors. Temporary generation weights
+    are deliberately ignored.
     """
     weights = np.asarray(extra["candidate_weights"], dtype=float)
     if weights.ndim != 3 or weights.shape[1:] != (12, shots) or not np.isfinite(weights).all():

@@ -33,6 +33,13 @@ _MARKERS = (
 )
 
 
+def _per_round(rate: float, rounds: int) -> float:
+    """Invert 1 - (1 - p_round)**rounds, including rates of zero and one."""
+    if rate == 1:
+        return 1.0
+    return float(-np.expm1(np.log1p(-rate) / rounds))
+
+
 def _metric_count(path: Path, metric: str, expected_shots: int) -> int:
     """Count a binary metric with bounded batches and verify its shot indices."""
     if not path.is_file():
@@ -122,26 +129,33 @@ class ColorCorrelatedRun:
             metric: _metric_count(directory / f"{metric}.parquet", metric, point.shots)
             for metric in metrics
         }
+        per_round = point.noise_model == "uniform"
+        to_rate = (lambda value: _per_round(value, point.rounds)) if per_round else float
         record = {
             "point_directory": name,
             "shots": point.shots,
             "failures": counts["logical_error"],
-            "logical_error_rate": counts["logical_error"] / point.shots,
+            "logical_error_rate_total": counts["logical_error"] / point.shots,
+            "logical_error_rate": to_rate(counts["logical_error"] / point.shots),
             "default_failures": counts.get("default_logical_error", pd.NA),
-            "default_logical_error_rate": (
+            "default_logical_error_rate_total": (
                 counts["default_logical_error"] / point.shots
+                if correlated else np.nan
+            ),
+            "default_logical_error_rate": (
+                to_rate(counts["default_logical_error"] / point.shots)
                 if correlated else np.nan
             ),
             "better_weight_count": counts.get(COUNTS[0], pd.NA),
             "effect_count": counts.get(COUNTS[1], pd.NA),
         }
         low, high = wilson_interval(record["failures"], point.shots)
-        record["ler_low"] = float(low)
-        record["ler_high"] = float(high)
+        record["ler_low"] = to_rate(float(low))
+        record["ler_high"] = to_rate(float(high))
         if correlated:
             low, high = wilson_interval(counts["default_logical_error"], point.shots)
-            record["default_ler_low"] = float(low)
-            record["default_ler_high"] = float(high)
+            record["default_ler_low"] = to_rate(float(low))
+            record["default_ler_high"] = to_rate(float(high))
         else:
             record["default_ler_low"] = np.nan
             record["default_ler_high"] = np.nan
@@ -149,7 +163,7 @@ class ColorCorrelatedRun:
         return record
 
     def summary(self, filter: Mapping[str, object] | None = None) -> pd.DataFrame:
-        """Return one row per selected config, with counts and 99% Wilson limits."""
+        """Return per-point counts and Wilson limits; uniform LER is per round."""
         selected = self.select(filter)
         aggregates = pd.DataFrame([
             self._summarize_point(name) for name in selected["point_directory"]
@@ -182,7 +196,9 @@ class ColorCorrelatedRun:
         """Plot LER below an independent boxed condition legend.
 
         The main plot keeps its requested physical size as legend rows change.
-        On a logarithmic axis, a zero-failure point is displayed at 0.5/shots;
+        Uniform circuit-noise LER is per round, using 1-(1-P_fail)**(1/r).
+        On a logarithmic axis, a zero-failure point is displayed at a
+        half-failure equivalent (per round for uniform noise);
         the returned table always retains its exact measured rate of zero.
         """
         if yscale not in ("linear", "log"):
@@ -195,8 +211,8 @@ class ColorCorrelatedRun:
         group_by = tuple(group_by)
         if len(group_by) > 2 or len(set(group_by)) != len(group_by):
             raise ValueError("group_by must contain at most two distinct parameters")
-        if any(name not in PARAMETERS or name == "physical_error_rate" for name in group_by):
-            raise ValueError("group_by must use config parameters other than physical_error_rate")
+        if any(name not in PARAMETERS or name in ("physical_error_rate", "rounds") for name in group_by):
+            raise ValueError("group_by must use config parameters other than physical_error_rate and rounds")
         if baseline_compare and "decoder_type" not in group_by:
             raise ValueError("baseline_compare requires decoder_type in group_by")
         table = self.summary(filter)
@@ -213,13 +229,14 @@ class ColorCorrelatedRun:
             baseline["decoder_type"] = "baseline"
             baseline["metric"] = "default_logical_error"
             baseline["failures"] = baseline["default_failures"].astype("int64")
+            baseline["logical_error_rate_total"] = baseline["default_logical_error_rate_total"]
             baseline["logical_error_rate"] = baseline["default_logical_error_rate"]
             baseline["ler_low"] = baseline["default_ler_low"]
             baseline["ler_high"] = baseline["default_ler_high"]
             table = pd.concat([table, baseline], ignore_index=True).sort_values(
                 ["distance", "physical_error_rate", "decoder_type"]
             ).reset_index(drop=True)
-        ungrouped = set(PARAMETERS) - {"physical_error_rate", *group_by}
+        ungrouped = set(PARAMETERS) - {"physical_error_rate", "rounds", *group_by}
         varying = sorted(name for name in ungrouped if table[name].nunique() > 1)
         if varying:
             raise ValueError(f"Filter or group_by the varying parameters: {varying}")
@@ -296,7 +313,12 @@ class ColorCorrelatedRun:
                 )
         grouped = (table.groupby(group_by[0] if len(group_by) == 1 else list(group_by),
                                  dropna=False, sort=True) if group_by else [((), table)])
-        display_floor = float((0.5 / table["shots"]).min())
+        zero_display = np.array([
+            _per_round(0.5 / row.shots, row.rounds)
+            if row.noise_model == "uniform" else 0.5 / row.shots
+            for row in table.itertuples()
+        ])
+        display_floor = float(zero_display.min())
         for key, rows in grouped:
             values = key if isinstance(key, tuple) else (key,)
             rows = rows.sort_values("physical_error_rate")
@@ -306,8 +328,12 @@ class ColorCorrelatedRun:
             y = rows["logical_error_rate"].to_numpy(dtype=float)
             low = rows["ler_low"].to_numpy(dtype=float)
             if yscale == "log":
-                shots = rows["shots"].to_numpy(dtype=float)
-                y = np.where(y == 0, 0.5 / shots, y)
+                floor_by_row = np.array([
+                    _per_round(0.5 / row.shots, row.rounds)
+                    if row.noise_model == "uniform" else 0.5 / row.shots
+                    for row in rows.itertuples()
+                ])
+                y = np.where(y == 0, floor_by_row, y)
                 low = np.maximum(low, display_floor)
             ax.plot(x, y, marker=marker, color=color)
             ax.fill_between(x, low,
@@ -319,11 +345,13 @@ class ColorCorrelatedRun:
             if (table["failures"] == 0).any():
                 figure.text(
                     0.85 / figure_width, 0.12 / figure_height,
-                    "Zero-failure points displayed at 0.5/shots; table retains LER = 0.",
+                    "Zero-failure points use half-failure display values; table retains LER = 0.",
                     fontsize=8, color="0.35",
                 )
         else:
             ax.set_ylim(0, upper)
-        ax.set(xlabel="Physical error rate", ylabel="Logical error rate")
+        ylabel = ("Logical error rate per round" if (table["noise_model"] == "uniform").all()
+                  else "Logical error rate")
+        ax.set(xlabel="Physical error rate", ylabel=ylabel)
         ax.grid(alpha=0.25)
         return figure, ax, table

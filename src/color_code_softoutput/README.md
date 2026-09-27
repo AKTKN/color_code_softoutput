@@ -31,6 +31,12 @@ adds `decoder_type=baseline` from each selected color-correlated point's
 `default_logical_error.parquet`. This uses the same shots as that point's
 `logical_error.parquet`; the returned plot table records `metric` and
 `source_decoder_type`. Ordinary `concat_mwpm` points remain separate samples.
+For `noise_model=uniform`, `logical_error_rate` and its Wilson limits are
+reported per round as `1 - (1 - P_fail) ** (1 / rounds)`; the measured
+whole-experiment rate remains in `logical_error_rate_total`. The plot ignores
+`rounds` as a legend condition, so `rounds: distance` works with distance
+and decoder type as the two grouping keys. Multiple round counts for the
+same plotted condition still require a separate selection.
 
 ## YAML workflow point storage
 
@@ -108,6 +114,15 @@ detectors. The weight flag compares the selected common-prior candidate with
 the best of the three ordinary candidates under that same prior using exact
 `<`; temporary candidate-generation weights are excluded. Effect is exactly
 `default_logical_error & ~logical_error`.
+For each extra color-correlated candidate, guide-selected mechanisms are
+conditioned in a temporary copy of the pre-decomposition X/Z DEM. That DEM
+is decomposed anew for the target color before both matching stages run.
+Set `decoders[].options.color_correlated_weight_basis: original_dem` to score
+and select color-correlated candidates by their mapped correction under the
+unchanged pre-decomposition X/Z DEM prior. The default is `stage2`. The
+weight flag always compares all twelve candidates with the ordinary three
+using the same selected basis. Saved runs cannot be reinterpreted under a
+different basis without decoding their shots again.
 
 The worker holds at most four circuit/decoder pairs in a per-process LRU cache
 and writes no files. The scheduler uses multiprocessing `spawn` and bounds

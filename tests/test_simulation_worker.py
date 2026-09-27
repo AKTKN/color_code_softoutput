@@ -7,10 +7,11 @@ from color_code_softoutput.simulation import worker
 from color_code_softoutput.simulation.task import ResolvedPoint
 
 
-def point(correlated=False, *, identity="p", shots=8):
+def point(correlated=False, *, identity="p", shots=8, weight_basis="stage2"):
     return ResolvedPoint(identity, "ordinary-label", 3, .05, "bitflip", 1,
                          "tri", "tri_optimal", shots, (),
-                         (("enable_colorcorrelated_decoding", correlated),), ())
+                         (("enable_colorcorrelated_decoding", correlated),
+                          ("color_correlated_weight_basis", weight_basis)), ())
 
 
 def test_observable_failure_reduction():
@@ -84,10 +85,13 @@ def test_cache_bounded(monkeypatch):
         worker._CODE_CACHE.clear()
 
 
-@pytest.mark.parametrize("correlated", [False, True])
-def test_real_tiny_worker(correlated):
+@pytest.mark.parametrize("correlated,weight_basis", [
+    (False, "stage2"), (True, "stage2"), (True, "original_dem"),
+])
+def test_real_tiny_worker(correlated, weight_basis):
     worker._CODE_CACHE.clear()
-    p = point(correlated, identity=f"real-{correlated}", shots=2)
+    p = point(correlated, identity=f"real-{correlated}-{weight_basis}",
+              shots=2, weight_basis=weight_basis)
     out = worker.run_chunk(worker.WorkerInput(p.point_id, 0, 0, 2, 3, p))
     expected = {"logical_error"}
     if correlated:

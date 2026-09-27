@@ -80,6 +80,16 @@ def test_preflight_rejects_before_creating_run(tmp_path):
     assert list(tmp_path.iterdir()) == []
 
 
+def test_original_dem_weight_basis_option(tmp_path):
+    raw = settings(tmp_path)
+    raw["decoders"][1]["options"]["color_correlated_weight_basis"] = "original_dem"
+    config = parse_workflow_config(raw)
+    assert dict(config.decoders[1].options)["color_correlated_weight_basis"] == "original_dem"
+    raw["decoders"][1]["options"]["color_correlated_weight_basis"] = "unknown"
+    with pytest.raises(ValueError, match="color_correlated_weight_basis"):
+        parse_workflow_config(raw)
+
+
 def test_failure_still_closes_single_log(tmp_path, monkeypatch):
     config = parse_workflow_config(settings(tmp_path))
 

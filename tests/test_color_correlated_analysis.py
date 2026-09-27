@@ -15,7 +15,7 @@ from color_code_softoutput.simulation.config import parse_workflow_config
 from color_code_softoutput.simulation.planner import plan_points, point_directory_name
 
 
-def _run(tmp_path):
+def _run(tmp_path, *, uniform=False):
     raw = {
         "simulation": {"output_root": str(tmp_path), "shots": 3, "workers": 1,
                        "master_seed": 7, "buffer_shots": 3, "verbose": False},
@@ -23,7 +23,8 @@ def _run(tmp_path):
                      "min_chunk_shots": 1, "max_chunk_shots": 3,
                      "throughput_ema_alpha": .5},
         "sweep": {"distance": [3, 5], "physical_error_rate": [.01, .02],
-                  "noise_model": "depol", "rounds": 1, "circuit_type": "tri",
+                  "noise_model": "uniform" if uniform else "depol",
+                  "rounds": "distance" if uniform else 1, "circuit_type": "tri",
                   "cnot_schedule": "tri_optimal"},
         "decoders": [
             {"type": "concat_mwpm"},
@@ -130,10 +131,26 @@ def test_baseline_uses_paired_default_metric(tmp_path):
     assert set(baseline.logical_error_rate) == {1 / 3}
     assert set(correlated.failures) == {0}
     plt.close(figure)
-
     figure, axes, table = run.plot_ler(
         filter={"distance": 3, "decoder_type": "color_correlated"},
         group_by=["decoder_type"], baseline_compare=True)
     assert set(table.decoder_type) == {"color_correlated", "baseline"}
     assert len(axes.lines) == 2
     plt.close(figure)
+
+
+def test_uniform_ler_is_per_round_and_rounds_do_not_split_legend(tmp_path):
+    run = _run(tmp_path, uniform=True)
+    figure, axes, table = run.plot_ler(
+        group_by=["distance", "decoder_type"], baseline_compare=True)
+    assert axes.get_ylabel() == "Logical error rate per round"
+    assert len(axes.lines) == 6
+    assert len(figure.axes[1].patches) == 6
+    baseline = table[table.decoder_type == "baseline"]
+    assert set(baseline.logical_error_rate_total) == {1 / 3}
+    for row in baseline.itertuples():
+        assert row.logical_error_rate == pytest.approx(1 - (2 / 3) ** (1 / row.rounds))
+        assert row.ler_low < row.logical_error_rate < row.ler_high
+    plt.close(figure)
+    with pytest.raises(ValueError, match="rounds"):
+        run.plot_ler(group_by=["distance", "rounds"])

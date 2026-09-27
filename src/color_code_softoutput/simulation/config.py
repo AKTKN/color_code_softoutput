@@ -135,9 +135,10 @@ _SWEEP_KEYS = frozenset({"distance", "physical_error_rate", "noise_model", "roun
 _CONSTRUCTOR_KEYS = frozenset({"temp_bdry_type", "superdense_circuit", "perfect_logical_initialization",
     "perfect_logical_measurement", "perfect_first_syndrome_extraction", "perfect_init_final",
     "remove_non_edge_like_errors", "comparative_decoding", "enable_colorcorrelated_decoding",
+    "color_correlated_weight_basis",
     "exclude_non_essential_pauli_detectors"})
 _DECODE_KEYS = frozenset({"colors", "compute_swim_distance", "full_output", "check_validity", "verbose"})
-_BOOLEAN_OPTIONS = (_CONSTRUCTOR_KEYS - {"temp_bdry_type"}) | (_DECODE_KEYS - {"colors"})
+_BOOLEAN_OPTIONS = (_CONSTRUCTOR_KEYS - {"temp_bdry_type", "color_correlated_weight_basis"}) | (_DECODE_KEYS - {"colors"})
 _SWEEP_ALIASES = frozenset({"d", "rounds", "circuit_type", "cnot_schedule", "noise_model",
     "p_bitflip", "p_depol", "p_reset", "p_meas", "p_cnot", "p_idle", "p_circuit"})
 
@@ -212,6 +213,9 @@ def _options(value, name, allowed):
             raise ValueError(f"{name}.{key} must be boolean")
     if "temp_bdry_type" in value and value["temp_bdry_type"] not in (None, "X", "Y", "Z", "x", "y", "z"):
         raise ValueError(f"{name}.temp_bdry_type must be X, Y, Z or null")
+    if ("color_correlated_weight_basis" in value
+            and value["color_correlated_weight_basis"] not in ("stage2", "original_dem")):
+        raise ValueError(f"{name}.color_correlated_weight_basis must be stage2 or original_dem")
     if "colors" in value:
         colors = value["colors"]
         if colors != "all" and colors not in ("r", "g", "b") and not (

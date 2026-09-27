@@ -1,5 +1,40 @@
 # STATUS.md
 
+## Original-DEM candidate-weight option — 2026-09-27
+
+The color-correlated decoder now accepts
+`color_correlated_weight_basis="original_dem"` through `ColorCode` and YAML
+decoder options. It maps each of the twelve stage-2 candidates to the
+pre-decomposition X/Z DEM (`dem_xz`) and scores the mapped correction using
+that DEM's unchanged log-odds prior. Candidate selection, reported weights,
+comparative logical gaps, and the workflow's better-weight flag use the
+selected basis. The default `stage2` behavior is retained. The original-DEM
+score is a correction weight, not a posterior class likelihood. Existing
+saved runs keep their recorded basis and cannot be rescored from aggregated
+counts. Decoder suite: 129 passed, two skipped; worker/runner: 15 passed;
+a two-shot d=3, r=3 uniform-circuit smoke completed. No campaign ran.
+In a d=3, r=3 uniform-noise
+check, every stage-2 column has one original source, and stage-2 versus
+original-DEM candidate scores agreed within 5.4e-15 on four shots.
+
+## Original-DEM guide conditioning correction — 2026-09-27
+
+Per the user's clarification, the nine extra candidates now condition the
+guide-selected mechanisms of the pre-decomposition X/Z DEM on being active,
+rebuild that original DEM with unchanged targets/order, decompose it anew for
+the target color, and rerun both matching stages. Simultaneous guide sources
+are conditioned jointly. Stage-2 candidates are realigned through original
+mechanism indices before base-prior selection. The former direct updates to
+decomposed-column probabilities are removed. The implementation prompt and
+`Near optimal decoding for the color code/main.tex` were corrected to state
+this rule. Decoder suite: 129 passed, two skipped; worker/runner: 15 passed;
+the d=3, r=3 uniform-circuit 16-shot validity smoke passed (15 shots with
+nonzero detectors, two extra candidates selected), as did a d=5, r=5 shot.
+All 253 main-package tests pass. The corrected TeX source compiles with its
+bibliography. Saved runs were not changed and no new sampling campaign ran.
+Decoder implementation was committed as `7a1eff0` and pushed to
+`origin/phase2a/swim-distance` in the separate color-code-stim repository.
+
 ## Saved color-correlated decoding analysis — 2026-09-27
 
 Added `analysis/color_correlated.py` and the editable
@@ -19,6 +54,11 @@ series, with source and metric recorded in the returned table. The existing
 36-point run now yields nine series and a 3-by-3 legend; three focused tests
 pass and all five notebook cells execute. The baseline figure is saved as
 `analysis/color_correlated_ler_with_baseline.png`, without new sampling.
+For uniform circuit noise, plot and summary LER values and Wilson bounds are
+now converted to per-round values using `1-(1-P_fail)^(1/r)`, including the
+paired baseline. The measured total rate is retained separately. Round count
+is excluded from legend grouping and varying-condition checks; four focused
+analysis tests pass, including `rounds: distance`.
 
 ## Circuit-memory provenance portability — 2026-09-27
 
