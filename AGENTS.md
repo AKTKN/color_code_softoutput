@@ -367,6 +367,13 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-27 — Audited the current simulation architecture and local decoder API
+for the staged YAML workflow refactor. The plan is
+`src/SIMULATION_WORKFLOW_REFACTOR_PLAN.md`; no runner, scheduler, or storage
+refactor was implemented. Correlated decoding plus matching-growth SWIM is
+an explicitly unsupported combination. Next task: implement and test strict
+configuration/sweep planning and capability validation before worker changes.
+
 2026-09-27 — Published the root package as public
 `AKTKN/color_code_softoutput` on GitHub. The initial source commit is
 `cdea414`; generated results, local checkouts, build/cache files and

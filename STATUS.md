@@ -1,5 +1,19 @@
 # STATUS.md
 
+## Simulation workflow architecture audit — 2026-09-27
+
+Completed the read-only architecture and local API audit for the planned YAML
+simulation workflow. The staged module plan, scientific compatibility gates,
+legacy data strategy, and Sinter design references are in
+`src/SIMULATION_WORKFLOW_REFACTOR_PLAN.md`. The `color_code_so` environment
+confirmed the exact `bitflip`, `depol`, and `uniform` noise constructors.
+Correlated candidate selection uses the original stage-2 prior; the decoder
+currently rejects correlated decoding with matching-growth SWIM. No workflow
+implementation, sampling campaign, or external source edit was performed.
+The focused regression initially had 43 passes and one circuit end-to-end
+failure because a provenance prompt was absent from its expected path. The
+prompt was restored to `prompts/`, and the end-to-end test passes again.
+
 ## GitHub source publication — 2026-09-27
 
 Initialized the workspace root as a separate Git repository and published
