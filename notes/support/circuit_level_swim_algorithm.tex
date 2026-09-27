@@ -1,0 +1,76 @@
+% Compact executable companion to sec:cl-algorithm, not a second derivation.
+\section{Closed-memory implementation algorithm}
+\label{sec:cl-implementation}
+This implementation specializes Section~\ref{sec:cl-algorithm} to fully
+terminated triangular memory, $T=d$, the package's \texttt{tri\_optimal}
+schedule and \texttt{NoiseModel.uniform\_circuit\_noise}.
+No open future boundary or sliding window is supported.
+
+\paragraph{Frozen inputs.}
+For each color retain the actual hard-decoder $H_1,H_2$, probabilities and
+natural-log-odds weights, $L_2$, stable column IDs, effective DEM source IDs,
+column sort mapping, and all physical/virtual detector metadata (source IDs,
+color, measured Pauli, time, full coordinates). Per-shot inputs are the
+unchanged stage-1 prediction, stage-2 syndrome, hard correction and exported
+growth radii. Both physical and virtual active rows are constrained;
+inactive padding may be removed only after its syndrome is checked zero.
+Verify the manager-to-stage-2 detector and observable identities before use.
+The actual effective decomposition, including its filtering and X/Z separation,
+is authoritative; the physical sampling circuit remains unchanged.
+
+\paragraph{Offline preprocessing.}
+Cache by the frozen circuit, distance, rounds, schedule, noise structure,
+weights and color. Build $G_c^\bullet$ from $D=H_2$ with inactive rows omitted:
+one edge per column, half-edges completed at $b_*$, zero-detector columns
+retained as labelled loops. Preserve parallel mechanisms. Labels are
+$\lambda_e=L_2[e]$; coordinates never determine logical parity.
+Test Theorem~\ref{thm:cl-quotient}'s rank condition. A failed test returns
+\texttt{no\_opposite\_class}, $\phi=+\infty$, no witness.
+A spanning forest tests internal balance and constructs the potential $g$.
+If balanced, cache the gauged two-terminal topology of
+Theorem~\ref{thm:cl-cut}; odd zero-detector loops become $b^0b^1$ edges.
+Otherwise cache the binary cover of Theorem~\ref{thm:cl-cover}.
+The balance test is structural and is never repeated shot by shot.
+
+\paragraph{Per shot.}
+\begin{enumerate}
+\item Run the ordinary concatenated decoder unchanged. Read its chosen
+color, correction, observable and ordinary weight. Replaying its frozen
+stage-1/2 matrices through the existing generic growth API is permitted
+for observation, with exact hard-output checks; charge that replay separately.
+\item Read final original-defect radii in ordinary natural-log-weight units.
+Missing growth is an error, not zero radii. Compute on $G_c^\bullet$
+\[
+ h_v=\max(0,\max_s(r_s-d(s,v))),\qquad
+ \bar\omega(e)=\max(0,\omega(e)-h_u-h_v).
+\]
+Loops use $u=v$. Artificial $b_*$ has no independent growth center.
+\item Copy these residuals by source column ID onto the cached cut or
+cover. Do not rerun matching or growth on either analysis topology.
+Keep labelled zero-cost edges, including covered odd cycles.
+\item In the cut search from $b^0$ to $b^1$. In the cover minimize
+$\operatorname{dist}((v,0),(v,1))$ over every base vertex $v$.
+Arbitrary endpoints on opposite sheets are invalid.
+\item Reduce predecessor source IDs modulo two and verify $Dz=0$,
+$L_2z=1$ and $\bar\omega(z)=\phi$ (declared floating tolerance).
+Retain a nonempty witness also when $\phi=0$.
+Return the value, optional witness, method (\texttt{two\_boundary} or
+\texttt{logical\_cover}), class and balance flags, and certification flag.
+\end{enumerate}
+The selected score is the value of the color chosen by the ordinary hard
+decoder, not the minimum of the three values. All three values are retained.
+Neither this selection nor the existing comparative gap is a posterior LLR.
+
+\paragraph{Costs and certification.}
+For $n$ completed vertices and $m$ mechanisms, graph construction, the
+equivalent graph-cycle class test, balance and cut/cover caching cost
+$O(n+m)$ time and storage. A separate binary matrix-rank check is a
+validation oracle with polynomial elimination cost, not part of that bound.
+Per-shot residual propagation costs $O((n+m)\log(2+n))$; cut search has
+the same bound. The general cover uses
+$O(n(n+m)\log(2+n))$ time and $O(n+m)$ working storage.
+Growth extraction, any hard-decoder replay and provenance validation are
+additional costs. The current final-defect metric-ball convention exports
+no checked optimal nonnegative odd-cut certificate; therefore
+\texttt{swim\_bound\_certified=False}. Theorem~\ref{thm:cl-gap} remains
+conditional on its exact certificate assumptions.

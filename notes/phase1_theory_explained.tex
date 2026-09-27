@@ -1,0 +1,559 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=27mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,bm}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\F}{\mathbb F_2}
+\newcommand{\dist}{\operatorname{dist}}
+
+\title{Understanding the Phase-1 Theory:\\
+A Swim-Distance Construction for the Concatenated Color-Code Decoder}
+\author{Explanatory research note}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This note gives a streamlined explanation of the Phase-1 theory developed for
+a swim-distance-like soft output for the concatenated matching decoder of a
+triangular color code. The aim is not to reproduce every combinatorial lemma,
+but to make the logical structure transparent to a reader familiar with the
+concatenated matching decoder of Lee, Li, and Bartlett and the surface-code
+soft-output construction of Meister, Pattison, and Preskill.
+
+The central observation is that the ordinary stage-2 monochromatic graph
+$L_c^*$ merges two geometrically different terminations into one artificial
+matching boundary vertex. Once these two terminations are resolved, the
+resulting graph has two virtual terminals. For the standard odd-distance
+triangular 6.6.6 color-code family considered here, a chain joining these two
+terminals maps to a nontrivial physical logical operator, whereas a closed
+difference chain within the same stage-2 fiber is stabilizer-trivial. This
+gives the logical path structure required to transplant the Meister-type
+cluster-contraction construction to each fixed color branch.
+
+The precise Phase-1 scope is important: the construction is for one fixed
+color branch, one CSS sector, perfect syndrome measurements, and a fixed
+stage-1 output. It is therefore not yet a soft output for the complete
+three-branch concatenated decoder, nor is it a syndrome-conditioned
+logical-class likelihood ratio.
+\end{abstract}
+
+\section{What Phase 1 establishes}
+
+For the planar surface code, a nontrivial logical operator can be represented
+by a path joining two inequivalent boundaries. Meister, Pattison, and Preskill
+use this geometry to define a decoder confidence: grow the decoder clusters,
+contract the regions already covered by those clusters, and measure the
+remaining shortest distance between the two logical boundaries \cite{Meister}.
+
+For a triangular color code, the physical code is not itself a simple
+two-boundary path problem. A single-qubit Pauli error can excite checks of
+three colors, and logical operators admit colored-string and string-net
+representatives. Moreover, the concatenated matching decoder does not decode
+the full color-code hypergraph in one matching problem. It first projects
+information to a restricted graph and then solves a second, monochromatic
+matching problem \cite{Lee}.
+
+The Phase-1 question is therefore narrower:
+\begin{quote}
+For a fixed color $c$, does the \emph{stage-2} monochromatic graph contain a
+two-boundary logical topology analogous to the planar surface code? If so,
+can Meister's cluster-distance construction be applied to that graph?
+\end{quote}
+
+The answer established in Phase 1 is yes, after one essential modification:
+the single artificial boundary vertex of the ordinary stage-2 graph must be
+resolved into two distinct terminal types.
+
+\section{Color-code ingredients}
+
+\subsection{Triangular color code}
+
+Consider the standard triangular 6.6.6 color-code patch of odd distance
+$d\ge 3$. Data qubits live on vertices of a trivalent, three-face-colorable
+lattice. Faces have colors $c\in\{r,g,b\}$. For each face $f$, the CSS
+stabilizers are
+\[
+  S_f^X=\prod_{q\in f}X_q,
+  \qquad
+  S_f^Z=\prod_{q\in f}Z_q.
+\]
+The triangular patch has three physical boundary sides
+$\Gamma_r,\Gamma_g,\Gamma_b$. A boundary of color $c$ is adjacent only to
+faces of the other two colors. The code encodes one logical qubit, and a
+complete physical side supports representatives of both logical $X$ and
+logical $Z$ \cite{Bombin,Lee}.
+
+For the discussion below we analyze $X$ errors using measured $Z$ checks. The
+$Z$-error case follows by exchanging the two CSS sectors.
+
+\subsection{Colored strings versus the stage-2 graph}
+
+A physical $c$-colored Pauli string can be built from elementary two-qubit
+operators acting on endpoints of primal edges of color $c$. Interior
+syndromes cancel along the string, leaving excitations only at its ends.
+Color-code strings can also meet to form string nets because of the fusion
+relations among the three color charges \cite{Kesselring}.
+
+This physical string picture is useful background, but it should not be
+identified directly with the concatenated decoder's stage-2 graph. The
+Phase-1 result is instead a statement about how chains in that stage-2 graph
+map back to physical-qubit supports.
+
+\section{The concatenated matching decoder}
+
+Fix one color $c$ and denote the other two colors by $c_1,c_2$.
+
+\subsection{Stage 1: restricted graph}
+
+The first graph is $L_{\neg c}^*$. Its real vertices are checks of colors
+$c_1$ and $c_2$, together with an artificial matching boundary vertex. Each
+primal color-$c$ edge corresponds bijectively to one stage-1 graph edge,
+\[
+  \epsilon_{\neg c}:E_c\longrightarrow\Delta_1(L_{\neg c}^*).
+\]
+Matching the measured non-$c$ syndrome gives a set of predicted primal
+$c$-edge parities, denoted $E_{\mathrm{pred}}^{(c)}$.
+
+The output of stage 1 is not yet a physical-qubit correction. It becomes part
+of the vertex syndrome used by stage 2.
+
+\subsection{Stage 2: monochromatic graph}
+
+The second graph is $L_c^*$. Its real vertices have two different origins,
+\[
+  \Delta_0(L_c^*)_{\rm real}=F_c\sqcup E_c.
+\]
+Thus a stage-2 real vertex is either a physical color-$c$ face/check or a
+primal color-$c$ edge carrying the auxiliary parity predicted by stage 1.
+There is also one artificial matching boundary vertex $v_{\mathrm{bdry}}$.
+
+The essential bijection is
+\[
+  \epsilon_c:Q\longrightarrow\Delta_1(L_c^*),
+\]
+where $Q$ is the set of physical data qubits. Every stage-2 graph edge
+therefore represents exactly one physical data qubit. For a bulk qubit, the
+edge joins the unique incident $c$-face to the unique incident primal
+$c$-edge. Near a boundary, one of these two objects may be absent, in which
+case the graph edge is attached to $v_{\mathrm{bdry}}$ \cite{Lee}.
+
+Stage 2 solves the matching problem with input
+\[
+  \sigma_Z^{(c)}\sqcup E_{\mathrm{pred}}^{(c)},
+\]
+and $\epsilon_c^{-1}$ maps the selected stage-2 graph edges to a physical
+qubit correction candidate $V_{\mathrm{pred}}^{(c)}$.
+
+The ordinary decoder repeats both stages for $c=r,g,b$ and chooses the
+minimum-weight candidate among the three branches \cite{Lee}.
+
+\section{The hidden boundary structure of $L_c^*$}
+
+For a fixed color $c$, the graph edges incident on $v_{\mathrm{bdry}}$ do not
+all represent the same geometric termination. For the standard triangular
+family, they split exactly into two classes.
+
+\paragraph{Class 0: the complete $c$-colored side.}
+Every qubit on the physical side $\Gamma_c$, including its two corners, has
+no incident physical $c$-face. Its stage-2 edge therefore has one real
+endpoint, a primal $c$-edge vertex, and one missing face endpoint.
+
+\paragraph{Class 1: the corner opposite $\Gamma_c$.}
+The unique corner at which the other two physical sides meet has an incident
+$c$-face but no incident primal $c$-edge. Its stage-2 edge therefore has one
+real endpoint, a $c$-face vertex, and one missing edge endpoint.
+
+The ordinary graph connects both classes to the same $v_{\mathrm{bdry}}$.
+This is valid for matching because the virtual boundary has no prescribed
+parity. However, the identification hides the distinction needed for logical
+topology.
+
+\subsection{Boundary-resolved graph}
+
+Define the resolved graph $\widetilde L_c^*$ by replacing
+$v_{\mathrm{bdry}}$ with two virtual terminals
+\[
+  b_c^0,\qquad b_c^1.
+\]
+The $d$ qubit edges associated with the complete side $\Gamma_c$ terminate at
+$b_c^0$, while the unique edge associated with the opposite corner terminates
+at $b_c^1$. All other edges and real vertices are unchanged. Hence
+\[
+  \Delta_0(\widetilde L_c^*)
+   =F_c\sqcup E_c\sqcup\{b_c^0,b_c^1\},
+\]
+and there remains a bijection
+\[
+  \widetilde\epsilon_c:
+  Q\longrightarrow\Delta_1(\widetilde L_c^*).
+\]
+
+Identifying $b_c^0$ and $b_c^1$ again recovers the ordinary graph $L_c^*$.
+Therefore the resolution does not change the physical edge set or its edge
+weights. Operationally, ordinary decoding may remain on $L_c^*$; the resolved
+graph is used for logical-topology and soft-output analysis.
+
+\section{From stage-2 chains to physical Pauli operators}
+
+Because stage-2 edges are in bijection with physical qubits, any binary graph
+chain $\Gamma\subseteq\Delta_1(\widetilde L_c^*)$ defines a physical support
+\[
+  T_c(\Gamma)=\widetilde\epsilon_c^{-1}(\Gamma).
+\]
+For the $X$ sector, the associated Pauli operator is
+\[
+  P_{X,c}(\Gamma)=\prod_{q\in T_c(\Gamma)}X_q.
+\]
+Addition of graph chains is symmetric difference. Since $X_q^2=I$,
+\[
+  P_{X,c}(\Gamma_1+\Gamma_2)
+  =P_{X,c}(\Gamma_1)P_{X,c}(\Gamma_2).
+\]
+Thus a difference between two stage-2 corrections is naturally represented
+by a binary chain in the resolved graph.
+
+\subsection{What the graph boundary means}
+
+The real stage-2 graph boundary contains two kinds of coordinates:
+\begin{enumerate}
+  \item parity at a $c$-face vertex is the physical syndrome on that
+        $c$-colored check;
+  \item parity at a primal $c$-edge vertex is the auxiliary stage-1 parity.
+\end{enumerate}
+The second quantity is not itself a physical check. However, the collection
+of $c$-edge parities determines the syndrome on the non-$c$ physical faces by
+the same restricted incidence used in stage 1. Consequently the physical
+syndrome factors through the real stage-2 incidence,
+\[
+  H\,T_c(\Gamma)=\Lambda_c D_c\Gamma,
+\]
+for an appropriate reconstruction map $\Lambda_c$. The virtual terminals are
+not measured checks and are removed from $D_c$.
+
+Therefore a chain whose graph boundary is supported only on the two virtual
+terminals has zero physical syndrome. In particular,
+\[
+  \partial\Gamma=b_c^0+b_c^1
+  \quad\Longrightarrow\quad
+  H\,T_c(\Gamma)=0.
+\]
+This makes a terminal-to-terminal path a candidate logical or stabilizer
+operator. Zero physical syndrome alone does not yet decide which.
+
+\section{Why terminal-to-terminal means logical}
+
+This is the central topological statement of Phase 1.
+
+Consider differences between corrections with the same real stage-2 input.
+Such a difference $z$ has no boundary on any real stage-2 vertex, so its graph
+boundary can only be
+\[
+  \partial z=0
+  \qquad\text{or}\qquad
+  \partial z=b_c^0+b_c^1.
+\]
+
+To determine its physical logical class, use a known physical logical $Z$
+representative supported on the complete side $\Gamma_c$. The key parity
+identity proved in Phase 1 is
+\[
+  \text{overlap of }T_c(z)\text{ with }\Gamma_c
+  =
+  (\partial z)_{b_c^0}
+  \pmod 2.
+\]
+This holds because exactly the qubit edges belonging to $\Gamma_c$ terminate
+at $b_c^0$.
+
+The triangular code encodes one qubit. Hence a zero-syndrome $X$-type
+operator is stabilizer-trivial exactly when it commutes with a nontrivial
+logical $Z$, and it is in the nontrivial logical-$X$ class when it
+anticommutes with that logical $Z$. Therefore,
+\[
+  \boxed{
+  \partial z=0
+  \Longrightarrow
+  T_c(z)\text{ is stabilizer-trivial},
+  }
+\]
+while
+\[
+  \boxed{
+  \partial z=b_c^0+b_c^1
+  \Longrightarrow
+  T_c(z)\text{ is a nontrivial logical }X.
+  }
+\]
+
+The full Phase-1 proof additionally shows that every closed resolved chain in
+the fixed stage-2 fiber is generated by the appropriate physical face
+stabilizers, and that every nontrivial fixed-fiber logical class has a simple
+$b_c^0$--$b_c^1$ path representative. Those details are appropriate for a
+formal appendix; the parity argument above is the main conceptual reason.
+
+\begin{theorem}[Fixed-branch logical topology, streamlined form]
+For the standard odd-distance triangular 6.6.6 family, fixed color $c$, and
+one CSS sector, the relative difference space of a fixed stage-2 input has
+exactly two physical equivalence classes. Closed chains represent the trivial
+class, while chains joining $b_c^0$ to $b_c^1$ represent the nontrivial
+logical class.
+\end{theorem}
+
+\begin{remark}
+The phrase ``fixed stage-2 input'' is essential. The auxiliary parity on the
+$E_c$ vertices comes from stage 1. Phase 1 classifies logical differences
+\emph{within that fixed auxiliary-parity fiber}. It does not say that stage 1
+is correct, nor does it compare different stage-1 predictions.
+\end{remark}
+
+\section{Why the Meister construction now applies}
+
+After the theorem above, the relevant logical structure of
+$\widetilde L_c^*$ is the same structure used by Meister for a planar
+surface-code soft output:
+\begin{itemize}
+  \item graph edges carry physical error labels and nonnegative weights;
+  \item two inequivalent virtual boundaries remain distinct;
+  \item a chain between the two boundaries is nontrivial logical;
+  \item a same-syndrome closed difference is stabilizer-trivial.
+\end{itemize}
+
+This does \emph{not} mean that the color code is a surface code, or that the
+complete concatenated decoder is equivalent to a surface-code decoder. In
+particular, the real vertices of $\widetilde L_c^*$ have mixed meaning:
+$F_c$ vertices are physical checks whereas $E_c$ vertices are stage-1
+auxiliary constraints.
+
+The statement is only that the fixed-branch stage-2 logical quotient has the
+two-terminal path topology required for the Meister construction.
+
+\section{Decoder clusters and contraction}
+
+In Meister's MWPM construction, clusters are obtained from the dual growth of
+the matching problem, not from connected components of the final correction
+support \cite{Meister}. Conceptually, syndrome vertices grow metric balls with
+decoder-determined radii. The union of these balls forms a covered region
+$\mathcal C_c$, and its connected components are the decoder clusters.
+
+For the present construction, this growth is interpreted on the resolved
+graph $\widetilde L_c^*$. The two terminals remain distinct; touching one
+terminal must not create a virtual zero-cost shortcut through the other.
+
+Each connected component of $\mathcal C_c$ is contracted to zero metric
+diameter. Equivalently, distance is charged only on portions of graph edges
+not covered by the grown clusters. If an edge $e=uv$ has original weight
+$w_e$ and cluster coverage extends distances $h_u$ and $h_v$ into the edge
+from its two endpoints, then the residual weight is
+\[
+  \bar w_e=\max\{0,w_e-h_u-h_v\}.
+\]
+This partial-edge treatment matters: assigning a whole edge zero cost merely
+because both endpoints belong to one cluster can be incorrect.
+
+\section{The per-color swim distance}
+
+Define
+\[
+  \boxed{
+  \phi_c=\dist_{\bar G_c}(b_c^0,b_c^1),
+  }
+\]
+where $\bar G_c$ is the resolved stage-2 graph with cluster-contracted
+residual edge weights.
+
+Because terminal-to-terminal paths are exactly the nontrivial fixed-fiber
+logical class,
+\[
+  \phi_c
+  =
+  \min_{\substack{
+       z\ \text{same-fiber difference}\\
+       z\ \text{nontrivial logical}}}
+       \bar w_c(z).
+\]
+Equivalently, it is the minimum residual cost of a simple
+$b_c^0$--$b_c^1$ path.
+
+Thus the surface-code intuition survives: the decoder is more confident when
+a larger amount of uncovered metric length is required to complete a
+nontrivial logical path. The nontrivial color-code step is the proof that the
+two resolved stage-2 terminal types really distinguish physical logical
+parity.
+
+\section{A Meister-type representative-gap bound}
+
+For exact stage-2 MWPM with the certified optimal dual used to define the
+clusters, Phase 1 proves a one-sided analogue of Meister's
+minimum-representative bound. Let $f_c$ be the stage-2 MWPM correction in the
+fixed stage-1 fiber, and define
+\[
+  W_{c,\mathrm{base}}^{(2)}=w_c(f_c).
+\]
+Let $W_{c,\mathrm{opp}}^{(2)}$ be the minimum weight of a correction with the
+same real stage-2 input but in the opposite physical logical class. Then
+\[
+  \boxed{
+  W_{c,\mathrm{opp}}^{(2)}-W_{c,\mathrm{base}}^{(2)}\ge\phi_c.
+  }
+\]
+
+The logic is the same as in Meister's proof: the optimal dual certifies that
+the MWPM correction is fully covered by the grown clusters, while any
+opposite-class correction differs from it by a nontrivial terminal-joining
+chain whose uncovered cost is at least $\phi_c$.
+
+This theorem requires the appropriate optimal matching dual. Arbitrary radii,
+a suboptimal dual, or generic cluster information do not imply the bound.
+
+\section{What $\phi_c$ does and does not mean}
+
+Three statements should be kept separate.
+
+\paragraph{Exact geometric statement.}
+$\phi_c$ is exactly the minimum cluster-contracted cost of a nontrivial
+logical difference in the fixed color-$c$, fixed-stage-1 stage-2 problem.
+
+\paragraph{Certified minimum-representative statement.}
+For exact MWPM with the specified optimal dual,
+\[
+  W_{c,\mathrm{opp}}^{(2)}-W_{c,\mathrm{base}}^{(2)}\ge\phi_c.
+\]
+
+\paragraph{Probability statement.}
+No exact logical-class likelihood ratio is established. Even with independent
+physical bit-flip weights, a logical-class posterior contains a sum over many
+degenerate representatives. The complete concatenated decoder also contains
+other stage-1 fibers and two other color branches. Therefore Phase 1 does not
+identify $\phi_c$ with the full syndrome-conditioned logical LLR, with the
+comparative gap of the complete decoder, or with the final logical failure
+probability.
+
+\section{Computation}
+
+Assume the stage-2 graph, physical edge weights, and decoder growth radii are
+already available. A direct computation is:
+\begin{enumerate}
+  \item restore the two resolved terminals $b_c^0,b_c^1$ from the labelled
+        ordinary stage-2 graph;
+  \item use the decoder radii to determine the amount of cluster coverage
+        reaching every graph vertex;
+  \item compute $\bar w_e=\max\{0,w_e-h_u-h_v\}$ for every edge;
+  \item run a shortest-path search from $b_c^0$ to $b_c^1$ in the residual
+        graph.
+\end{enumerate}
+
+The coverage values $h_v$ can be computed by one additional multi-source
+shortest-path pass. Thus, with the radii already supplied, the postprocessing
+requires two Dijkstra-type passes and linear edge work,
+\[
+  O\!\left((|V|+|E|)\log |V|\right),
+\]
+with $O(|V|+|E|)$ storage. Since the triangular stage-2 graph has
+$|V|,|E|=O(d^2)$, the per-color postprocessing is
+\[
+  O(d^2\log d)
+\]
+with standard sparse-graph data structures. Running all three colors changes
+only the constant factor.
+
+\subsection{What differs from the surface-code case}
+
+The asymptotic shortest-path complexity is essentially unchanged. The main
+differences are structural and implementation-related:
+\begin{enumerate}
+  \item the ordinary color-code stage-2 graph first requires the
+        side-versus-opposite-corner boundary resolution;
+  \item part of the stage-2 vertex data are auxiliary stage-1 parity
+        constraints rather than directly measured checks;
+  \item the resulting confidence is conditional on one fixed stage-1 fiber;
+  \item an exact MWPM representative-gap certificate needs matching
+        dual/growth information, not only the final correction.
+\end{enumerate}
+
+In the inspected current implementation, ordinary PyMatching-style decoding
+returns correction and weight information but does not directly expose the
+optimal dual radii required by the certified construction. Decoder
+instrumentation or a separate certificate-producing procedure is therefore a
+separate implementation task.
+
+\section{The Phase-1 logic in one sequence}
+
+The construction can be summarized as
+\[
+\boxed{
+\begin{array}{c}
+\text{triangular color code}\\[1mm]
+\downarrow\\
+\text{concatenated decoder, fixed color }c\\[1mm]
+\downarrow\\
+L_c^*\text{ with one merged matching boundary}\\[1mm]
+\downarrow\ \text{resolve physical provenance}\\
+\widetilde L_c^*\text{ with }b_c^0,b_c^1\\[1mm]
+\downarrow\ \text{edge}\leftrightarrow\text{qubit map}\\
+b_c^0\text{--}b_c^1\text{ chain}
+\leftrightarrow
+\text{nontrivial physical logical}\\[1mm]
+\downarrow\ \text{decoder cluster contraction}\\
+\phi_c=\dist_{\bar G_c}(b_c^0,b_c^1).
+\end{array}}
+\]
+
+The difficult mathematical part is concentrated in the middle: proving that
+resolved terminal parity equals physical logical parity. Once that
+correspondence is established, the swim-distance construction itself becomes
+the same graph-metric idea used for the surface code.
+
+\section{What remains beyond Phase 1}
+
+Phase 1 deliberately does not answer:
+\begin{itemize}
+  \item how to combine $\phi_r,\phi_g,\phi_b$ after the ordinary decoder
+        selects one of the three branches;
+  \item how stage-1 uncertainty or failure should enter the confidence;
+  \item how the result relates to a full-decoder forced, comparative, or
+        exact logical gap;
+  \item how well $\phi_c$ calibrates logical failure probability;
+  \item how the construction should be extended to circuit-level spacetime
+        decoding;
+  \item how the principle generalizes beyond matching, for example to a
+        direct hypergraph or BP--LSD decoder.
+\end{itemize}
+
+Keeping these questions separate is important. Phase 1 establishes the
+stage-2 logical geometry and a valid Meister-type soft-output construction,
+not the final confidence measure of the complete color-code decoder.
+
+\begin{thebibliography}{9}
+
+\bibitem{Lee}
+S.-H. Lee, A. Li, and S. D. Bartlett,
+\emph{Color code decoder with improved scaling for correcting circuit-level noise},
+Quantum \textbf{9}, 1609 (2025).
+
+\bibitem{Meister}
+N. Meister, C. A. Pattison, and J. Preskill,
+\emph{Efficient soft-output decoders for the surface code},
+arXiv:2405.07433.
+
+\bibitem{Bombin}
+H. Bomb\'in and M. A. Mart\'in-Delgado,
+\emph{Topological Quantum Distillation},
+Phys. Rev. Lett. \textbf{97}, 180501 (2006).
+
+\bibitem{Kesselring}
+M. S. Kesselring, F. Pastawski, J. Eisert, and B. J. Brown,
+\emph{The boundaries and twist defects of the color code and their applications to topological quantum computation},
+Quantum \textbf{2}, 101 (2018).
+
+\end{thebibliography}
+
+\end{document}

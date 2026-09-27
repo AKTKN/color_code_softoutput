@@ -1,0 +1,884 @@
+% Included by notes/note.tex; compile the integrated note from the project root.
+\clearpage
+\part{Circuit-level fixed-fiber theory}
+\label{part:circuit}
+\section{Circuit faults, detector maps, and observable semantics}
+\label{sec:cl-dem}
+This part concerns a finite, fully terminated triangular 6.6.6 memory
+experiment, one chosen color, and the sector detected by $Z$ checks and
+read out as logical $Z$. Its mathematical input is the actual retained
+labelled stage-2 DEM. The graph results below also hold for any finite
+one-observable graphlike DEM satisfying their explicit hypotheses. They
+are not a claim about an open future boundary or sliding-window decoding.
+All new results are our derivations or explicit adaptations, not priority
+claims. The earlier perfect-measurement results remain unchanged.
+
+\begin{definition}[DEM algebra]\label{def:cl-dem}
+Flatten a finite Stim DEM, resolving detector offsets and repetitions.
+Give each error instruction a stable ID $e\in E_0$ and retain its probability
+$q_e$, detector parity vector $D_e$, and observable parity vector $O_e$.
+Set $B[:,e]=D_e$, $L[:,e]=O_e$. Then
+\[
+ B:\F^{E_0}\longrightarrow\F^{V_{\rm det}},\qquad
+ L:\F^{E_0}\longrightarrow\F^{V_{\rm obs}},\qquad
+ (s,\ell)=(Bx,Lx).
+\]
+An instruction containing separator symbols describes one correlated event;
+its components' targets are XORed to form this column. Separators do not
+supply independent Bernoulli variables. Detector coordinates are metadata,
+not the definition of either matrix. Observable IDs are frame-change
+labels, not additional constrained detector rows.
+\end{definition}
+These are Stim's error-instruction semantics \cite{StimDEM}.
+For a fixed Clifford circuit with Pauli faults, let $A_{\rm rec}$ send
+faults to changes of measurement-record bits, and let $P_{\rm det}$ and
+$P_{\rm obs}$ select the annotated record parities. With ideal reference
+signs subtracted,
+\begin{equation}
+ B=P_{\rm det}A_{\rm rec},\qquad L=P_{\rm obs}A_{\rm rec}.
+ \label{eq:cl-record}
+\end{equation}
+This follows by composing binary parity maps. It is the detector-matrix
+factorization of Derks et al.\ \cite[Definitions 2.6, 2.8--2.9]{DerksDEM},
+with separate symbols for record checks and fault incidence. A DEM may
+already compress physically distinct faults; its columns are not necessarily
+individual gate locations. Retain a relation to circuit locations, channel
+outcomes, and separator groups separately. General disjoint Pauli channels
+need not admit an exact independent DEM. Record Stim's conversion options
+and any approximation, and never infer exact probabilities from the binary
+identities alone.
+
+For the memory in Lee, physical detector rows are the successive check
+parities of Eq.\ (6), including the initial $Z$ checks and final ancilla/data
+consistency checks; the observable is the final side parity of Eq.\ (7)
+\cite[Sec.~4.1]{Lee}. The $X$-check sector lacks those same initial/final
+rows in a $Z$ memory. Detector Pauli type names the measured check, not
+the error Pauli that anticommutes with it.
+
+\section{Lee decomposition, compression, and the actual implementation}
+\label{sec:cl-decomp}
+\subsection{Paper algorithm with typed metadata}
+Lee's Algorithm~1 first separates each error into its $Z$-detector and
+$X$-detector parts, sending each observable to its corresponding measured
+Pauli sector. Each retained part keeps the original probability. The
+paper's line~6 retains a part only if it has a nonempty detector set.
+Thus a pure observable-only part is omitted by the literal algorithm;
+its absence must be checked, or its loss recorded. Line~5's phrase
+``observables in $\mathcal D$'' is read using $\mathcal O$, consistently
+with the input tuple and the prose following the algorithm.
+Compression at line~10 uses the \emph{complete} target set, including
+observable IDs. For independent members of one such class $C$ it gives
+\begin{equation}
+ q_C=\frac{1-\prod_{e\in C}(1-2q_e)}2.
+ \label{eq:cl-compression}
+\end{equation}
+To derive this, the expectation of $(-1)^{\oplus_{e\in C}x_e}$ is the
+product of the expectations $1-2q_e$. This proves exact parity compression
+within that independent model, including the displayed two-event formula.
+It is not a minimum-cost representative operation.
+
+For a compressed separated mechanism $e$, write $A_e$ for its physical
+$c$ detector targets, $N_e$ for its non-$c$ targets, and $o_e$ for its
+observable vector. In the paper the restricted model first collects every
+$e$ with $0<|N_e|\le2$, erases its observable labels, then compresses by
+$N_e$. Give each distinct nonempty retained target set $N$ a restricted
+edge ID and a constrained virtual row $v_N$. Let $H_{\rm rest}[:,N]=N$.
+The restricted observable erasure is intentional: stage~1 predicts edge
+occupancy, not a physical logical observable.
+
+The stage-2 rule retains precisely the following mechanisms from the
+separated input:
+\begin{equation}
+ d_e=\begin{cases}
+ A_e,&N_e=\varnothing,\ |A_e|\le2,\\
+ A_e+v_{N_e},&0<|N_e|\le2,\ |A_e|\le1.
+ \end{cases}
+ \qquad \ell_e=o_e .                         \label{eq:cl-decomp}
+\end{equation}
+All others are removed. Each retained stage-2 column keeps its own
+probability; it does not inherit the compressed restricted probability.
+There is no instruction to forget observable labels when two stage-2
+edges have the same endpoints.
+
+\begin{definition}[Stage-2 maps and row types]\label{def:cl-stage2}
+Let $E_c^{\rm circ}$ be the retained mechanism IDs and
+$V_c^{\rm real}=V_c^{\rm phys}\sqcup V_c^{\rm virt}$, a tagged union.
+Physical rows are measured $c$ detectors; virtual rows are the stage-1
+predicted restricted-edge parities. Both are \emph{constrained} rows in
+stage~2. Put
+\[
+ D_c^{\rm circ}[:,e]=d_e,\qquad L_c^{\rm circ}[:,e]=\ell_e,
+ \qquad \omega_c(e)=\log\frac{1-q_e}{q_e}.
+\]
+The metric uses supplied finite nonnegative weights, hence ordinarily
+$0<q_e\le1/2$. Zero-probability mechanisms are excluded from the admissible
+fault set; negative log odds are outside this metric theorem. This is
+not a prescription to clip negative hard-decoder weights.
+Inactive zero rows used for storage padding are recorded separately and
+may be omitted in analysis only if their supplied syndrome is zero.
+The artificial matching boundary has no row in $D_c^{\rm circ}$.
+Below $D,L_2,w$ abbreviate these maps and weights locally.
+\end{definition}
+
+Define $Q_{\rm virt}[:,e]=v_{N_e}$ if $N_e\ne\varnothing$, and zero
+otherwise. If $B_{\rm ret}$ is the physical detector matrix on retained
+separated mechanisms, then columnwise
+\begin{equation}
+ D=\begin{pmatrix}B_c\\Q_{\rm virt}\end{pmatrix},\qquad
+ B_{\rm ret}=\Lambda_c^{\rm circ}D,\qquad
+ \Lambda_c^{\rm circ}(a,v)=(a,H_{\rm rest}v).
+ \label{eq:cl-factor}
+\end{equation}
+The physical rows in the last expression are ordered as $c$, then non-$c$.
+This proof uses $H_{\rm rest}v_{N_e}=N_e$ and is valid on every retained
+column. Consequently a feasible stage~1 result $t$ and feasible stage~2
+result $x$ with $Dx=(s_c^{\rm phys},t)$ reconstruct the supplied physical
+syndrome through $\Lambda_c^{\rm circ}$. Existence of both feasible outputs
+is a separate condition; filtering can destroy it.
+
+\begin{proposition}[Observable-faithfulness and its limits]
+\label{prop:cl-faithful}
+Within the retained separated DEM, the observable of any mechanism vector
+$x$ is exactly $L_2x$. Full-target compression preserves detector and
+observable parity under its XOR projection. Graphlike filtering preserves
+the labels of surviving columns, but need not preserve the logical quotient,
+the minimum logical cost, or the noise distribution of the input model.
+\end{proposition}
+\begin{proof}
+Every stage-2 substitution in \eqref{eq:cl-decomp} leaves $o_e$ unchanged;
+linearity proves the first assertion. Let $P_{\rm comp}x$ XOR all original
+variables in each full-target class. Equal columns give
+$B_{\rm old}=B_{\rm comp}P_{\rm comp}$ and
+$L_{\rm old}=L_{\rm comp}P_{\rm comp}$. Equation~\eqref{eq:cl-compression}
+is exact for independent classes. Filtering instead restricts the domain
+to a coordinate subspace. It can remove every odd kernel vector: take two
+columns both incident on three detectors, with labels zero and one. Their
+sum is invisible and odd, while deleting both leaves no logical class.
+\end{proof}
+The many-to-one XOR projection has no canonical inverse. A provenance
+membership vector is not a physical fault lift: choosing \emph{all} members
+of a two-element compressed class yields even, not odd, target parity.
+A physical interpretation of a selected compressed variable requires a
+choice of a parity-odd preimage, with its own probability and cost.
+X/Z separation replaces a common event by independent effective events;
+it preserves sector target labels but loses intersector correlations.
+Neither that operation nor conditioning on a predicted stage~1 result
+establishes physical statistical independence.
+
+\subsection{Pinned source realization and concrete discrepancies}
+The inspection here is at color-code-stim commit
+\texttt{ba6f7dc} (full hash in the bibliography), not the earlier Phase-1
+snapshot \cite{CircuitImplementation}. For ordinary memory,
+\texttt{DemManager.\_generate\_dem} first calls
+\texttt{separate\_depolarizing\_errors} on the \emph{circuit}, then extracts
+its flattened DEM. It does not first extract the correlated original DEM.
+The one-qubit replacement has sector error probability $2p/3$.
+For two-qubit depolarization each of $X_A,X_B,X_AX_B$ (and separately the
+three $Z$ mechanisms) has probability
+$(1-\sqrt{1-16p/15})/2$. These independent sector generators reproduce the
+sector marginal: each nonzero two-bit outcome has probability $4p/15$,
+since $a(1-a)=4p/15$ for $a=(1-\sqrt{1-16p/15})/2$.
+The joint X/Z distribution changes. The implementation
+also drops components at or below its $10^{-15}$ probability cutoff.
+These details must be part of the recorded effective-model definition.
+
+In \texttt{DemDecomp.decompose\_org\_dem}, the dictionary key contains
+both detector IDs and observable strings. For already separated, unique
+full-target inputs, each retained stage-2 mechanism has one source in the
+manager's effective DEM; probability sorting permutes its source-map rows
+consistently. Then $L_2=L_{\rm manager}J$ and
+$B_{\rm manager}J=\Lambda_c^{\rm circ}D$, where $J$ is that column selection.
+The outer decoder computes its observable using this map and the manager's
+observable matrix. This establishes agreement with the hard-decoder frame
+for that domain; the manager's ``original'' DEM is already noise-modified.
+
+Two additional limits follow directly from the code. First, its
+mixed-sector fallback assigns observables to the $Z$ part and assigns a
+fresh singleton source list to each target key, overwriting an earlier
+identical key rather than parity-compressing both sources. The later
+stage-2 map rejects multiple rows referring to one original source.
+Thus this fallback is not a general implementation of Lee's compression
+or multi-observable Pauli separation. Second, its joint filtering happens
+\emph{before} restricted probabilities are accumulated: a mechanism with
+$|N_e|\le2$ but $|A_e|\ge2$ contributes to paper stage~1 but not to code
+stage~1. The two algorithms can therefore select different fibers even
+though \eqref{eq:cl-factor} holds for the retained code model.
+No external source is changed by this theory task. A future adapter must
+consume the actual frozen matrices and check the two displayed identities,
+rather than silently replacing the hard decoder with the paper algorithm.
+
+\section{The fixed-fiber logical quotient and existence of two classes}
+\label{sec:cl-quotient}
+\begin{theorem}[Fixed-fiber logical classification]\label{thm:cl-quotient}
+Fix stage~1 and a nonempty stage-2 fiber $\mathcal F_s=\{x:Dx=s\}$.
+Define
+\[
+ K_c^{\rm circ}=\ker D,\qquad R_c^{\rm circ}=\ker D\cap\ker L_2,
+ \qquad \mathcal Q_c^{\rm circ}=K_c^{\rm circ}/R_c^{\rm circ}.
+\]
+Then $[z]\mapsto L_2z$ is a canonical isomorphism
+\begin{equation}
+ \mathcal Q_c^{\rm circ}\cong\operatorname{im}(L_2|_{\ker D}).
+ \label{eq:cl-quotient}
+\end{equation}
+For one observable the image is $\F$ if and only if
+\begin{equation}
+ L_2\notin\operatorname{rowspan}D,
+ \quad\text{equivalently}\quad
+ \operatorname{rank}\begin{pmatrix}D\\L_2\end{pmatrix}
+       =\operatorname{rank}D+1.                       \label{eq:cl-rank}
+\end{equation}
+In that case every nonempty fiber has exactly two frame classes.
+\end{theorem}
+\begin{proof}
+The restricted logical map has kernel exactly $R_c^{\rm circ}$, so its
+quotient map is well-defined, injective, and onto its stated image.
+The annihilator of $\ker D$ is $\operatorname{rowspan}D$: inclusion is
+immediate and both dimensions equal $\operatorname{rank}D$. A binary
+one-row functional is either zero or surjective on a subspace, proving
+the criterion. Translation by any $f\in\mathcal F_s$ identifies that
+fiber with $f+\ker D$. Two candidates differ invisibly under $D$ and have
+same or opposite frame according to $L_2(x+x')=0$ or $1$.
+\end{proof}
+The denominator means no observable-frame change within this effective
+model. It is not asserted to be the group of static face stabilizers,
+nor the set of all physically harmless circuit faults for unmeasured
+logical observables. The other sector in a one-$Z$-observable memory
+can have the zero logical map.
+
+\begin{proposition}[A sufficient memory-circuit witness condition]
+\label{prop:cl-memory}
+Suppose the retained measured-sector model contains the effects of every
+single data-qubit readout flip at the final boundary, with nonzero
+probability, final face detectors as in Lee Eq.\ (6a), and logical parity
+as in Eq.\ (7). Full-target compression may replace an effect by an
+identical effect. Then \eqref{eq:cl-rank} holds for every color and every
+odd $d\ge3$, for any number of rounds and any extraction schedule satisfying
+these final detector definitions.
+\end{proposition}
+\begin{proof}
+A readout flip at $q$ changes exactly the final real faces containing $q$
+and the final logical side parity if that side contains $q$.
+Its non-$c$ face set identifies its incident primal $c$ edge, except at
+the opposite corner where that set is empty. Thus substitution gives
+exactly the Phase-1 column $(H_cq,M_cq)$ on final physical and final
+virtual rows. These columns pass the graphlike filter by
+Lemma~\ref{lem:incidence}. Distinct qubits give distinct such columns:
+the two endpoints of a primal $c$ edge have different surviving $c$-face
+incidence (a face of color $c$ does not contain that edge); the unique
+missing-edge corner is separate. Hence compression does not identify
+these qubits with each other. Take the Phase-1 path supported on either
+non-$c$ physical side. Its virtual and physical incidences cancel, and
+its final logical parity is one by Lemma~\ref{lem:sideparity}. The same
+binary combination of retained effects is an odd element of $\ker D$.
+\end{proof}
+This is a sufficient all-distance condition, not an assumption that every
+noise model supplies readout faults. For absent or removed mechanisms use
+the necessary-and-sufficient rank gate; do not infer two classes merely
+from the number of encoded qubits. No noisy-circuit threshold enters this
+proof.
+
+\section{Logical cochains and the precise spacetime interpretation}
+\label{sec:cl-geometry}
+\begin{definition}[Algebraic complex and correlation cochain]
+\label{def:cl-complex}
+Choose a basis of $R_c^{\rm circ}$ and let $A_R$ be its inclusion into
+$\F^{E_c^{\rm circ}}$. The complex is
+\[
+ U_R\xrightarrow{A_R}\F^{E_c^{\rm circ}}\xrightarrow{D}\F^{V_c^{\rm real}},
+ \qquad DA_R=0.
+\]
+Its cochain maps are $D^{\mathsf T}$ and $A_R^{\mathsf T}$. The cochain
+$\lambda_c=L_2^{\mathsf T}$ satisfies $A_R^{\mathsf T}\lambda_c=0$.
+It pairs with $z\in\ker D$ by $\lambda_c^{\mathsf T}z=L_2z$ and
+therefore defines a class in $H^1$ dual to the quotient in
+\eqref{eq:cl-quotient}. Equivalent representatives are
+$\lambda'_c=\lambda_c+D^{\mathsf T}g$.
+\end{definition}
+This complex explicitly quotients out frame-trivial differences; it does
+not prove that the basis vectors of $U_R$ are local geometric two-cells.
+For the bare graph complex without two-cells every edge cochain is a
+cocycle, but its $H_1$ is the larger space $\ker D$.
+
+There is also a circuit-level correlation pairing before decomposition.
+Pull the logical record selector backward through the circuit:
+$\Sigma_L^{\rm fault}=A_{\rm rec}^{\mathsf T}P_{\rm obs}^{\mathsf T}$.
+For every fault chain $x$,
+\[
+ \langle x,\Sigma_L^{\rm fault}\rangle
+ =P_{\rm obs}A_{\rm rec}x=Lx.                 \label{eq:cl-pairing}
+\]
+This is an explicit cochain pairing, derived from \eqref{eq:cl-record}.
+Clifford propagation realizes it as the symplectic commutation pairing
+with backward-propagated measurement operators; forward/backward
+adjointness is also proved in Delfosse--Paetznick
+\cite[Proposition~3, Sec.~3.4]{SpacetimeCodes}.
+If an effective fault lift $J_{\rm fault}$ into a specified physical fault
+complex is supplied with $L_{\rm fault}J_{\rm fault}=L_2$ and the matching
+detector identity, then pullback gives
+$\langle J_{\rm fault}z,\Sigma_L^{\rm fault}\rangle=L_2z$.
+A compression membership relation alone does not meet this hypothesis.
+A geometric surface is a realization of this cochain only after its
+intersection functional agrees on all columns, or differs by $g^{\mathsf T}D$
+on kernel chains. This states an executable parity check for a proposed
+surface, not a proof from its drawing.
+
+\subsection{What the literature does and does not identify}
+Hillmann et al.\ define fault complexes and express CSS foliation using
+a repetition-code tensor product \cite[Eqs.~(4)--(6), p.~2]{FaultComplex}.
+Logical correlations and undetected faults are paired homology/cohomology
+classes in that construction. This is existing theory for its specified
+complex, not a theorem that Lee's compressed virtual rows are local cells.
+Delfosse--Paetznick construct spacetime stabilizer codes for Clifford
+circuits \cite[Theorems~1--3]{SpacetimeCodes}; their maximum-likelihood
+correspondence uses its corresponding fault model, not Lee's independently
+reweighted model. Bomb\'in et al.\ distinguish resource and syndrome
+complexes; their color-code fusion complex has three-colorable vertices
+and triangular two-cells \cite[Appendix~F, Definition~7]{FaultTolerant}.
+Neither construction identifies an artificial matching boundary with a
+physical boundary.
+
+Herzog et al.\ explicitly represent a triangular 6.6.6 memory as a prism,
+with temporal preparation/readout faces and vertical logical correlation
+surfaces \cite[Sec.~III.A--B, Figs.~5--6]{ColorPipes}. Their standard prism
+uses $d$ rounds; changing the number of repetitions changes its time
+extent. The prism is a protocol-level representation. It is not the
+labelled $c$-only DEM, and its uncolored vertical walls are not Lee's
+color-resolved matching terminals. These are source-backed geometric
+interpretations; an exact local map from the actual compressed Lee model
+to such a prism is \emph{open} here.
+
+\begin{proposition}[Controlled product comparison]\label{prop:cl-product}
+Let $C$ be the Phase-1 algebraic complex of Definition~\ref{def:complex}
+and $I_T$ the cellular chain complex of an interval with vertices
+$0,\ldots,T$ and edges $j=[j-1,j]$. The total tensor complex
+$C\otimes I_T$ is chain-homotopy equivalent to $C$.
+\end{proposition}
+\begin{proof}
+Let $p_T$ send every time vertex to $1$ and every time edge to zero;
+let $i_T(1)=0$ (the basis vertex at time zero). Define
+$h_T(j)=[0,1]+\cdots+[j-1,j]$ on time vertices, and zero on time edges.
+Then $p_Ti_T=1$ and $\partial h_T+h_T\partial=1+i_Tp_T$, by cancellation
+along the interval, including its two ends. Tensor these maps with the
+identity on $C$. In characteristic two the cross terms in the homotopy
+identity cancel. This proves the chain-homotopy equivalence.
+\end{proof}
+This is our direct algebraic comparison with the product intuition.
+It supplies no cost isometry: different time layers can have different
+weights. Gate faults, hooks, changed final constraints, filtering and
+virtual substitutions require a further chain map; none is silently
+identified with this ideal tensor product.
+
+\subsection{Five boundary objects and temporal mechanisms}
+Spatial color boundaries belong to the physical patch. Temporal boundaries
+specify preparation and final record checks. The matching boundary is an
+unconstrained algebraic endpoint. A correlation surface has its own
+geometric boundary. An analysis cut introduces auxiliary terminal copies.
+These five meanings are distinct. Virtual detectors have a restricted-edge
+source set and a predicted bit, not a newly measured physical check.
+Their coordinate metadata should store all source detector coordinates;
+an average coordinate, if used for display, cannot assign their topology.
+
+For example a $Z$-ancilla readout flip in round $1$ contributes to the
+first and second $Z$ detectors (or to the first and final consistency
+detectors if $T=1$), with observable label zero. A final data readout flip
+contributes to its final incident face detectors and may flip the logical
+side parity. It can become a half-edge after color decomposition.
+The unmeasured sector and circuit variants can have additional end-time
+half-edges. All are classified by $d_e,\ell_e$; their time coordinate or
+surviving row type alone does not decide their logical action.
+Closed memory therefore does not mean absence of temporal half-edges.
+Removing future detector rows enlarges $\ker D$ and can change its logical
+image; none of the memory conclusions authorizes sliding-window decoding.
+
+\section{Fundamental residual minimum and the canonical logical cover}
+\label{sec:cl-cover}
+\begin{definition}[Boundary completion and residual minimum]
+\label{def:cl-swim}
+Complete each one-detector column at one artificial vertex $b_*$, retain
+each two-detector column as an edge, and represent each zero-detector
+column by a labelled loop at $b_*$. Call this multigraph $G_c^\bullet$.
+No new edge connects distinct boundaries. Let $\bar\omega_c(e)\ge0$ be
+the uncovered interval length of each original mechanism, specified in
+Section~\ref{sec:cl-clusters}. Define, before selecting any cut,
+\begin{equation}
+ \boxed{\displaystyle \phi_c^{\rm circ}
+ =\min_{Dz=0,\ L_2z=1}\sum_e\bar\omega_c(e)z_e.}
+ \label{eq:cl-swim}
+\end{equation}
+An empty minimum is $+\infty$, accompanied by no logical witness.
+\end{definition}
+For any fixed $f$ with $Df=s$, the substitution $x=f+z$ proves that the
+feasible set is exactly the detector-invisible opposite-frame fixed-fiber
+difference set. Thus \eqref{eq:cl-swim} is its minimum contracted cost,
+not necessarily the difference between uncontracted optimum weights.
+It is independent of a drawing and depends on the chosen cluster data.
+
+\begin{lemma}[Completion introduces no false logical chain]
+\label{lem:cl-boundary}
+A binary mechanism chain has $Dz=0$ if and only if its completed full
+incidence vanishes in $G_c^\bullet$.
+\end{lemma}
+\begin{proof}
+All real rows are identical. The sum of all incidence rows is zero,
+including for loops, so zero real incidence forces zero incidence at
+$b_*$. Conversely full zero incidence implies real zero incidence.
+\end{proof}
+In particular half-edges occur an even number of times in an invisible
+chain. The completion is valid for this fixed matrix; a separate zero-cost
+edge that changes sheet or carries a logical label is not permitted.
+
+\begin{theorem}[Exact binary-cover algorithm]\label{thm:cl-cover}
+Give edge $e$ the label $\lambda_e=L_2[e]$. The cover has vertices $(v,a)$,
+$a\in\F$, and, for every base edge $e=uv$, two lifted edges
+\[
+ (u,a)\longleftrightarrow(v,a+\lambda_e),
+ \qquad\text{each of cost }\bar\omega_c(e).
+\]
+Both lifts keep the source ID $e$. A loop of label one has two parallel
+lifts between its two sheet copies; a zero-labelled loop stays a loop.
+Then
+\begin{equation}
+ \phi_c^{\rm circ}
+ =\min_{v\in V(G_c^\bullet)}
+     \operatorname{dist}_{\widehat G_c}((v,0),(v,1)).
+ \label{eq:cl-cover}
+\end{equation}
+A minimizing path projects, with traversals reduced modulo two, to a
+witness $z$ with $Dz=0$, $L_2z=1$, and cost $\phi_c^{\rm circ}$.
+For $n$ base vertices and $m$ labelled mechanisms this can be computed
+in $O(n(m+n)\log(2+n))$ time and $O(m+n)$ working storage, given residuals.
+\end{theorem}
+\begin{proof}
+Induction on a walk's length shows that its lift from $(v,a)$ ends on
+sheet $a+\sum_e\lambda_e$ (counting multiplicity) over its endpoint.
+Every path between opposite copies of the \emph{same} vertex therefore
+projects to an odd closed walk. Its mod-two chain has zero incidence,
+odd label and cost at most its walk cost by nonnegativity.
+
+Conversely, an admissible chain is an even multigraph by
+Lemma~\ref{lem:cl-boundary}. Pair its half-edges to decompose it into
+edge-disjoint closed trails, then split at repeated vertices to obtain
+cycles (allowing loops and parallel-edge two-cycles). The total label is
+one, so some cycle is odd. Its cost is at most the chain's cost. Starting
+at any vertex on this cycle lifts it to an opposite-sheet path or walk
+of that cost. These two inequalities prove \eqref{eq:cl-cover}, including
+zero costs and disconnected inputs, and force equality for the projected
+minimizer. Dijkstra from each $(v,0)$ to $(v,1)$ on a $2n$-vertex,
+$2m$-edge nonnegative graph gives the bound, reusing search storage.
+Save source IDs in a predecessor tree; reduce their multiplicities XORwise.
+\end{proof}
+The construction is the standard voltage-cover idea; homology-signature
+covers with inherited weights appear, for example, in
+\cite[Sec.~5.1]{HomologyCovers}. The proof here needs just one label bit,
+not a surface embedding or an identification of all homology classes.
+For multiple observables a nonzero total label still has a nonzero cycle,
+but a prescribed multi-bit class can require several cycles. No one-bit
+complexity is asserted for that more general optimization.
+
+One arbitrary source is insufficient: attach a unit-weight triangle with
+odd total label to $b_*$ by a bridge of weight ten. The odd minimum is
+three, while the distance from $(b_*,0)$ to $(b_*,1)$ is twenty-three.
+A multisource search between \emph{all} zero and one sheet vertices is
+also wrong: one labelled edge with two real endpoints can yield a finite
+answer even when $\ker D=0$. Endpoints must project to the same base vertex.
+
+\section{When a two-boundary cut is exact}
+\label{sec:cl-cut}
+A surface cut is not automatically a shortest path problem between arbitrary
+points on its two sides. Those points may project to different constrained
+vertices or interior edge points. Their projected path then has nonzero
+boundary. A physical correlation surface must supply a valid chain-lifting
+rule, not merely an intersection picture.
+
+\begin{theorem}[Checkable two-terminal cut condition]\label{thm:cl-cut}
+Let $G_{\rm int}$ contain all two-real-endpoint edges and real vertices of
+$G_c^\bullet$. Suppose every cycle of $G_{\rm int}$ has label zero.
+Equivalently there is a binary potential $g$ on real vertices with
+$\lambda_{uv}=g(u)+g(v)$ on every internal edge. Extend $g(b_*)=0$ and
+gauge labels by $\lambda'_e=\lambda_e+g^{\mathsf T}D[:,e]$.
+Construct $G_c^{\rm cut}$ as follows: keep each internal edge once, replace
+$b_*$ by two free terminals $b^0,b^1$, and attach a half-edge $e$ at
+real vertex $u$ to $b^{\lambda'_e}$. Replace a zero-detector odd loop by
+an edge $b^0b^1$, and an even loop by a loop at $b^0$. Keep all mechanism
+IDs and residual costs. Then
+\begin{equation}
+ \phi_c^{\rm circ}
+ =\operatorname{dist}_{\bar G_c^{\rm cut}}(b^0,b^1).
+ \label{eq:cl-cut}
+\end{equation}
+Thus $B_c^0=\{b^0\}$ and $B_c^1=\{b^1\}$ are valid boundary sets.
+The balance test, potential construction and shortest path take
+$O((m+n)\log(2+n))$ time given residual costs.
+\end{theorem}
+\begin{proof}
+Choose a spanning forest of $G_{\rm int}$ and assign $g$ by accumulated
+labels from each root. A non-tree edge satisfies the equation precisely
+when its fundamental cycle is even, proving the equivalence and giving
+a linear-time check, including parallel edges. Internal gauged labels
+are zero. On $\ker D$, gauging does not change logical parity.
+The incidence at $b^1$ in the cut graph is exactly $L_2z$ on such chains;
+handshake makes the incidence at $b^0$ the same. Odd chains therefore
+have boundary $b^0+b^1$, and even chains have full boundary zero.
+Every odd chain contains a simple terminal path by the odd-degree
+component argument, and every such path is odd. Nonnegative costs prove
+the distance equality. Original edge incidence is otherwise unchanged,
+including all temporal and virtual endpoints. There are no duplicated
+real vertices or internal edges in this construction, only two copies
+of the artificial boundary. No edge is inferred from temporal coordinates.
+\end{proof}
+The hypothesis is necessary for this type of boundary-only resolution to
+encode \emph{every} invisible chain by terminal parity: an internal odd
+cycle has no terminal incidence under any such rewiring. The triangle
+counterexample above supplies this obstruction. A more general certified
+surface cut can duplicate internal vertices or subdivided edges, but must
+prove both cost-nonincreasing lifts and projections of admissible chains;
+no such local geometric construction is established here for all Lee
+memory schedules. Use Theorem~\ref{thm:cl-cover} whenever the balance gate
+fails. This is an efficient geometry-independent memory algorithm, with
+its stated multi-source-run cost, not an unproved one-Dijkstra claim.
+
+\begin{corollary}[Representative invariance]\label{cor:cl-gauge}
+Replacing $L_2$ by $L_2+g^{\mathsf T}D$ while holding each residual cost
+fixed leaves $\phi_c^{\rm circ}$ unchanged. Any two valid cut constructions
+for equivalent cochains compute that same value. The covers are isomorphic
+by $(v,a)\mapsto(v,a+g(v))$ with $g(b_*)=0$.
+\end{corollary}
+\begin{proof}
+The extra term vanishes on every feasible difference. The displayed
+vertex permutation carries each lifted edge to its gauged lift and keeps
+its weight. Apply the two exact-minimum theorems.
+\end{proof}
+This invariance concerns the same original coverage. Re-running an
+arbitrary growth algorithm on different cut graphs can change coverage
+and is not an instance of this result.
+
+\section{Cluster contraction with preserved logical information}
+\label{sec:cl-clusters}
+\begin{theorem}[Transport of interval coverage]\label{thm:cl-transport}
+Choose finite nonnegative radii at original vertices of $G_c^\bullet$
+and form the union of metric balls in its interval realization.
+For $e=uv$ let
+\[
+ h_v=\max(0,\max_s(r_s-d(s,v))),\qquad
+ \bar\omega_c(e)=\max(0,w_e-h_u-h_v).
+\]
+This is exactly the uncovered length of the original edge. A loop uses
+both endpoints at the same vertex and hence $\max(0,w_e-2h_u)$.
+Assign each cover copy the residual cost of its source edge. In a cut,
+assign unchanged edges their source residual cost; if an edge is subdivided,
+assign its pieces their actual uncovered interval lengths, whose sum is
+the source residual. With logical labels and source IDs retained, these
+operations preserve the minimum in \eqref{eq:cl-swim}.
+\end{theorem}
+\begin{proof}
+Every route to the interior of an edge enters through one endpoint.
+Thus the covered prefixes and suffixes have lengths $h_u,h_v$, clipped
+to the edge interval; their union proves the formula, also for loops.
+Subdivide at coverage endpoints, give covered pieces zero cost, and keep
+a subdivision label assignment whose XOR equals $\lambda_e$.
+A cycle in the subdivision uses either all or none of an original edge
+because new vertices have degree two. The cover's projection/lifting
+proof therefore applies with exactly the same costs and labels.
+Equivalently, lift the entire covered subset to both sheets, then contract
+its connected components \emph{in the cover}, retaining expansion paths.
+A route through a contracted component expands at zero cost on that sheet
+structure. This proves the residual transport without new decoder growth.
+For a valid cut use its stated chain correspondence with these same costs.
+\end{proof}
+Spatial, timelike and diagonal edges have identical treatment. Virtual
+vertices may be metric centers if they carry the stage-2 syndrome.
+Half-edges are actual intervals with their own labels, even when their
+end-time coordinates coincide. Clusters touching boundaries do not create
+extra positive coverage by themselves. All coverage must be computed
+from the explicitly chosen original metric, not from merged component IDs.
+
+There is an essential qualification to the word contraction: a covered
+component can contain an odd cycle. Erasing that component's labels in
+the base graph loses a zero-cost logical witness. One may retain all
+original zero-cost labelled edges (as here), or contract in the cover with
+expansion data. A single unlabelled quotient vertex is insufficient.
+For example two fully covered parallel half-edges with different labels
+have $\phi=0$, although collapsing them into one unlabelled edge loses it.
+A zero answer is returned with a nonempty mod-two logical witness.
+
+If radii are certified boundary-normalized odd-cut radii, $r_s\le d(s,b_*)$.
+Such a ball cannot propagate a positive distance through the artificial
+boundary. Splitting that boundary as in Theorem~\ref{thm:cl-cut} therefore
+preserves covered portions, as in Proposition~\ref{prop:dual}; components
+must still be recomputed on the cut. For arbitrary production radii this
+commutation is not automatic. Define coverage first on $G_c^\bullet$ and
+transport it; or record a different, fully specified coverage convention.
+In the controlled Phase-1 reduction below the convention must match
+Phase~1 exactly. Missing radii mean an unavailable cluster score, not zero.
+
+Meister's Fig.~2 caption explicitly allows a three-dimensional decoding
+graph with faulty measurements \cite[p.~6]{Meister}. The interval-ball
+construction and odd-cut reasoning are graph-theoretic adaptations;
+the logical quotient must still be supplied separately. Neither UF growth
+nor the exported Sparse-Blossom final-defect balls are thereby certified.
+
+\section{Certified circuit-level representative bound}
+\label{sec:cl-gap}
+For this theorem suppose the completed graph is connected after removal
+of inactive isolated rows (loops are allowed), or apply the construction
+componentwise, using ordinary even-syndrome $T$-joins in components
+without a boundary. For clarity the proof uses a single connected graph
+with boundary. Let $\Sigma=\operatorname{supp}s$. On its syndrome metric
+closure plus $b_*$, take the nonnegative boundary-normalized odd-cut dual
+of Definition~\ref{def:dual}, now with distances in $G_c^\bullet$.
+Thus $y_S\ge0$ for odd $S\subseteq\Sigma$,
+\[
+ l_{uv}(y)\le d(u,v),\quad r_u=\sum_{S\ni u}y_S\le d(u,b_*),
+ \quad Y=\sum_Sy_S=w(f),\quad Df=s.
+\]
+The equality is required in exact arithmetic for the exact supplied
+weights. The parity-polyhedron reduction of Proposition~\ref{prop:dual}
+gives such a certificate for any exact minimum $f$. Nonnegative loops
+can be removed from a minimum; selected zero-cost loops do not affect it.
+The explicit companion LP remains exponentially represented in syndrome
+size, separate from the polynomial cover postprocessing.
+
+\begin{theorem}[Fixed-fiber certified gap]\label{thm:cl-gap}
+With the specified optimal certificate and its interval coverage, set
+\[
+ W_{c,\mathrm{base}}^{\rm circ}=w(f),\qquad
+ W_{c,\mathrm{opp}}^{\rm circ}
+ =\min_{Dm=s,\ L_2(m+f)=1}w(m).
+\]
+If the opposite class exists, then
+\begin{equation}
+ W_{c,\mathrm{opp}}^{\rm circ}-W_{c,\mathrm{base}}^{\rm circ}
+ \ge\phi_c^{\rm circ}.                              \label{eq:cl-gap}
+\end{equation}
+No two-terminal cut or spacetime embedding is a hypothesis.
+\end{theorem}
+\begin{proof}
+Pair half-edges of a feasible $m$ at each real vertex, leaving exactly
+one unpaired at each syndrome vertex and all boundary half-edges
+unpaired. This decomposes $m$ into edge-disjoint trails and closed trails,
+including loops. Each defect occurs as a trail endpoint once. A trail
+between defects $u,v$ has covered length at least
+$\min(\text{length},r_u+r_v)\ge l_{uv}(y)$; a defect-boundary trail has
+covered length at least $r_u$. For every odd $S$, at least one endpoint
+pair exits $S$, so summing these inequalities counts $y_S$ at least once.
+Other trails contribute nonnegative length. Hence covered weight is at
+least $Y$ for every feasible $m$, exactly as in Lemma~\ref{lem:coverage}.
+For $f$, $Y=w(f)$ forces $\bar\omega_c(f)=0$. Therefore
+\[
+ w(m)-w(f)\ge\bar\omega_c(m)
+ =\bar\omega_c(m+f)\ge\phi_c^{\rm circ}
+\]
+for every opposite candidate, since $D(m+f)=0$ and $L_2(m+f)=1$.
+Take the minimum. The argument depends on the DEM logical map, not on
+physical face generation or planar geometry.
+\end{proof}
+This is an exact minimum-representative cost inequality in a fixed
+stage~1 fiber. It is not a summed-class likelihood ratio, a full
+comparative-decoder gap, or a calibration theorem. Current exported
+radii use the named final-defect metric-ball convention and do not export
+$y_S$, its original defect memberships, verified feasibility, or exact
+primal/dual equality. Consequently \eqref{eq:cl-gap} is \emph{not certified}
+for those production outputs. With a suboptimal zero dual, a three-edge
+logical path can have residual cost three while a one-edge baseline and
+two-edge opposite correction have gap one; the Phase-1 counterexample
+already disproves that stronger claim.
+
+\section{Exact perfect-measurement reduction}
+\label{sec:cl-limit}
+\begin{theorem}[Controlled code-capacity limit]\label{thm:cl-limit}
+Prepare the standard memory ideally, insert one layer of independent
+$X_q$ mechanisms with probabilities $0<p_q<1/2$ immediately before the
+first ideal syndrome extraction, and make every subsequent operation,
+measurement and readout noiseless. Retain only this fault layer and the
+measured-sector observable. Identify redundant zero detector rows as
+padding. Under inherited weights and identical Phase-1 coverage,
+\[
+ D_c^{\rm circ}=D_c,\qquad L_c^{\rm circ}|_{K_c}=\beta_c,
+ \qquad \phi_c^{\rm circ}=\phi_c^{\rm Phase1},
+ \label{eq:cl-limit}
+\]
+where the first equality uses the explicit qubit and row bijections below.
+Certified normalized balls grown in the merged graph give the same
+coverage as their Phase-1 resolved realization. Arbitrary supplied
+Phase-1 coverage can instead be transported edgewise by definition.
+\end{theorem}
+\begin{proof}
+An $X_q$ inserted before the first ideal measurement changes every later
+$Z$-check outcome containing $q$ by the same bit. Consecutive parities
+therefore cancel after the first detector layer, and final ancilla/data
+consistency also cancels. The only nonzero detector column is $Hq$ on
+first-layer $Z$ faces. Its final logical label is $\ell_Z^{\mathsf T}q$.
+There are no other admissible mechanisms; setting their probabilities
+to zero means removing them, not retaining finite-cost columns.
+
+By the Phase-1 local incidence proof, the non-$c$ detector target set
+of $q$ identifies its primal $c$ edge when one exists. Thus restricted
+compression groups its two endpoint mechanisms, with probability
+$p_u+p_v-2p_up_v$, and creates exactly the virtual row for that edge.
+At the opposite corner the target set is empty and no virtual row is
+created. The two endpoints have distinct $c$ incidences as in
+Proposition~\ref{prop:cl-memory}; different physical $c$ edges have
+distinct restricted incidences in the specified hexagonal patch.
+All qubits pass the filter, and complete stage-2 targets remain distinct.
+Consequently there is one retained stage-2 edge per qubit, with its own
+$p_q$, and the row/column identification gives
+$D_c^{\rm circ}=(H_c,M_c)T_c=D_c$.
+On its kernel, $L_c^{\rm circ}z=\ell_Z^{\mathsf T}T_cz=\beta_c(z)$ by
+Lemma~\ref{lem:sideparity}. Hence the two fundamental minima have
+identical feasible supports and identical residual cost on each edge.
+Theorem~\ref{thm:swim} proves the required equality with the Phase-1
+terminal distance. For certified balls, the radius-to-boundary bound
+prevents positive propagation across the merged boundary, and
+Proposition~\ref{prop:dual} proves the covered-interval equality.
+\end{proof}
+This is a theorem for a specified limit, including any number of additional
+noiseless rounds. Repeated noisy data layers are a different mechanism
+space. Homotopy equivalence alone would not prove metric equality, and
+independently chosen optimal duals need not give equal scores. The
+reduction concerns a fixed stage~1 fiber; it does not require the
+restricted weighted hard decoder to select the same fiber as an unweighted
+Phase-1 presentation.
+
+\section{Validation contract and limits of acceptance}
+\label{sec:cl-validation}
+The following are implementation acceptance tests, not substitute proofs
+and not a numerical study performed by this theory task.
+\begin{enumerate}
+\item \textbf{Exact reduction.} Construct the controlled single-layer limit
+at $d=3,5,7$ in each color, compare $D,L_2$ under explicit row/edge maps,
+and compare residual minima with identical coverage. Do not merely compare
+sampled hard failure rates.
+\item \textbf{Exhaustive small DEM.} For tiny retained memory DEMs at small
+$d,T$, enumerate all mechanism subsets when feasible, evaluate $Dz,L_2z$
+and residual cost, and compare with the cover. Save actual column counts;
+if $2^{|E|}$ is too large, use explicitly identified small submodels or an
+exact binary optimizer, without calling that full enumeration.
+\item \textbf{Witness.} For every finite returned value, including zero,
+check $Dz=0$, $L_2z=1$ and cost equality using original mechanism IDs.
+For an empty logical class require infinity and no witness. Test isolated
+odd loops, parallel labels, internal odd cycles and disconnected graphs.
+\item \textbf{Stim.} With zero radii, positive-probability separator-free
+graphlike mechanisms and unit weights, compare with
+\texttt{DetectorErrorModel.shortest\_graphlike\_error}. This API minimizes
+mechanism count, ignoring nonzero probabilities, and can treat separator
+components as graphlike pieces \cite{StimAPI}. It is not an oracle for
+nonuniform log odds or for correlated component costs. Assert witness
+parity, not identity of tied minima. The API's prose ``less than two''
+symptoms conflicts with its two-detector examples; the operational
+criterion here is at most two detectors.
+\item \textbf{Cut and representative checks.} Verify the internal balance
+condition before using a two-terminal cut. Compare it with the cover;
+apply arbitrary detector-row gauges and compare again with fixed residuals.
+Reject cuts lacking a parity-preserving witness projection.
+\item \textbf{Temporal audit.} Retain first/final record parities, source
+faults and observable labels. Test temporal half-edges with both labels,
+and reject time-only or endpoint-role-only logical classifications.
+\item \textbf{Compression and provenance.} Compare full-target XOR maps;
+include duplicate targets, incompatible labels on parallel endpoints,
+empty-detector logical mechanisms, filtering losses and mixed-sector
+fallback collisions. Check manager-to-stage-2 logical and detector
+identities for each retained column.
+\item \textbf{Contraction.} Compare interval subdivision with transported
+residual edges, including partial coverage, loops, overlapping balls,
+boundary contacts and covered odd cycles. Never erase their logical labels.
+\item \textbf{Hard invariance.} Freeze input matrices, probabilities,
+ordering, merge policy and syndrome arrays. Compare hard predictions,
+weights, selected color and failure labels before/after analysis on the
+same records. Circuit SO is not enabled until this future gate passes.
+\item \textbf{Certificate.} If exact dual data are supplied, verify all
+odd-cut constraints and equality to the actual labelled-graph optimum;
+then compare exhaustive representative gaps. Without that certificate
+report the theorem check as inapplicable, not passed.
+\end{enumerate}
+Remaining open issues are the local prism/fault-complex lift for the actual
+Lee compressed graph, a universally valid geometric one-search cut for
+all schedules, and production optimal-dual export. The DEM quotient,
+cover, gated cut, coverage transport, controlled reduction and conditional
+representative bound do not depend on resolving those stronger claims.
+No aggregation theorem, likelihood calibration, sliding-window rule,
+production decoder change, or performance benchmark is included.
+
+\section{Executable DEM-to-decoder construction specification}
+\label{sec:cl-algorithm}
+This construction specifies a read-only soft-output adapter; the compact
+implementation interface is given in Section~\ref{sec:cl-implementation}.
+The existing hard path is authoritative, including its effective-model
+choices. For a new circuit require explicit detector/observable metadata;
+coordinates alone are insufficient to infer Pauli type, color or logical
+boundary. The following records and gates are part of the algorithm.
+\begin{enumerate}
+\item \textbf{Freeze the experiment.} Inputs: Stim circuit, memory basis,
+$d,T$, schedule, noise parameters and conversion options. Outputs: circuit
+hash, package SHAs, original DEM (when exact extraction is supported),
+manager's separated circuit/DEM, and an approximation ledger. Do not replace
+the physical sampling circuit with the separated decoding circuit.
+\item \textbf{Index targets and sources.} Flatten repeats and detector
+offsets. Save mechanism IDs as (model hash, flattened instruction index),
+probability, full detector/observable parity sets, separator-group IDs,
+and available circuit error-location explanations. Save detector ID,
+record parity support, full coordinates, time, check Pauli and color;
+save observable ID, measured Pauli and record parity support. Keep absent
+geometric locations explicitly absent. Validate all array dimensions.
+\item \textbf{Materialize the actual decomposition.} Read the frozen
+manager's $H_1,H_2,p_1,p_2$, stage-2 observable matrix, sort permutation,
+and error-map matrices. Tag every virtual row by restricted edge ID and
+its entire source target set $N$. Distinguish full-target compression
+classes from selected representative maps. Record filtered sources and
+all probability changes. For a paper-algorithm reference, use
+\eqref{eq:cl-compression}--\eqref{eq:cl-decomp} and keep it separately
+identified; it must not replace the hard path implicitly.
+\item \textbf{Run unchanged stage~1.} Supply the historical restricted
+check matrix, $\log((1-p_1)/p_1)$ and its same row-masked measured syndrome
+to PyMatching. Its predicted edge vector $t$ indexes the virtual rows.
+Check restricted syndrome feasibility, with original row IDs restored.
+Keep the exact column ordering and hard merge/tie policy.
+\item \textbf{Build the same stage~2 input.} Mask physical detector bits
+to color $c$ and append $t$, preserving the historical padding. Supply
+unchanged $H_2$, log-odds weights and syndrome to the existing stage-2
+PyMatching call. Default check-matrix fault IDs represent stage-2 columns;
+physical observable labels remain in the external $L_2$ matrix and need
+not be added as hard parity constraints. Keep the ordinary prediction
+$f$ and weight separate from analysis.
+\item \textbf{Build the labelled analysis model.} From each $H_2$ column
+retain its ID, complete nonzero endpoint rows, source effective DEM IDs,
+probability, exact chosen weight, $L_2$ label, and physical/virtual endpoint
+metadata. Audit $D f=s$ and $L_2f$ against the unchanged outer frame map.
+Remove only zero padding rows. Keep parallel mechanisms and zero-detector
+logical loops even if hard graph construction omits or merges them. Check
+$L_2\notin\operatorname{rowspan}D$ or construct the equivalent odd-cycle
+witness. If this fails, return ``no opposite class'' and infinity.
+\item \textbf{Audit hard-graph compatibility.} PyMatching's internal parallel
+merge and weight quantization can differ from the retained multigraph.
+Record the map and recompute $w(f)$ from retained columns. The geometric
+metric can still be defined on the retained graph with an explicitly
+chosen ball convention, but the bound flag requires an optimal $f$ and
+certificate for \emph{that same} graph and weights. An internal hard weight
+alone is not this audit.
+\item \textbf{Obtain growth.} Read existing growth data without altering
+hard decoding, with original defect IDs, radii, units, normalization and
+the named convention. If unavailable return ``growth unavailable''.
+A separately authorized exact certificate extractor/companion solver
+would additionally provide $y_S$, feasibility and equality to $w(f)$;
+current final-defect radii do not. Set the certification flag accordingly.
+\item \textbf{Compute residuals once.} Complete half-edges at $b_*$ and
+zero-detector columns as loops. For the declared original ball metric,
+compute $h_v$ by a temporary-source Dijkstra with initial costs
+$R-r_v$, $R=\max r_v$. The temporary source is discarded. Evaluate every
+$\bar\omega_c(e)$, retaining original IDs. A supplied interval-coverage
+convention instead unions intervals per source edge explicitly.
+\item \textbf{Choose the proven logical analysis.} Test balance of the
+internal graph. On success the cut of Theorem~\ref{thm:cl-cut} uses one
+terminal search. Otherwise build the cover and minimize same-base-vertex
+opposite-sheet distances as in Theorem~\ref{thm:cl-cover}. All copies inherit
+their source residual; no new matching or decoder growth is performed
+on the cover/cut. Their vertices, sheets, boundaries and temporary search
+arcs are analysis-only and never passed as new hard-decoder checks.
+\item \textbf{Return and verify.} Return $\phi_c^{\rm circ}$, original-edge
+mod-two witness, graph/weight/growth identifiers, class-existence status
+and bound-certification flag. Verify witness incidence, frame parity and
+cost independently. Return ordinary correction, ordinary weight and
+existing branch selection unchanged. Report per-color fixed-fiber scope;
+exclude open future boundaries and sliding-window decoding. The separately
+authorized closed-memory implementation does not change these theorem hypotheses.
+\end{enumerate}

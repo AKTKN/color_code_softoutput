@@ -1,0 +1,11 @@
+{
+  "distances": [3, 5, 7],
+  "physical_error_rates": [0.01, 0.05],
+  "shots": 512,
+  "seed": 20260912,
+  "rounds": 1,
+  "circuit_type": "tri",
+  "cnot_schedule": "tri_optimal",
+  "acceptance_fractions": [0.1, 0.25, 0.5, 0.75, 1.0],
+  "timing_repeats": 3
+}

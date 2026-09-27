@@ -1,0 +1,17 @@
+name: color_code_so
+channels:
+  - defaults
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+      - numpy>=1.26,<2
+      - cmake>=3.20,<4
+      - ninja
+      - setuptools
+      - wheel
+      - pytest
+      - rustworkx
+      - ipykernel
+      - nbformat
+      - sinter==1.16.0

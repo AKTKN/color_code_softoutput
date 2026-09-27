@@ -1,0 +1,356 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{bm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\newcommand{\Cset}{\mathcal C}
+\newcommand{\M}{\mathcal M}
+\newcommand{\D}{\mathsf D}
+\newcommand{\wt}{W}
+\newcommand{\Prob}{\Pr}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\argmin}{\operatorname*{arg\,min}}
+
+\title{Color-Correlated Concatenated MWPM Decoding for the Color Code}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Scope and assumptions}
+
+We consider a two-dimensional color code decoded by the concatenated minimum-weight
+perfect matching (MWPM) decoder of Lee, Li, and Bartlett.  The Pauli sectors are
+treated independently: throughout the derivation, one fixes either the $X$-error
+sector or the $Z$-error sector and applies the same construction to the other sector
+independently.
+
+Let
+\[
+    \Cset = \{r,g,b\}
+\]
+denote the three colors.  A sector-specific detector error model (DEM) is written as
+\[
+    \M = \{m_i=(q_i,D_i,O_i)\}_{i=1}^{M},
+\]
+where $q_i$ is the prior probability of the $i$th independent error mechanism,
+$D_i$ is the set of detectors flipped by that mechanism, and $O_i$ is the set of
+logical observables flipped by it.
+
+For each color $c\in\Cset$, the concatenated decoder constructs two graphlike DEMs:
+a $c$-restricted first-stage DEM and a $c$-only second-stage DEM.  We denote these by
+\[
+    \M_c^{(1)},\qquad \M_c^{(2)}.
+\]
+The corresponding error probabilities are
+\[
+    \bm p_c^{(1)},\qquad \bm p_c^{(2)},
+\]
+and the matching weight of an error mechanism with probability $p$ is
+\[
+    \ell(p)=\log\frac{1-p}{p}.
+\]
+
+\section{Baseline concatenated MWPM}
+
+For a fixed color $c$, let $\{c_1,c_2\}=\Cset\setminus\{c\}$.  The first MWPM is
+performed on the $c$-restricted DEM using the violated detectors of colors $c_1$ and
+$c_2$.  Its solution is denoted by
+\[
+    x_c^{(1)}
+    =
+    \operatorname{MWPM}
+    \left(
+        \sigma^{(c_1)}\cup\sigma^{(c_2)};
+        \M_c^{(1)}
+    \right).
+\]
+The selected first-stage mechanisms are converted into virtual detectors and combined
+with the physical $c$-colored detector outcomes.  The second MWPM returns
+\[
+    x_c^{(2)}
+    =
+    \operatorname{MWPM}
+    \left(
+        \sigma^{(c)}\cup V(x_c^{(1)});
+        \M_c^{(2)}
+    \right).
+\]
+The resulting second-stage correction is mapped back to the original DEM ordering:
+\[
+    e_c^{(0)} = R_c x_c^{(2)},
+\]
+where $R_c$ denotes the existing error-map operation implemented by the decoder.
+
+The baseline solution weight, using the ordinary unmodified second-stage prior of
+color $c$, is
+\[
+    W_c^{(0)}
+    =
+    \sum_j x_{c,j}^{(2)}
+    \log\frac{1-p_{c,j}^{(2)}}{p_{c,j}^{(2)}}.
+\]
+The ordinary concatenated decoder obtains the three candidates
+\[
+    e_r^{(0)},\qquad e_g^{(0)},\qquad e_b^{(0)}
+\]
+and chooses the least-weight one.
+
+\section{Source provenance of decomposed mechanisms}
+
+Each error mechanism $a$ in a decomposed DEM is derived from one or more mechanisms
+of the original DEM.  Let
+\[
+    \pi(a)\subseteq\{1,\ldots,M\}
+\]
+denote its source set.  In the current implementation, this information is represented
+by the decomposition error-map matrices.
+
+For the standard decomposition in which the source mechanisms appear with unit
+multiplicity, the marginal probability of a decomposed mechanism $a$ is
+\[
+    p_a
+    =
+    \frac{
+        1-\prod_{i\in\pi(a)}(1-2q_i)
+    }{2}.
+\]
+This is the probability that an odd number of the independent source mechanisms in
+$\pi(a)$ occurs.
+
+\section{Color-correlated prior update}
+
+The purpose of the color-correlated step is to use a candidate correction obtained
+from one color as evidence for reweighting the two-stage matching problem of a
+different target color.
+
+Let $G\subseteq\{1,\ldots,M\}$ be the set of original DEM mechanisms selected by a
+guide correction.  For a target decomposed mechanism $a$, consider conditioning on a
+guide source mechanism $i\in G$ having occurred.
+
+If $i\notin\pi(a)$, the target mechanism is independent of that guide source and
+\[
+    p_{a\mid i}=p_a.
+\]
+If $i\in\pi(a)$, conditioning on $i$ being active flips the parity condition for the
+remaining sources, yielding
+\[
+    p_{a\mid i}
+    =
+    \frac{
+        1+\displaystyle\prod_{j\in\pi(a)\setminus\{i\}}(1-2q_j)
+    }{2}.
+\]
+The reweighted prior is defined by the same ``take the strongest implied
+probability'' rule used in correlated matching:
+\[
+    \widetilde p_a^{(G)}
+    =
+    \max\left(
+        p_a,\,
+        \max_{i\in G}p_{a\mid i}
+    \right).
+\]
+Numerically, if the conditional probability is exactly one, it should be clipped to
+$1-\varepsilon$ before converting it to a finite log-likelihood weight:
+\[
+    \widetilde\ell_a^{(G)}
+    =
+    \log\frac{1-\widetilde p_a^{(G)}}{\widetilde p_a^{(G)}}.
+\]
+
+The update is applied to \emph{both} stages of the target-color concatenated decoder:
+\[
+    \M_c^{(1)}
+    \longrightarrow
+    \widetilde\M_{c,G}^{(1)},
+    \qquad
+    \M_c^{(2)}
+    \longrightarrow
+    \widetilde\M_{c,G}^{(2)}.
+\]
+The first-stage MWPM must therefore be rerun; reweighting only the second stage is not
+equivalent to rerunning the concatenated decoder because the first-stage solution
+determines the virtual syndrome used by the second stage.
+
+\section{Guide sets}
+
+For the baseline color-$d$ solution, define
+\[
+    G_d
+    =
+    \supp(e_d^{(0)})
+    =
+    \{i:e_{d,i}^{(0)}=1\}.
+\]
+For the combined guide from two colors $d_1$ and $d_2$, the operation is a Boolean
+OR, i.e.\ a set union rather than an XOR:
+\[
+    G_{d_1\lor d_2}
+    =
+    G_{d_1}\cup G_{d_2}.
+\]
+
+For a target color $c$ with other colors $\{d_1,d_2\}=\Cset\setminus\{c\}$, run the
+full two-stage concatenated decoder three additional times:
+\begin{align}
+    e_c^{[d_1]}
+    &=
+    \D_c\!\left(
+        \sigma;
+        \widetilde\M_{c,G_{d_1}}^{(1)},
+        \widetilde\M_{c,G_{d_1}}^{(2)}
+    \right),\\
+    e_c^{[d_2]}
+    &=
+    \D_c\!\left(
+        \sigma;
+        \widetilde\M_{c,G_{d_2}}^{(1)},
+        \widetilde\M_{c,G_{d_2}}^{(2)}
+    \right),\\
+    e_c^{[d_1\lor d_2]}
+    &=
+    \D_c\!\left(
+        \sigma;
+        \widetilde\M_{c,G_{d_1\lor d_2}}^{(1)},
+        \widetilde\M_{c,G_{d_1\lor d_2}}^{(2)}
+    \right).
+\end{align}
+
+\section{Twelve-candidate set}
+
+The full candidate set is
+\begin{align}
+\mathcal E
+={}&
+\{
+e_r^{(0)},e_g^{(0)},e_b^{(0)}
+\}
+\nonumber\\
+&\cup
+\{
+e_r^{[g]},e_r^{[b]},e_r^{[g\lor b]}
+\}
+\nonumber\\
+&\cup
+\{
+e_g^{[r]},e_g^{[b]},e_g^{[r\lor b]}
+\}
+\nonumber\\
+&\cup
+\{
+e_b^{[r]},e_b^{[g]},e_b^{[r\lor g]}
+\}.
+\end{align}
+Thus, before deduplication,
+\[
+    |\mathcal E|=12.
+\]
+The first version of the algorithm is non-iterative: only the three baseline solutions
+are used as guides.  Correlated candidates are not recursively used to generate
+further candidates.
+
+\section{Final scoring under a common prior}
+
+The weights produced during the nine correlated reruns are evaluated under different
+reweighted priors and therefore cannot be compared directly.  Reweighting is used
+only for \emph{candidate generation}.
+
+For each candidate generated for target color $c$, retain its native second-stage
+binary solution $x_c$.  Recompute its selection weight with the ordinary,
+unmodified second-stage probabilities of the same color:
+\[
+    W_0(x_c)
+    =
+    \sum_j x_{c,j}
+    \log\frac{1-p_{c,j}^{(2)}}{p_{c,j}^{(2)}}.
+\]
+This definition deliberately matches the existing concatenated decoder's weight
+semantics.  The final output is
+\[
+    e^\star
+    =
+    \argmin_{e\in\mathcal E} W_0(e).
+\]
+
+Hence the algorithm has the structure
+\[
+    \text{baseline decoding}
+    \;\longrightarrow\;
+    \text{cross-color conditional reweighting}
+    \;\longrightarrow\;
+    \text{nine additional candidates}
+    \;\longrightarrow\;
+    \text{common-prior rescoring}
+    \;\longrightarrow\;
+    \text{minimum-weight output}.
+\]
+
+\section{Comparative decoding}
+
+If comparative decoding is enabled, the entire 12-candidate construction is performed
+independently inside each fixed logical class $\lambda$.  Let
+\[
+    W_{\lambda,k},
+    \qquad k=1,\ldots,12,
+\]
+denote the common-prior weights of the 12 candidates in logical class $\lambda$.
+The class weight is
+\[
+    W_\lambda=\min_k W_{\lambda,k}.
+\]
+The final logical class is the class with minimum $W_\lambda$, and the existing
+logical-gap definition is preserved:
+\[
+    \Delta
+    =
+    W_{(2)}-W_{(1)},
+\]
+where $W_{(1)}\le W_{(2)}\le\cdots$ are the sorted class minima.
+
+\section{Implementation invariants}
+
+The implementation should preserve the following invariants.
+
+\begin{enumerate}[leftmargin=2em]
+    \item When color-correlated decoding is disabled, the decoder must be bit-for-bit
+    compatible with the current concatenated decoder for the same inputs and random
+    seed.
+    \item Every returned final correction remains represented in the original DEM
+    ordering, as in the current implementation.
+    \item The public \texttt{weights} output remains a weight under the ordinary
+    unmodified prior, never under a correlated reweighted prior.
+    \item Existing logical-gap computation is performed from the minimum
+    common-prior candidate weight in each logical class.
+    \item The reported \texttt{best\_colors} value continues to denote the target
+    color $r/g/b$, not the index of one of the 12 candidate-generation branches.
+    \item Boolean OR of two guide corrections means union of selected error mechanisms,
+    not symmetric difference.
+    \item Existing correction-based metrics can operate on the final mapped correction
+    without modification.
+    \item Any soft-output quantity that depends on the internal matching growth state
+    must not be silently reused for a candidate produced under a different reweighted
+    graph.  Such combinations should either be recomputed consistently or rejected
+    explicitly.
+\end{enumerate}
+
+\begin{thebibliography}{9}
+
+\bibitem{LeeLiBartlett}
+S.-H. Lee, A. Li, and S. D. Bartlett,
+``Color code decoder with improved scaling for correcting circuit-level noise,''
+\emph{Quantum} (2025).
+
+\bibitem{ShuttyNewmanVillalonga}
+N. Shutty, M. Newman, and B. Villalonga,
+``Efficient near-optimal decoding of the surface code through ensembling,''
+arXiv:2401.12434.
+
+\end{thebibliography}
+
+\end{document}

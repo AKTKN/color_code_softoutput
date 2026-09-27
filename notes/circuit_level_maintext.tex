@@ -1,0 +1,279 @@
+\documentclass[10pt,twocolumn]{article}
+\usepackage[a4paper,margin=18mm,columnsep=7mm]{geometry}
+\usepackage{amsmath,amssymb,mathtools,bm,microtype}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\F}{\mathbb F_2}
+\newcommand{\MWPM}{\operatorname{MWPM}}
+
+\title{Circuit-level extension of the color-code swim distance}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Circuit-level extension}
+\label{sec:circuit_level_main}
+
+The perfect-measurement construction associates, for each color \(c\), a
+modified stage-2 decoding graph whose two inequivalent boundaries encode the
+two logical classes within a fixed stage-1 fiber.  The swim distance is then
+the minimum residual distance between these boundaries after contracting the
+clusters produced by the decoder.  Here we extend this construction to a
+fully terminated circuit-level memory experiment.  The main difference is
+that, at circuit level, a logical class is most naturally defined directly
+from the detector error model (DEM), rather than from a particular spacetime
+drawing.
+
+\subsection{Fixed-fiber logical classes from the DEM}
+
+We consider one Pauli sector and one color \(c\).  After the
+Lee--Li--Bartlett decomposition, the stage-2 \(c\)-only DEM is graphlike and
+contains physical \(c\)-colored detector rows, virtual detector rows inherited
+from stage 1, and logical-observable labels \cite{Lee}.  Let
+\[
+ D_c^{\rm circ}:\F^{E_c^{\rm circ}}\rightarrow\F^{V_c^{\rm real}},
+ \qquad
+ L_c^{\rm circ}:\F^{E_c^{\rm circ}}\rightarrow\F
+\]
+denote respectively the detector-incidence and logical-observable maps of the
+retained stage-2 model.  A binary vector
+\(x\in\F^{E_c^{\rm circ}}\) specifies a set of retained stage-2 error
+mechanisms, so that
+\[
+ s=D_c^{\rm circ}x,\qquad
+ \ell=L_c^{\rm circ}x
+\]
+are its stage-2 syndrome and logical frame change.
+
+Fixing the stage-1 output fixes the virtual detector values and therefore a
+stage-2 fiber
+\[
+ \mathcal F_s=\{x:D_c^{\rm circ}x=s\}.
+\]
+Two candidates \(x,x'\in\mathcal F_s\) differ by
+\(z=x+x'\in\ker D_c^{\rm circ}\).  Their logical frames agree when
+\(L_c^{\rm circ}z=0\), and are opposite when
+\(L_c^{\rm circ}z=1\).  Thus the circuit-level analogue of the
+perfect-measurement logical quotient is
+\[
+ \frac{\ker D_c^{\rm circ}}
+ {\ker D_c^{\rm circ}\cap\ker L_c^{\rm circ}}
+ \cong
+ \operatorname{im}
+ \!\left(
+ L_c^{\rm circ}|_{\ker D_c^{\rm circ}}
+ \right).
+ \label{eq:circ_quotient}
+\]
+For the one-observable memory experiment this quotient contains two classes
+whenever \(L_c^{\rm circ}\) is nonzero on
+\(\ker D_c^{\rm circ}\).  Equivalently,
+\[
+ L_c^{\rm circ}\notin\operatorname{rowspan}D_c^{\rm circ}.
+ \label{eq:rank_condition}
+\]
+This condition depends only on the fixed decoding graph and can therefore be
+checked once when the circuit-level decoder is constructed.
+
+This DEM-based formulation avoids identifying temporal boundaries, matching
+boundaries, and logical boundaries by coordinates alone.  Detector time,
+color, and position remain useful metadata, but the logical action of a
+mechanism is determined by \(L_c^{\rm circ}\).
+
+\subsection{Cluster contraction and the circuit-level swim distance}
+
+Let \(w_e\geq0\) be the edge weight of a retained stage-2 mechanism and let
+the MWPM decoder provide a set of growth radii.  As in the
+perfect-measurement construction, these radii define metric balls on the
+original weighted stage-2 graph.  If \(h_u\) and \(h_v\) are the maximum
+covered lengths arriving at the two endpoints of an edge
+\(e=uv\), the uncovered part of the edge is
+\[
+ \bar w_e=\max\{0,w_e-h_u-h_v\}.
+ \label{eq:residual_weight}
+\]
+The same interval construction applies to spatial, timelike, and diagonal
+circuit-level edges.  Importantly, the coverage is computed on the original
+stage-2 graph and is only then transferred to the logical analysis graph.
+No new decoder growth is performed after introducing a logical cut or cover.
+
+We define the circuit-level swim distance by
+\[
+ \boxed{
+ \phi_c^{\rm circ}
+ =
+ \min_{\substack{
+ D_c^{\rm circ}z=0\\
+ L_c^{\rm circ}z=1
+ }}
+ \sum_{e}\bar w_e z_e
+ }.
+ \label{eq:circuit_swim}
+\]
+Hence \(\phi_c^{\rm circ}\) is the minimum residual cost required to move
+from the decoder's current fixed-fiber logical class to the opposite class
+without changing the stage-2 syndrome.  This definition is independent of a
+particular geometric embedding.
+
+\subsection{General computation by a logical double cover}
+
+To compute Eq.~\eqref{eq:circuit_swim}, complete every one-detector
+mechanism at a single artificial matching-boundary vertex \(b_\ast\);
+two-detector mechanisms remain ordinary edges, and a zero-detector mechanism
+is represented as a labelled loop at \(b_\ast\).  Denote the resulting
+multigraph by \(G_c^\bullet\).  Each edge carries the logical label
+\[
+ \lambda_e=L_c^{\rm circ}[e]\in\F.
+\]
+
+We then construct a binary logical cover with two copies of every vertex,
+\((v,0)\) and \((v,1)\).  For every edge \(e=uv\), add
+\[
+ (u,a)\longleftrightarrow(v,a+\lambda_e),
+ \qquad a\in\F,
+ \label{eq:cover_edge}
+\]
+and assign both lifted edges the same residual cost \(\bar w_e\).  An
+even-labelled edge stays within one sheet, whereas an odd-labelled edge
+switches sheets.  A detector-invisible chain with odd logical parity therefore
+lifts to a path between opposite copies of the same base vertex.  Consequently,
+\[
+ \phi_c^{\rm circ}
+ =
+ \min_{v\in V(G_c^\bullet)}
+ \operatorname{dist}_{\widehat G_c}\bigl((v,0),(v,1)\bigr).
+ \label{eq:cover_distance}
+\]
+The minimizing path can be projected back to the original stage-2 mechanisms
+and reduced modulo two to obtain a witness \(z\) satisfying
+\[
+ D_c^{\rm circ}z=0,\qquad
+ L_c^{\rm circ}z=1.
+\]
+This construction is completely graph-based and does not require an explicit
+spacetime surface.
+
+\subsection{Two-boundary form for closed memory experiments}
+
+For the standard fully terminated memory experiment, Eq.~\eqref{eq:cover_distance}
+often admits a simpler two-boundary realization.  Consider the subgraph
+formed by the real vertices and the edges joining two real vertices.  If
+every cycle of this internal graph has even logical label, there exists a
+binary potential \(g\) such that
+\[
+ \lambda_{uv}=g(u)+g(v)
+ \label{eq:balanced}
+\]
+for every internal edge.  This condition is checked efficiently by a single
+spanning-forest traversal and is therefore an offline preprocessing step,
+not a per-shot computation.
+
+Under Eq.~\eqref{eq:balanced}, we gauge-transform
+\[
+ \lambda'_e
+ =
+ \lambda_e + g^{\mathsf T}D_c^{\rm circ}[:,e],
+\]
+which leaves \(L_c^{\rm circ}z\) unchanged for every
+\(z\in\ker D_c^{\rm circ}\).  All internal edges can then be made
+logical-even.  Splitting the single artificial matching boundary into two
+vertices \(b^0\) and \(b^1\), and attaching each boundary edge according to
+its transformed logical label, gives a resolved graph
+\(G_c^{\rm cut}\) for which
+\[
+ \boxed{
+ \phi_c^{\rm circ}
+ =
+ \operatorname{dist}_{\bar G_c^{\rm cut}}(b^0,b^1)
+ }.
+ \label{eq:two_boundary}
+\]
+Thus, when the balance condition holds, the circuit-level computation has
+exactly the same operational form as the perfect-measurement construction:
+contract the decoder clusters and measure the shortest residual distance
+between two inequivalent boundaries.
+
+The condition is not implied merely by the phrase ``closed temporal
+boundary''.  A closed memory circuit can still contain one-detector
+mechanisms near initialization or readout.  What matters is whether the
+logical parity of every internal cycle is trivial.  If this condition fails,
+Eq.~\eqref{eq:cover_distance} remains valid and provides the general fallback.
+
+\subsection{Spacetime interpretation}
+
+The preceding construction also clarifies the relation to the usual
+spacetime picture.  A repeated triangular color-code memory can be viewed
+as a triangular-prism-like spacetime protocol, with logical information
+propagated by correlation surfaces.  In this interpretation,
+\(L_c^{\rm circ}\) is the algebraic intersection functional associated with
+the relevant logical correlation.  A valid two-boundary cut can be viewed
+as opening the decoding graph along a representative of this logical
+cochain.
+
+This geometric picture is useful for intuition, but the DEM formulation is
+more general: hook errors, diagonal edges, virtual detectors, and compressed
+mechanisms need not form a literal Cartesian product of the static decoding
+graph with time.  The logical-cover construction remains valid without such
+an embedding.
+
+\subsection{Relation to the perfect-measurement result}
+
+The circuit-level definition reduces exactly to the code-capacity result in
+the controlled perfect-measurement limit.  If the only noisy mechanisms are
+independent data-qubit errors before an ideal syndrome-extraction round, then
+the circuit-level detector map reduces to the perfect-measurement stage-2
+map and, on detector-invisible differences,
+\[
+ D_c^{\rm circ}=D_c,\qquad
+ L_c^{\rm circ}z=\beta_c(z).
+\]
+With the same cluster coverage,
+\[
+ \phi_c^{\rm circ}
+ =
+ \phi_c,
+\]
+where \(\phi_c\) is the previously defined distance between the two
+resolved perfect-measurement boundaries.  Hence
+Eq.~\eqref{eq:circuit_swim} is a genuine extension rather than a separate
+confidence definition.
+
+Finally, if the clusters are generated from an exact MWPM optimum together
+with the required optimal nonnegative dual certificate, the perfect-measurement
+representative-gap argument also extends:
+\[
+ W_{c,\mathrm{opp}}^{\rm circ}
+ -
+ W_{c,\mathrm{base}}^{\rm circ}
+ \geq
+ \phi_c^{\rm circ}.
+ \label{eq:circ_gap_bound}
+\]
+This is a fixed-fiber minimum-representative bound, not a full logical-class
+LLR or a theorem about the complete three-color decoder.  In the current
+implementation the exported Sparse-Blossom growth data are used as a
+practical soft-output convention but are not yet certified as the exact
+dual required by Eq.~\eqref{eq:circ_gap_bound}.
+
+The present construction assumes a fully terminated memory experiment.
+Removing future detector rows changes \(\ker D_c^{\rm circ}\) and can change
+its logical image; therefore open temporal boundaries, including
+sliding-window decoding, require a separate treatment.
+
+\begin{thebibliography}{9}
+
+\bibitem{Lee}
+S.-H. Lee, A. Li, and S. D. Bartlett,
+``Color code decoder with improved scaling for correcting circuit-level
+noise,'' \emph{Quantum} \textbf{9}, 1609 (2025).
+
+\bibitem{Meister}
+N. Meister, C. A. Pattison, and J. Preskill,
+``Efficient soft-output decoders for the surface code,''
+arXiv:2405.07433.
+
+\end{thebibliography}
+
+\end{document}

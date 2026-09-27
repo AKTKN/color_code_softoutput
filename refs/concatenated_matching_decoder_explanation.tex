@@ -1,0 +1,682 @@
+\documentclass[a4paper,11pt]{ltjsarticle}
+
+\usepackage[margin=24mm]{geometry}
+\usepackage{amsmath,amssymb,mathtools,bm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+\usepackage{array}
+\usepackage{longtable}
+
+\title{Concatenated MWPM decoder が decoder として成立する理由\\
+\large Lee--Li--Bartlett の Appendix A に沿った数学的解説と projection decoder との対応}
+\author{}
+\date{}
+
+\newcommand{\F}{\mathbb{F}_2}
+\newcommand{\D}{\Delta}
+\newcommand{\bd}{\partial}
+\newcommand{\im}{\operatorname{Im}}
+\newcommand{\kerop}{\operatorname{ker}}
+\newcommand{\wt}{\operatorname{wt}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\MWPM}{\operatorname{MWPM}}
+\newcommand{\symdiff}{\mathbin{\triangle}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+本稿は，Lee, Li, Bartlett, \emph{Color code decoder with improved scaling for correcting circuit-level noise} の concatenated minimum-weight perfect matching (MWPM) decoder について，特に Appendix~A の証明を原論文の論理構造に沿って再構成し，なぜこの二段階 matching が syndrome-consistent な decoder を与えるのかを数学的に説明するものである．中心となる事実は，color-code の一つの物理誤りが作る三体 hyperedge の境界写像が，(i) 一色を除いた restricted lattice 上の通常の graph boundary と，(ii) monochromatic (``color-only'') lattice 上の boundary に分解できることである．この分解により，第一段階の MWPM 出力を第二段階の ``virtual syndrome'' として用いても，第二段階の解を元の color-code hypergraph に戻したときに元の syndrome が必ず再現される．
+
+さらに，projection decoder の lifting が concatenated decoder の第二段階 MWPM における feasible solution の一つであることを示し，両者の対応関係を明確にする．最後に，circuit-level detector error model (DEM) への一般化における graph-like 条件を整理し，color restriction 後に hyperedge が残る syndrome-extraction circuit に対して何が本質的な障害であり，何が回路設計・detector basis・auxiliary variable・hypergraph-aware decoding によって原理的に回避可能かを検討する．
+\end{abstract}
+
+\tableofcontents
+
+\section{最初に区別すべき三つの「decoder の正しさ」}
+
+Lee--Li--Bartlett の Appendix~A を読む際に最も重要なのは，``decoder が成立する'' という言葉が少なくとも三つの異なる主張を含み得ることである．これらを混同すると，Appendix~A が実際に何を証明しているのかを誤解しやすい．
+
+\begin{enumerate}[label=(\roman*)]
+  \item \textbf{Syndrome consistency:} decoder が返す error prediction $x$ が，観測 syndrome $\sigma$ と整合する，すなわち
+  \begin{equation}
+    \bd_1^H x = \sigma
+  \end{equation}
+  （boundary がある場合は boundary charge を除いて整合する）こと．
+
+  \item \textbf{Optimization within the induced matching problem:} 各 MWPM が，その graph 上で与えられた syndrome に対する最小重み matching を返すこと．
+
+  \item \textbf{Bounded-distance / optimal decoding guarantee:} 例えば code distance $d$ に対し，すべての $t<d/2$ 個の物理誤りを必ず論理的に正しく訂正すること．
+\end{enumerate}
+
+Appendix~A が厳密に証明する中心命題は (i) である．さらに projection decoder との比較として，projection decoder が作る lift は concatenated decoder の第二段階における feasible solution であり，したがって同じ第一段階 matching を固定すれば concatenated decoder の第二段階 MWPM の重みは projection decoder の lift より大きくならない，という包含関係が示される．一方，(iii) は証明されていない．むしろ原論文 Appendix~C は，perfect-measurement setting においても $O(3d/7)$ weight の uncorrectable error family が存在し得ることを示している．したがって，有限サイズ数値で $p_{\mathrm{fail}}\sim p^{d/2}$ に近い scaling が観測されたことと，``すべての $<d/2$ error を訂正できる'' ことは同義ではない．
+
+この区別は，後半で circuit-level noise に対する generality を議論する際にも本質的である．
+
+\section{Color code の decoding を hypergraph boundary として書く}
+\subsection{Dual lattice と chain space}
+
+原論文 Appendix~A は，まず boundary のない trivalent, three-colorable lattice $L$ を考え，その dual lattice を $L^*$ とする．$L^*$ の vertex は red, green, blue の三色で彩色され，任意の triangular dual face は
+\begin{equation}
+  \{v_r,v_g,v_b\}
+\end{equation}
+という一つずつ異なる色の vertex を持つ．以下，すべての chain space は $\F$ 上の vector space であり，和は symmetric difference / parity addition と解釈する．例えば同じ syndrome vertex が二度現れれば $1+1=0$ により消える．
+
+通常の dual lattice の cellular chain complex では
+\begin{equation}
+ C_2(L^*) \xrightarrow{\bd_2^*} C_1(L^*) \xrightarrow{\bd_1^*} C_0(L^*)
+\end{equation}
+を考える．例えば edge $\{u,v\}$ の boundary は
+\begin{equation}
+  \bd_1^*\{u,v\}=u+v.
+\end{equation}
+
+\subsection{Decoding hypergraph $H$}
+
+Color code の一個の data-qubit $X$ error は，通常三つの $Z$-check を反転させる．dual picture では，一個の物理 qubit に対応する dual face $\{v_r,v_g,v_b\}$ を一つの hyperedge とみなすと自然である．そこで原論文は decoding hypergraph $H$ を導入する．
+
+\begin{itemize}
+  \item $C_0(H)$ の基底：dual lattice の syndrome/check vertices．
+  \item $C_1(H)$ の基底：各 data qubit に対応する三体 hyperedge $\{v_r,v_g,v_b\}$．
+  \item hypergraph boundary：
+  \begin{equation}
+    \bd_1^H\{v_r,v_g,v_b\}=v_r+v_g+v_b.
+    \label{eq:hyper-boundary}
+  \end{equation}
+\end{itemize}
+
+したがって physical $X$-error configuration を $x\in C_1(H)$ と書けば，その syndrome は単に
+\begin{equation}
+  \sigma=\bd_1^H x
+  \label{eq:syndrome-hyper}
+\end{equation}
+である．Decoding problem は，観測された $\sigma\in C_0(H)$ に対して
+\begin{equation}
+  \bd_1^H x=\sigma
+  \label{eq:decoder-task}
+\end{equation}
+を満たす error chain $x$ を見つける問題として書ける．
+
+ここで通常の MWPM が直接使えない理由も明確である．ordinary graph incidence matrix の一列は高々二つの vertex を持つのに対し，Eq.~\eqref{eq:hyper-boundary} は一つの elementary error が三つの syndrome vertices を同時に反転させる column-weight-3 の hyperedge だからである．
+
+\section{二つの graph への分解}
+\subsection{Red-restricted lattice $L^*_{\neg r}$}
+
+red sub-decoding を例にする．$L^*_{\neg r}$ は red vertex を除き，green と blue の vertex のみを残した graph である．各 red-colored edge は，その endpoints が green と blue なので，$L^*_{\neg r}$ の ordinary edge になる．
+
+red vertex を消す projection を
+\begin{equation}
+ \pi_0^{(r)}:C_0(L^*)\to C_0(L^*)
+\end{equation}
+として
+\begin{equation}
+ \pi_0^{(r)}(v)=
+ \begin{cases}
+ v,& v\ \text{is green or blue},\\
+ 0,& v\ \text{is red}
+ \end{cases}
+ \label{eq:pi-r}
+\end{equation}
+と定義する．したがって $\im\pi_0^{(r)}=C_0(L^*_{\neg r})$ である．
+
+第一段階 MWPM は，元の syndrome の green/blue 成分
+\begin{equation}
+  \pi_0^{(r)}(\sigma)
+\end{equation}
+を syndrome として restricted graph を decode し，edge set
+\begin{equation}
+  b_r\in C_1(L^*_{\neg r})
+\end{equation}
+を返す．valid matching であることは
+\begin{equation}
+  \bd_1^{L^*_{\neg r}}b_r=\pi_0^{(r)}(\sigma)
+  \label{eq:first-matching}
+\end{equation}
+と書ける．
+
+重要なのは，$b_r$ をまだ physical-qubit correction とは解釈しないことである．$b_r$ は「どの red edge に odd parity の physical errors が横切っていると推定するか」という auxiliary information である．これが concatenation の第一段階 output であり，第二段階では syndrome のように扱われる．
+
+\subsection{Red-only lattice $L^*_r$}
+
+第二段階に用いる $L^*_r$ は，通常の color-code dual lattice とは異なる bipartite-like graph である．その vertex は二種類からなる：
+\begin{equation}
+  \D_0(L^*_r)=\D_0^{(r)}(L^*)\cup \D_1^{(r)}(L^*).
+\end{equation}
+すなわち
+\begin{enumerate}[label=(\alph*)]
+  \item 元の red syndrome vertex $v_r$，
+  \item 元の red edge，すなわち green--blue pair $\{v_g,v_b\}$
+\end{enumerate}
+である．
+
+そして，一個の physical-qubit hyperedge $h=\{v_r,v_g,v_b\}$ を，$L^*_r$ では
+\begin{equation}
+  v_r \longleftrightarrow \{v_g,v_b\}
+  \label{eq:red-only-edge}
+\end{equation}
+という ordinary edge とみなす．したがって
+\begin{equation}
+  C_1(L^*_r)\cong C_1(H)
+  \label{eq:isomorphism}
+\end{equation}
+である．この同型が concatenated decoder の核心である．第二段階 MWPM が返す ordinary edge set を，そのまま physical error hyperedge set $x$ に読み戻せる．
+
+\subsection{Boundary map の二成分分解}
+
+$L^*_r$ の一つの edge $h=\{v_r,v_g,v_b\}$ の graph boundary は
+\begin{equation}
+  \bd_1^{L^*_r}h = v_r+\{v_g,v_b\}.
+\end{equation}
+原論文はこの二成分を
+\begin{align}
+ p_{\mathrm{vert}}^{(r)}
+ &:=P_{\im(1-\pi_0^{(r)})}\bd_1^{L^*_r},\\
+ p_{\mathrm{edge}}^{(r)}
+ &:=P_{C_1(L^*_{\neg r})}\bd_1^{L^*_r}
+ \label{eq:p-maps}
+\end{align}
+と定義する．basis element に対しては
+\begin{align}
+ p_{\mathrm{vert}}^{(r)}\{v_r,v_g,v_b\}&=v_r,\\
+ p_{\mathrm{edge}}^{(r)}\{v_r,v_g,v_b\}&=\{v_g,v_b\}.
+ \label{eq:p-actions}
+\end{align}
+ゆえに
+\begin{equation}
+ \bd_1^{L^*_r}=p_{\mathrm{vert}}^{(r)}+p_{\mathrm{edge}}^{(r)}.
+\end{equation}
+
+この notation を使うと，「一個の三体 hyperedge が作る syndrome」を次の二段階に factorize できる：
+\begin{equation}
+ \boxed{
+ \bd_1^H
+ =p_{\mathrm{vert}}^{(r)}
+ +\bd_1^{L^*_{\neg r}}p_{\mathrm{edge}}^{(r)}
+ }
+ \label{eq:key-factorization}
+\end{equation}
+である．実際，basis hyperedge に作用させるだけで
+\begin{align}
+ \left(p_{\mathrm{vert}}^{(r)}+\bd_1^{L^*_{\neg r}}p_{\mathrm{edge}}^{(r)}\right)
+ \{v_r,v_g,v_b\}
+ &=v_r+\bd_1^{L^*_{\neg r}}\{v_g,v_b\}\\
+ &=v_r+v_g+v_b\\
+ &=\bd_1^H\{v_r,v_g,v_b\}.
+ \label{eq:basis-check}
+\end{align}
+両辺が linear map なので，basis 上で一致すれば任意の $x\in C_1(H)$ に対して一致する．Appendix~A の Claim~1 は本質的に Eq.~\eqref{eq:key-factorization} の直接的帰結である．
+
+\section{Appendix A.2: なぜ二段階 MWPM の出力は必ず元の syndrome と整合するか}
+
+\subsection{第二段階の matching condition}
+
+第一段階で Eq.~\eqref{eq:first-matching} を満たす $b_r$ が得られたとする．第二段階は red-only lattice $L^*_r$ 上で
+\begin{equation}
+  (1-\pi_0^{(r)})(\sigma)+b_r
+  \label{eq:second-syndrome}
+\end{equation}
+を syndrome として MWPM を行う．したがって第二段階の出力 $x\in C_1(L^*_r)\cong C_1(H)$ は
+\begin{equation}
+ \bd_1^{L^*_r}x=(1-\pi_0^{(r)})(\sigma)+b_r
+ \label{eq:second-matching}
+\end{equation}
+を満たす．
+
+Eq.~\eqref{eq:second-matching} の左辺を二つの subspace 成分に分けると
+\begin{align}
+ p_{\mathrm{vert}}^{(r)}(x)&=(1-\pi_0^{(r)})(\sigma),
+ \label{eq:second-vert}\\
+ p_{\mathrm{edge}}^{(r)}(x)&=b_r.
+ \label{eq:second-edge}
+\end{align}
+ここで Eq.~\eqref{eq:second-edge} を第一段階の condition に代入すれば
+\begin{equation}
+ \bd_1^{L^*_{\neg r}}p_{\mathrm{edge}}^{(r)}(x)
+ =\pi_0^{(r)}(\sigma).
+ \label{eq:recover-nonred}
+\end{equation}
+したがって Eqs.~\eqref{eq:second-vert} and \eqref{eq:recover-nonred} を足すと
+\begin{align}
+ \left[p_{\mathrm{vert}}^{(r)}+\bd_1^{L^*_{\neg r}}p_{\mathrm{edge}}^{(r)}\right](x)
+ &=(1-\pi_0^{(r)})(\sigma)+\pi_0^{(r)}(\sigma)\\
+ &=\sigma.
+ \label{eq:sum-syndrome}
+\end{align}
+最後に Eq.~\eqref{eq:key-factorization} を使えば
+\begin{equation}
+  \bd_1^H x=\sigma.
+ \label{eq:claim1-result}
+\end{equation}
+これで Claim~1 が証明される．
+
+\subsection{この証明で MWPM の「最小性」は使っていない}
+
+ここは概念的に重要である．上の validity proof は，第一段階と第二段階がそれぞれ \emph{valid matching} を返すことしか使っていない．その matching が最小重みであることは Eq.~\eqref{eq:claim1-result} の証明には必要ない．
+
+したがって concatenation の数学的構造は，
+\begin{quote}
+第一段階で auxiliary parity $b_r$ を syndrome-consistent に選び，第二段階で $[(1-\pi_r)\sigma,b_r]$ に整合する physical error $x$ を選べば，元の hypergraph syndrome $\sigma$ は必ず再現される
+\end{quote}
+という chain-map factorization である．MWPM は，その feasible set の中から低い重みのものを効率的に選ぶために使われている．
+
+\section{具体例}
+\subsection{一個の physical error}
+
+一個の $X$ error が hyperedge
+\begin{equation}
+  h=\{v_r,v_g,v_b\}
+\end{equation}
+に対応するとする．観測 syndrome は
+\begin{equation}
+  \sigma=v_r+v_g+v_b.
+\end{equation}
+red sub-decoding では
+\begin{equation}
+ \pi_0^{(r)}\sigma=v_g+v_b.
+\end{equation}
+第一段階 restricted MWPM は最も自然には
+\begin{equation}
+  b_r=\{v_g,v_b\}
+\end{equation}
+を返す．第二段階 syndrome は
+\begin{equation}
+ (1-\pi_0^{(r)})\sigma+b_r=v_r+\{v_g,v_b\}.
+\end{equation}
+これは red-only lattice の一つの edge $h$ の boundary そのものであるから，第二段階は $h$ を選べる．元に戻せば一個の physical error prediction であり，その hypergraph boundary は元の三つの syndrome vertices と一致する．
+
+\subsection{二個の error による cancellation}
+
+二つの hyperedge
+\begin{equation}
+ h_1=\{v_{r,1},v_g,v_b\},\qquad
+ h_2=\{v_{r,2},v_g,v_b\}
+\end{equation}
+が同時に起きた場合を考える．$\F$ 上では green/blue syndrome が二回ずつ現れて消えるので
+\begin{equation}
+ \sigma=\bd_1^H(h_1+h_2)=v_{r,1}+v_{r,2}.
+\end{equation}
+したがって restricted syndrome は $\pi_0^{(r)}\sigma=0$ であり，第一段階は $b_r=0$ を選べる．第二段階では
+\begin{equation}
+ (1-\pi_0^{(r)})\sigma+b_r=v_{r,1}+v_{r,2}.
+\end{equation}
+一方
+\begin{align}
+ p_{\mathrm{edge}}^{(r)}(h_1+h_2)
+ &=\{v_g,v_b\}+\{v_g,v_b\}=0,\\
+ p_{\mathrm{vert}}^{(r)}(h_1+h_2)
+ &=v_{r,1}+v_{r,2}.
+\end{align}
+したがって第二段階は $h_1+h_2$ を feasible correction として持つ．この例は，第一段階が「個々の physical error」を当てているのではなく，restricted edge parity のみを推定していることを示す．
+
+\section{Appendix A.3: spatial boundary がある場合}
+
+Triangular color-code patch では anyon/defect が対応する colored boundary に condense できるため，syndrome consistency は単純な $\bd x=\sigma$ ではなく「boundary vertices を除いて一致する」と表現すべきである．原論文は dual lattice に三つの colored boundary vertices
+\begin{equation}
+ v^r_{\mathrm{bdry}},\quad v^g_{\mathrm{bdry}},\quad v^b_{\mathrm{bdry}}
+\end{equation}
+を導入し，boundary vertices が張る vector space を $C_{\mathrm{bdry}}$ とする．
+
+第一段階と第二段階の matching condition はそれぞれ
+\begin{align}
+ \bd_1^{L^*_{\neg r}}b_r-\pi_0^{(r)}\sigma
+ &\in C_{\mathrm{bdry}}(L^*_{\neg r}),
+ \label{eq:boundary-first}\\
+ \bd_1^{L^*_r}x-(1-\pi_0^{(r)})\sigma-b_r
+ &\in C_{\mathrm{bdry}}(L^*_r).
+ \label{eq:boundary-second}
+\end{align}
+と緩和される．すると Claim~2 は
+\begin{equation}
+ \bd_1^H x-\sigma\in C_{\mathrm{bdry}}(H)
+ \label{eq:boundary-result}
+\end{equation}
+を示す．すなわち interior detector では完全に syndrome が一致し，差が許されるのは物理的に charge が condense できる boundary のみである．
+
+実装上は複数の boundary nodes を一個の virtual boundary に contract しても，それらを結ぶ edge の weight を zero とすれば matching cost は変わらない．ただし Appendix~A.3 では数学的明瞭さのため colored boundary vertices を区別したまま証明している．
+
+\section{Projection decoder との対応}
+\subsection{Projection decoder の構造}
+
+従来の projection / restriction decoder は概念的に
+\begin{enumerate}
+  \item syndrome を複数の restricted lattices に project する，
+  \item 各 restricted lattice を surface-code-like MWPM で decode して $b_r,b_g,b_b$ を得る，
+  \item それらの restricted corrections を元の color-code error $x$ に \emph{lift} する
+\end{enumerate}
+という構造を持つ．
+
+Lee--Li--Bartlett の Appendix~A.4 では，boundary のない場合について projection decoder の出力を次のように書く：
+\begin{align}
+ \bd_1^{L^*_{\neg c}}b_c&=\pi_0^{(c)}(\sigma),\qquad c\in\{r,g,b\},
+ \label{eq:proj-restricted}\\
+ \bd_2^*(x)&=b_r+b_g+b_b,
+ \label{eq:proj-lift}\\
+ \bd_1^H(x)&=\sigma.
+ \label{eq:proj-valid}
+\end{align}
+Eq.~\eqref{eq:proj-lift} は，hyperedge $x$ の三つの colored-edge projection を合わせると三 restricted matchings を再現する，という lifting condition である．
+
+\subsection{Claim 3: projection lift は concatenated second stage の feasible solution}
+
+Appendix~A.4 の核心は，projection decoder と concatenated decoder が同じ red-restricted matching $b_r$ を持つとき，projection decoder が作る任意の valid lift $x$ が
+\begin{equation}
+ \bd_1^{L^*_r}x=b_r+(1-\pi_0^{(r)})\sigma
+ \label{eq:claim3}
+\end{equation}
+を満たすことである．これはまさに concatenated decoder の第二段階 matching condition である．
+
+証明は二つの direct-sum decomposition を使う．第一に dual face の edge boundary は
+\begin{equation}
+ \bd_2^*=p_{\mathrm{edge}}^{(r)}+p_{\mathrm{edge}}^{(g)}+p_{\mathrm{edge}}^{(b)}.
+ \label{eq:edge-decomposition}
+\end{equation}
+red, green, blue edge subspaces は互いに disjoint なので，Eq.~\eqref{eq:proj-lift} から各 color 成分を比較して
+\begin{equation}
+ p_{\mathrm{edge}}^{(r)}(x)=b_r
+ \label{eq:claim3-edge}
+\end{equation}
+が従う．
+
+第二に hypergraph syndrome boundary は
+\begin{equation}
+ \bd_1^H=p_{\mathrm{vert}}^{(r)}+p_{\mathrm{vert}}^{(g)}+p_{\mathrm{vert}}^{(b)}.
+ \label{eq:vert-decomposition}
+\end{equation}
+red, green, blue vertex subspaces も disjoint なので，Eq.~\eqref{eq:proj-valid} から
+\begin{equation}
+ p_{\mathrm{vert}}^{(r)}(x)=(1-\pi_0^{(r)})(\sigma)
+ \label{eq:claim3-vert}
+\end{equation}
+が得られる．Eqs.~\eqref{eq:claim3-edge} and \eqref{eq:claim3-vert} を足せば Eq.~\eqref{eq:claim3} である．
+
+\subsection{なぜ concatenated decoder は projection decoder より悪くないと言えるのか}
+
+projection decoder の lift $x_{\mathrm{proj}}$ は，concatenated decoder の第二段階 feasible set
+\begin{equation}
+ \mathcal{F}_r(b_r,\sigma)
+ :=\left\{x\in C_1(H):\bd_1^{L^*_r}x=b_r+(1-\pi_0^{(r)})\sigma\right\}
+\end{equation}
+の一要素である．第二段階 MWPM はこの feasible set の中で weight を最小化するため
+\begin{equation}
+ w(x_{\mathrm{concat},r})
+ \le w(x_{\mathrm{proj}})
+ \label{eq:weight-dominance}
+\end{equation}
+となる．
+
+この主張の意味は限定して読む必要がある．これは「projection decoder が返すすべての logical decision に対して concatenated decoder の logical failure probability が pointwise に必ず小さい」という確率論的定理ではなく，\emph{同じ restricted matching $b_r$ を起点にした lift optimization の feasible set に projection lift が含まれるため，最小 weight は大きくならない}という optimization-level の包含関係である．さらに実際の concatenated decoder は三色それぞれで二段階 decode を行い，その三候補から最小 weight を選ぶので，候補集合をさらに広げている．
+
+\begin{table}[t]
+\centering
+\caption{Projection decoder と concatenated MWPM decoder の対応}
+\begin{tabular}{p{0.23\linewidth}p{0.34\linewidth}p{0.34\linewidth}}
+\toprule
+ & Projection decoder & Concatenated MWPM decoder\\
+\midrule
+第一段階 & restricted lattice で MWPM & 同じ restricted lattice で MWPM\\
+第一段階出力 & $b_c$: restricted correction & $b_c$: auxiliary/virtual syndrome として解釈\\
+元 lattice への復元 & lifting rule を用いる & monochromatic lattice で第二 MWPM\\
+第二段階の意味 & 局所または規則的 lift & lift 自体を global minimum-weight matching problem にする\\
+三色の利用 & 複数 restricted results を組み合わせて lift & 各色ごとに独立候補 $x_c$ を作り，最小 weight を選択\\
+数学的関係 & lift は特定の feasible candidate & projection lift を含む feasible set 上で最小化\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{「concatenated」という発想はどこから来たのか}
+
+原論文が明示している由来は，Lee--Jeong による color-code-based cluster-state の measurement-based quantum computation (MBQC) decoder である．したがって著者の個人的な思考過程そのものを論文から復元することはできないが，公開された二つの仕事の構造から，発想上の流れは次のように再構成できる．
+
+\begin{enumerate}
+  \item Color code の single error は三つの checks を反転するため，そのままでは MWPM に載らない．
+  \item しかし一色を捨てた restricted lattice では，single error の影響は edge-like になり，第一段階 MWPM が可能になる．これは projection decoder と共通する．
+  \item 第一段階の matching は physical correction を一意に決めず，元の hyperedge configuration に関する「残った ambiguity」，具体的には特定 colored edge を横切る error parity を与える．
+  \item projection decoder はこの ambiguity を lifting rule で解消する．MBQC の decoder では，この残った parity 自体を \emph{もう一度 syndrome とみなし}，残りの colored checks と一緒に第二 MWPM に入力するという考え方が用いられた．
+  \item 2025 年の gate-based color-code decoder では，この構造を ``first decoder output as additional virtual syndrome data'' として明示的に抽象化し，$p_{\mathrm{edge}}^{(c)}$ と $p_{\mathrm{vert}}^{(c)}$ による chain-map factorization として Appendix~A で正当化した．
+\end{enumerate}
+
+したがって，concatenation の本質は「二つの decoder を単に直列に置いた」ことではない．第一段階が推定する latent parity variable を，第二段階にとっての observed-like constraint に昇格させることで，本来 hypergraph decoding である問題を二つの graph decoding problems に factorize した点にある．
+
+\section{Circuit-level noise への一般化}
+\subsection{Detector error model と graph-like mechanism}
+
+Circuit-level では elementary object は data-qubit error ではなく，circuit fault がどの detectors と logical observables を反転させるかである．原論文は一つの DEM mechanism を
+\begin{equation}
+  e=(q,D,O)
+\end{equation}
+と書く．$q$ は probability，$D$ は flipped detector set，$O$ は flipped logical-observable set である．通常の MWPM に直接載せられるためには
+\begin{equation}
+  |D|\le 2
+  \label{eq:edgelike}
+\end{equation}
+である必要があり，原論文はこれを edge-like と呼ぶ．
+
+原論文 Algorithm~1 は各 color $c$ について full DEM $M$ を restricted DEM $M_{\neg c}$ と color-only DEM $M_c$ に変換する．red を例にすれば概略は次の通りである．
+
+\begin{enumerate}
+  \item 一つの physical mechanism が $X$-type と $Z$-type detectors の両方を反転する場合，Pauli type ごとに別 mechanism に分割する．この操作は $Y$ error や $X\otimes Z$ などが持つ $X/Z$ correlation を無視する近似を含む．
+  \item red detectors を取り除いた target set $D_{\neg r}$ を作る．
+  \item $0<|D_{\neg r}|\le 2$ の mechanism のみを $M_{\neg r}$ に残し，同じ target set を持つ mechanisms を圧縮する．
+  \item $M_{\neg r}$ の各 mechanism $e$ に virtual detector $D_e$ を割り当てる．
+  \item second-stage DEM $M_r$ では，元 mechanism の green/blue detector targets を対応する $D_e$ へ置換する．その結果，red detector と virtual detector の間の edge-like mechanism を作る．
+\end{enumerate}
+
+Algorithm~1 の条件を数式で読むと，second stage に exact edge として残せる mechanism は概ね
+\begin{equation}
+  |D_{\neg c}|\le 2,\qquad |D_c|\le 1
+  \label{eq:circuit-cardinality}
+\end{equation}
+という構造を持つ必要がある．$D_{\neg c}=\varnothing$ の場合には full target 自体が $|D|\le2$ なら直接 $M_c$ に残る．この cardinality restriction が，arbitrary syndrome-extraction circuit への generality を考えるときの核心になる．
+
+\subsection{Circuit-level 版について Appendix A と同じ強さの定理は与えられていない}
+
+原論文 Appendix~A の formal proof は，Sec.~3 の perfect-measurement 2D decoder に対するものである．Sec.~4 の DEM decomposition について，``任意の color-code syndrome-extraction circuit と任意の $t$-fault pattern に対して，この二段階 MWPM が必ず正しい logical class を返す'' という一般定理は与えられていない．
+
+特に Algorithm~1 は，restriction 後に $|D_{\neg c}|>2$ となる mechanism，あるいは second stage で一つの virtual detector に加えて複数の $c$-colored detectors を同時に反転する mechanism を ordinary matching edge として保持できない．そのような mechanism は plain graph MWPM の native object ではない．したがって，特定の syndrome-extraction circuit に対して residual hyperedge が存在するとき，2025 年論文の Algorithm~1 をそのまま適用して full DEM と完全に等価な graph model を得られるとは限らない．
+
+原論文自身も superdense および middle-out syndrome-extraction circuits を今後検討すべき対象として挙げている．したがって，少なくとも同論文の証明範囲に限定すれば，それらを含む arbitrary extraction circuit に対する一般的な correctness theorem は未確立である，という理解が適切である．
+
+\section{Appendix 的検討：残る hyperedge は原理的に解消不能か}
+\subsection{結論の位置づけ}
+
+``hyperedge が残る'' ことは，color-code decoding 自体が原理的に不可能であることを意味しない．障害はより限定的であり，\emph{その detector representation を保ったまま，独立な ordinary graph edges の MWPM だけで full fault model を exact に表現できない}ことである．したがって，問題は topological impossibility というより representation / optimization problem である．
+
+一方で，任意の DEM を常に lossless に一つの MWPM graph へ変換できる，という期待も一般には正しくない．以下，何が可能で何が難しいかを分けて説明する．
+
+\subsection{方法 A: detector basis を変える}
+
+Detector check matrix を
+\begin{equation}
+ H\in\F^{m\times n}
+\end{equation}
+とし，column $j$ が fault mechanism $j$ の flipped detector pattern を表すとする．detector の basis を invertible matrix $R$ で変えることは
+\begin{equation}
+  H\mapsto H'=RH
+  \label{eq:row-transform}
+\end{equation}
+に対応する．$R$ が invertible なら syndrome information は失われず，$\kerop H'=\kerop H$ である．したがって，同じ fault distinguishability を保ちながら column weight を減らせる場合がある．
+
+これは circuit co-design と同様に有力であるが，任意の binary matrix が row operations のみで column weight $\le2$ になるわけではない．graph incidence matrix の columns が表現する binary matroid は graphic matroid であり，row operations は column matroid を変えない．一般の binary matroid は graphic ではないため，\emph{single exact matching graph への変換には数学的な表現可能性の制約がある}．
+
+この観点から見ると，「どの detector basis を選べば color-restricted DEM が graph-like になるか」を探索すること自体が，decoder design の一つの研究問題である．
+
+\subsection{方法 B: auxiliary / virtual variables による factorization}
+
+Concatenated decoder はまさにこの方法の一例である．一般化すると，full syndrome map
+\begin{equation}
+  \bd_H:E\to S_c\oplus S_{\neg c}
+\end{equation}
+に対して auxiliary space $U_c$ と maps
+\begin{equation}
+ p_{\mathrm{edge}}^{(c)}:E\to U_c,
+ \qquad
+ p_{\mathrm{vert}}^{(c)}:E\to S_c
+\end{equation}
+を見つけ，
+\begin{equation}
+ \bd_H
+ =p_{\mathrm{vert}}^{(c)}
+ +\bd_{\neg c}\,p_{\mathrm{edge}}^{(c)}
+ \label{eq:general-factorization}
+\end{equation}
+と factorize できれば，Appendix~A と同じ deterministic validity argument を再利用できる可能性がある．第一段階は $U_c$ の latent parity を推定し，第二段階は $(S_c,U_c)$ 上で physical errors を decode する．
+
+ただし circuit-level では，syndrome consistency だけでなく likelihood を正しく扱う必要がある．例えば一個の physical fault が三 detectors $d_1,d_2,d_3$ を同時に flip する場合，これを複数の ordinary edges に分解すること自体は形式的には可能でも，それらの edges は\emph{独立に起きるわけではない}．一個の fault に由来する edge bundle が all-or-nothing で選ばれるという correlation を plain MWPM は自動的には表現しない．
+
+したがって exact gadgetization には，少なくとも
+\begin{enumerate}
+  \item syndrome parity の保存，
+  \item logical observable parity の保存，
+  \item original fault probability / weight の保存，
+  \item auxiliary edge を部分的に選ぶ偽の低-cost solution を排除する constraint
+\end{enumerate}
+が必要になる．最後の条件が，単純な virtual-node insertion だけでは解決しない場合がある．
+
+\subsection{方法 C: syndrome-extraction circuit と decoder を共同設計する}
+
+Color-code circuit-level decoding では，CNOT schedule を適切に選ぶことで一個の circuit fault が各 restricted graph 上で高々二つの syndrome changes しか作らないようにする方針が既に使われている．Zhang--Wu--Guo は，weight-2,4,6,8 stabilizer measurement に対して特定の schedule condition を課すことで，各 2D restricted lattice 上の syndrome changes を高々二つに抑える構成を示している．
+
+したがって ``decoder が任意の extraction circuit に適応する'' だけでなく，逆に
+\begin{equation}
+ \text{extraction circuit}\quad\longleftrightarrow\quad\text{decoder graphability}
+\end{equation}
+を同時最適化する方が現実的である．superdense circuit などで hyperedge が残る場合も，ancilla preparation, CNOT ordering, detector definition のどれを変えれば restricted DEM が factorable になるか，という観点で調べる価値がある．
+
+\subsection{方法 D: hypergraph-aware / correlated decoder を部分的に使う}
+
+もし exact graphification が困難なら，第一段階または第二段階の一方だけを MWPM に固定する必要はない．例えば
+\begin{equation}
+ \text{MWPM}\to\text{BP/OSD},\quad
+ \text{MWPM}\to\text{ILP/MaxSAT},\quad
+ \text{graph matching}\to\text{correlated matching}
+\end{equation}
+のように，hyperedge / correlation を扱える decoder を第二段階に採用できる．この場合も concatenation の高水準の発想，すなわち ``first-stage latent parity を second-stage syndrome として使う'' ことは維持できる．失われるのは二段とも plain MWPM で高速に解けるという利点である．
+
+\subsection{任意の $t$ faults を訂正するために必要な三条件}
+
+``circuit-level で correctable number の範囲内の任意の error を訂正できる'' という強い保証を証明したいなら，少なくとも次の三層を分離すべきである．
+
+\begin{enumerate}
+  \item \textbf{Circuit fault distance:} $\le t$ faults で detector-trivial な nontrivial logical operator が生じないこと．これは circuit 自体の性質である．
+  \item \textbf{Representation completeness:} $\le t$ faults が作る detector/logical patterns が，restricted/second-stage model の中で lossless に表現されること．Algorithm~1 で relevant hyperedge を捨てるなら，この条件は自明には成立しない．
+  \item \textbf{Decision guarantee:} decoder がその model 上で，すべての $\le t$ fault patterns に対して正しい logical class を選ぶこと．syndrome-consistent candidate を返すだけでは足りない．
+\end{enumerate}
+
+Lee--Li--Bartlett Appendix~A は主に 2D perfect-measurement model での representation/syndrome consistency を扱う．さらに Appendix~C の counterexample が示すように，その setting ですら concatenated MWPM は一般の bounded-distance decoder ではない．したがって arbitrary syndrome-extraction circuit に対する ``all errors up to $t$'' theorem を得るには，Appendix~A の factorization を spacetime DEM へ持ち上げるだけでなく，上記三条件すべてを証明する必要がある．
+
+\section{この問題に対する研究上の見通し}
+
+この観点から，``superdense 等で color restriction 後に hyperedge が残る'' という問題は，単なる実装上の nuisance ではなく，concatenated decoder の一般化可能性を測る明確な数学的問題になる．特に次の定式化が有用である．
+
+\begin{quote}
+与えられた color-code syndrome-extraction circuit の full detector matrix $H$ と fault weights に対し，各 color $c$ について，syndrome map と logical map を保存する二段階 graph factorization が存在するための必要十分条件は何か．存在しない場合，最小限どの程度の hyperedge/correlation information を second stage に残せば fault distance を保てるか．
+\end{quote}
+
+この問題は，(i) chain-complex factorization，(ii) binary-matroid graphability，(iii) circuit-fault propagation，(iv) weighted latent-variable inference の交点にある．したがって，``任意の syndrome extraction に plain MWPM を適用できるか'' という問いよりも，次の hierarchy で調べる方が精密である．
+
+\begin{enumerate}
+  \item detector row operations だけで restricted DEM を graph-like にできるか；
+  \item auxiliary detectors を追加した二段階 factorization なら可能か；
+  \item correlation-preserving gadget を許せば可能か；
+  \item それでも不可能なら，どの hyperedges のみ hypergraph-aware decoder に渡せばよいか；
+  \item その construction が circuit fault distance と sub-threshold scaling を保存するか．
+\end{enumerate}
+
+この hierarchy のうち第2段階が，2025 年の concatenated MWPM decoder の数学的本体である．したがって residual hyperedge の問題は concatenation idea の否定ではなく，むしろ ``factorization をどこまで一般化できるか'' という自然な次の研究課題とみなせる．
+
+\appendix
+\section{記号と写像の対応表}
+
+\begin{longtable}{p{0.22\linewidth}p{0.68\linewidth}}
+\toprule
+記号 & 意味\\
+\midrule
+\endfirsthead
+\toprule
+記号 & 意味\\
+\midrule
+\endhead
+$L$ & primal color-code lattice\\
+$L^*$ & dual lattice\\
+$H$ & physical data-qubit errors を hyperedges とする decoding hypergraph\\
+$C_i(\cdot)$ & $i$-cells を基底とする $\F$ vector space\\
+$\bd_1^H$ & physical error hyperedge set から syndrome への boundary map\\
+$L^*_{\neg c}$ & color $c$ の vertices を除いた restricted lattice\\
+$L^*_c$ & $c$-colored syndrome vertices と $c$-colored edges を vertices とする monochromatic / color-only lattice\\
+$\pi_0^{(c)}$ & syndrome から $c$-colored component を消す projection\\
+$b_c$ & first-stage restricted MWPM の edge-set output\\
+$p_{\mathrm{edge}}^{(c)}$ & physical hyperedge を restricted colored edge component に写す map\\
+$p_{\mathrm{vert}}^{(c)}$ & physical hyperedge を $c$-colored syndrome vertex component に写す map\\
+$x$ & second-stage output；$C_1(L^*_c)\cong C_1(H)$ により physical error prediction と同一視\\
+\bottomrule
+\end{longtable}
+
+\section{証明の最短版}
+
+red sub-decoding だけを書けば，証明は次の四行に圧縮できる．
+\begin{align}
+ \bd_1^{L^*_{\neg r}} b_r &= \pi_0^{(r)}\sigma,\\
+ \bd_1^{L^*_r}x &= (1-\pi_0^{(r)})\sigma+b_r,\\
+ p_{\mathrm{vert}}^{(r)}x&=(1-\pi_0^{(r)})\sigma,\qquad
+ p_{\mathrm{edge}}^{(r)}x=b_r,\\
+ \bd_1^H x
+ &=p_{\mathrm{vert}}^{(r)}x+\bd_1^{L^*_{\neg r}}p_{\mathrm{edge}}^{(r)}x
+ =(1-\pi_0^{(r)})\sigma+\pi_0^{(r)}\sigma=\sigma.
+\end{align}
+
+つまり，二段階 MWPM の correctness の algebraic core は
+\begin{equation}
+ \boxed{\bd_1^H=p_{\mathrm{vert}}^{(r)}+\bd_1^{L^*_{\neg r}}p_{\mathrm{edge}}^{(r)}}
+\end{equation}
+という一つの factorization identity である．
+
+\section{原論文の主張と本稿の補助的考察の区別}
+
+本稿で原論文に直接基づく部分は，Sec.~3 の two-stage decoder，Appendix~A.1--A.4 の chain-complex definitions, Claims~1--3 とその consequences，Sec.~4 の DEM decomposition/Algorithm~1，および Sec.~5 で述べられる future directions である．
+
+一方，以下は原論文に明記された theorem ではなく，その構造を用いた補助的・発展的考察である：
+\begin{itemize}
+  \item detector matrix の row operations と graphic matroid の関係を用いた ``single graphification'' の可否の整理；
+  \item arbitrary DEM に対する一般 factorization Eq.~\eqref{eq:general-factorization}；
+  \item hyperedge gadgetization における probability/correlation preservation の必要条件；
+  \item arbitrary circuit に対する correctness を circuit fault distance, representation completeness, decision guarantee の三層に分ける整理．
+\end{itemize}
+これらは，原論文の証明内容と，そこから自然に導かれる generalization problem を混同しないために明示的に区別した．
+
+\begin{thebibliography}{99}
+
+\bibitem{Lee2025Concat}
+S.-H. Lee, A. Li, and S. D. Bartlett,
+``Color code decoder with improved scaling for correcting circuit-level noise,''
+\emph{Quantum} (2025), arXiv:2404.07482.
+
+\bibitem{LeeJeong2022}
+S.-H. Lee and H. Jeong,
+``Universal hardware-efficient topological measurement-based quantum computation via color-code-based cluster states,''
+\emph{Physical Review Research} \textbf{4}, 013010 (2022).
+
+\bibitem{Delfosse2014}
+N. Delfosse,
+``Decoding color codes by projection onto surface codes,''
+\emph{Physical Review A} \textbf{89}, 012317 (2014).
+
+\bibitem{Zhang2024}
+J. Zhang, Y.-C. Wu, and G.-P. Guo,
+``Facilitating practical fault-tolerant quantum computing based on color codes,''
+\emph{Physical Review Research} \textbf{6}, 033086 (2024).
+
+\bibitem{HiggottGidney2025}
+O. Higgott and C. Gidney,
+``Sparse Blossom: correcting a million errors per core second with minimum-weight matching,''
+\emph{Quantum} (2025), arXiv:2303.15933.
+
+\bibitem{Stim}
+C. Gidney,
+``Stim: a fast stabilizer circuit simulator,''
+\emph{Quantum} \textbf{5}, 497 (2021).
+
+\end{thebibliography}
+
+\end{document}

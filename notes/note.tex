@@ -1,0 +1,1997 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=27mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm,mathrsfs,booktabs,array,microtype}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\hypersetup{pdftitle={Fixed-branch swim distance for triangular color-code matching},
+pdfauthor={Color-code soft-output research project}}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\theoremstyle{plain}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{corollary}[definition]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[definition]{Remark}
+\newtheorem{openissue}[definition]{Open issue}
+\newcommand{\F}{\mathbb F_2}
+\newcommand{\C}{\mathcal C}
+\newcommand{\LL}{\mathcal L}
+\newcommand{\bd}{v_{\mathrm{bdry}}}
+\newcommand{\eps}{\epsilon}
+\newcommand{\pred}{\mathrm{pred}}
+\newcommand{\dang}{\mathrm{dang}}
+\newcommand{\missF}{\mathrm{missF}}
+\newcommand{\missE}{\mathrm{missE}}
+\newcommand{\MWPM}{\operatorname{MWPM}}
+\title{Fixed-branch swim distance for triangular color-code matching}
+\author{Color-code soft-output research note}
+\date{16 September 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We specify the physical and matching-lattice conventions for perfect-syndrome
+decoding of standard triangular 6.6.6 color codes. For every odd distance
+$d\geq3$ and fixed color $c$, we classify all physical qubits whose
+monochromatic matching edges meet the ordinary artificial boundary node.
+They form the $d$ qubits on the closed $c$-colored side and the single
+opposite corner. The two sets are distinguished by a missing $c$ face and a
+missing $c$ edge, respectively. An explicit coordinate proof covers the
+entire family, including every corner. We then resolve these types
+into two virtual vertices, prove connectivity and an explicit quotient
+back to the ordinary graph, and establish compatibility with matching
+when both terminals are free. A linear qubit-support map is defined on
+all resolved edge chains, with an exact factorization of the physical
+syndrome through graph incidence. Physical logical-boundary overlap then
+proves that terminal-joining relative chains are precisely the nontrivial
+logical class and closed chains are generated exactly by face stabilizers of the other
+two colors. The resulting induced binary complex realizes the
+physical logical quotient, establishing the fixed-branch topology of a
+Meister-type modified decoding graph. A free-boundary optimal dual
+specifies decoder clusters, whose exact interval contraction gives a
+computable per-color swim distance. We prove its physical logical
+interpretation and a certified stage-2 minimum-representative gap bound.
+The result does not identify a full-decoder gap or a logical-class LLR.
+The circuit-level part starts from detector and observable maps of the
+retained decomposed model. It proves a fixed-fiber quotient, a canonical
+logical-cover algorithm, a gated boundary cut, compatible labelled
+contraction, and a certified representative bound. A controlled
+perfect-measurement limit recovers the preceding theory exactly.
+\end{abstract}
+
+\part{Perfect-measurement fixed-fiber theory}
+\section{Scope and physical code}\label{sec:physical}
+All supports and incidence maps are binary. Addition of supports means
+symmetric difference. We analyze $X$ errors using measured $Z$ checks.
+Exchanging $X$ and $Z$ gives the other CSS sector; this does not assert
+statistical independence for arbitrary Pauli noise. Measurements are
+perfect in the first part (Sections~1--13); Part~\ref{part:circuit}
+specifies the circuit-level extension. Holes, twists, Pauli-type boundaries, other tilings such as
+4.8.8, and the degenerate distance-one patch are excluded.
+
+\begin{definition}[Physical lattice and colors]\label{def:physical}
+Let $\LL_{2D}$ be the standard triangular patch of the hexagonal color-code
+lattice, with
+\[
+ Q=\Delta_0(\LL_{2D}),\quad E=\Delta_1(\LL_{2D}),\quad
+ F=\Delta_2(\LL_{2D}),\quad \C=\{r,g,b\}.
+\]
+These are physical data vertices, primal edges, and real faces.
+Qubits occupy $Q$, not faces or edges. Write
+$F_c=\Delta_2^{(c)}(\LL_{2D})$ and $E_c=\Delta_1^{(c)}(\LL_{2D})$.
+The bulk lattice is trivalent with properly three-colored faces; the
+finite patch has degree-two corners.
+
+The three physical boundary arcs are $\Gamma_r,\Gamma_g,\Gamma_b$.
+A boundary of color $a$ is adjacent only to real faces of the other colors.
+An interior primal edge separating face colors $a,b$ has the third color.
+A boundary primal edge on $\Gamma_a$ with incident real face of color $b$
+also has the third color. In this rule the absent exterior sector is
+labelled by $a$; it is not a physical check.
+\end{definition}
+
+These are the physical and boundary conventions of
+Lee--Li--Bartlett \cite[Sec.~2.1, pp.~3--4]{Lee}.
+Section~\ref{sec:family} fixes the precise finite-family realization.
+The corner exception matters when calling the lattice trivalent.
+
+\begin{definition}[Checks, syndrome, and physical logical class]\label{def:checks}
+For $a\in A=\F^Q$ and $f\in F$, let
+\[
+ P_X(a)=\prod_{q\in Q}X_q^{a_q},\quad
+ P_Z(a)=\prod_{q\in Q}Z_q^{a_q},\qquad
+ S_f^X=\prod_{q\in f}X_q,\quad S_f^Z=\prod_{q\in f}Z_q .
+\]
+Here $q\in f$ means face-support incidence. Let $U=\F^F$ and define
+\[
+ H:A\longrightarrow U,\qquad (Ha)_f=\sum_{q\in f}a_q,\qquad
+ J=H^{\mathsf T}:U\longrightarrow A.
+\]
+The stabilizer group $\mathcal S$ is generated by the real-face
+$S_f^X,S_f^Z$. Faces have even weight, and distinct intersecting faces
+share two qubits, so $HJ=0$. The code space is their common $+1$
+eigenspace. An $X$ error of support $a$ has syndrome $\sigma_Z=Ha$:
+the outcome of $S_f^Z$ is $(-1)^{(Ha)_f}$. We also write
+$\sigma_Z\subseteq F$ for the syndrome support and
+$\sigma_Z^{(c)}=\sigma_Z\cap F_c$.
+\end{definition}
+
+The checks are those of \cite[Eq.~(1)]{Lee} and
+\cite[Eq.~(1)]{Bombin}. The physical CSS complex is
+\[
+ U\xrightarrow{J}A\xrightarrow{H}U,\qquad HJ=0.
+\]
+Thus $S_X=\operatorname{im}J$, $Z_X=\ker H$, and
+$\LL_X=Z_X/S_X$ describe physical stabilizer supports, zero-syndrome
+supports, and logical classes, respectively. They are not the homology
+of an unspecified matching graph. Same-syndrome corrections $a,a'$
+are equivalent exactly when $a+a'\in S_X$. Syndrome validity alone gives
+$a+a'\in Z_X$.
+
+The standard triangular code encodes one qubit, so $\dim\LL_X=1$
+\cite[triangular-code construction, pp.~2--3]{Bombin}.
+Logical $X$ and $Z$ representatives can each be supported on a complete
+physical side \cite[Sec.~2.1, p.~4]{Lee}.
+Write $Q_a=Q\cap\Gamma_a$, including both corners of that side.
+Lemma~\ref{lem:incidence} verifies $|Q_a|=d$.
+The same-side representatives $P_X(Q_a),P_Z(Q_a)$ anticommute since
+$d$ is odd. Fixing a nontrivial logical-$Z$ support $\ell_Z$ gives
+the physical logical parity $\lambda_X(z)=\ell_Z^{\mathsf T}z$ on
+$Z_X$. No equality with a matching-path endpoint parity is assumed.
+
+\section{Colored strings and boundary termination}\label{sec:strings}
+This section concerns physical strings, not logical paths of $\LL_c^*$.
+For a primal edge $e=\{u,v\}\in E_c$, the operator $X_uX_v$ has syndrome
+$H(u+v)$, with $u,v$ also denoting basis vectors of $A$.
+Every non-$c$ face contains either both endpoints or neither, so those
+contributions cancel. Remaining excitations are at the $c$ faces at the
+ends; a boundary may omit such a face. This local incidence property
+also follows from Lemma~\ref{lem:incidence}.
+
+A colored Pauli string transports a charge by composing these elementary
+two-qubit edge operators along a path in the usual shrunk lattice of that
+color. Consecutive segments share a $c$-face endpoint, whose syndrome
+cancels in the binary sum. The physical support is the symmetric
+difference of the endpoint pairs of the traversed primal $c$ edges.
+Only uncancelled real endpoints are excited. Exchanging $X$ and $Z$
+exchanges the excited check type. These are the colored strings of
+\cite[Eq.~(4), pp.~2--3]{Bombin}; their shrunk lattice is not being
+identified with either matching lattice defined below.
+
+A boundary of color $c$ condenses the corresponding colored charges:
+a $c$ string can terminate there without a measured $c$-check excitation
+\cite[boundary discussion, p.~3]{Bombin},
+\cite[Secs.~4.2--4.3, Fig.~6 and Table~2]{Kesselring}.
+This does not mean that all endpoints at one virtual matching node are
+logically equivalent. At a corner where colors $a,b$ meet, the only real
+face has the remaining color $c$; a single-qubit $X$ there excites only
+that real $Z$ check.
+
+Strings can meet at junctions to form string-nets. The three color charges
+of a fixed Pauli type can fuse to vacuum
+\cite[Secs.~3.3--3.4]{Kesselring}.
+Appropriate three-string nets give triangular-code logical representatives
+\cite[Eqs.~(5)--(6), Fig.~3]{Bombin}.
+Multiplying face stabilizers changes a support by an element of
+$\operatorname{im}J$ and realizes stabilizer deformations. A logical
+operator is therefore an equivalence class, not a preferred curve.
+Neither arbitrary graph cycles nor open stage-2 paths are declared to be
+such operators here.
+
+\section{A combinatorial realization of every allowed patch}\label{sec:family}
+\begin{definition}[Standard odd-distance family]\label{def:coords}
+Let $d=2t+1$, $t\geq1$, and $L=3t$. In triangular-lattice coordinates set
+\[
+ \Omega_t=\{(i,j)\in\mathbb Z_{\geq0}^2:i+j\leq L\},\quad
+ F_t=\{(i,j)\in\Omega_t:i-j\equiv2\pmod3\},\quad
+ Q_t=\Omega_t\setminus F_t.
+\]
+Identify $Q_t$ with physical qubits and each $f\in F_t$ with a real face.
+The face color is $\chi(j\bmod3)$, with
+$\chi(0)=g,\ \chi(1)=b,\ \chi(2)=r$.
+Use the cyclic neighbor list
+\[
+ N=\big((-1,1),(0,1),(1,0),(1,-1),(0,-1),(-1,0)\big).
+\]
+The face at $f$ has cyclic support $(f+N)\cap Q_t$, retaining this order.
+Consecutive retained qubits, including the wraparound pair, define its
+primal edges; shared edges are identified. This produces hexagonal bulk
+faces and quadrilateral boundary faces. The sides and corners are
+\begin{align*}
+ &\Gamma_r:\ j=0,\qquad\Gamma_g:\ i=0,\qquad\Gamma_b:\ i+j=L,\\
+ &q_{rg}=(0,0),\qquad q_{rb}=(L,0),\qquad q_{gb}=(0,L).
+\end{align*}
+A side is the polygonal arc through its retained qubits. Excluded
+face-center sites on its supporting line are not qubits.
+\end{definition}
+
+This specifies the standard triangular 6.6.6 family used in this note.
+Equivalently one starts from the hexagonal tiling with residue-two face
+centers and truncates the boundary polygons along the three sides.
+The data/check coordinates agree with the author's triangular
+implementation \cite{Implementation} under $x=4i+2j,\ y=j$, before the
+check-ancilla display displacement. That implementation fixes the
+coordinate convention; the following proof is symbolic for every
+$t\geq1$, not a finite test of the implementation.
+
+\begin{definition}[Local incidence sets]\label{def:local}
+For $q\in Q$ and $c\in\C$, put
+\[
+ \mathcal F_c(q)=\{f\in F_c:q\in f\},\qquad
+ \mathcal E_c(q)=\{e\in E_c:q\in e\},\qquad
+\]
+\[
+ n_c^F(q)=|\mathcal F_c(q)|,\qquad n_c^E(q)=|\mathcal E_c(q)|.
+\]
+\end{definition}
+
+\begin{lemma}[Complete local incidence]\label{lem:incidence}
+For all patches in Definition~\ref{def:coords}, the exhaustive local
+incidence table is
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Physical location & Real-face colors & Primal-edge colors\\
+\midrule
+Bulk & $r,g,b$ & $r,g,b$\\
+Open side $\Gamma_a$ & $\C\setminus\{a\}$ & $r,g,b$\\
+Corner $q_{ab}$ & $\C\setminus\{a,b\}$ & $a,b$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Each listed color occurs once. Furthermore $|Q_a|=d$,
+$Q_a\cap Q_b=\{q_{ab}\}$ for $a\ne b$, and no qubit lies on all three sides.
+\end{lemma}
+\begin{proof}
+For $q=(i,j)$ with $i-j\equiv0\pmod3$, its possible face centers are
+\[
+ (i-1,j),\qquad(i,j+1),\qquad(i+1,j-1).
+\]
+They are absent exactly when $i=0$, $i+j=L$, and $j=0$, respectively.
+For $i-j\equiv1\pmod3$, the possible centers are
+\[
+ (i+1,j),\qquad(i,j-1),\qquad(i-1,j+1),
+\]
+absent exactly when $i+j=L$, $j=0$, and $i=0$, respectively.
+Their row residues are all different, hence so are their colors.
+In both cases the lost center on $i=0$ is green, that on $i+j=L$
+is blue, and that on $j=0$ is red: substitute the respective side
+equation and the qubit residue into the row coordinate.
+Two simultaneous side equalities give exactly the corners, and all
+three are impossible because $L>0$. This proves the face column.
+
+The primal edges can be checked directly from the cyclic polygons.
+A bulk residue-zero qubit has neighbors
+\[
+ (i-1,j+1),\quad(i+1,j),\quad(i,j-1);
+\]
+a bulk residue-one qubit has neighbors
+\[
+ (i+1,j-1),\quad(i-1,j),\quad(i,j+1).
+\]
+Each pair of incident real faces meets at a different one of these
+edges. The missing-color rule gives the three edge colors once each.
+
+On the open red side $j=0$, the residue-zero qubits have $0<i<L$ and
+neighbors
+\[
+ (i-1,1),\quad(i-2,0),\quad(i+1,0).
+\]
+The first edge is shared by green face $(i-1,0)$ and blue face $(i,1)$
+and is red. The second is on the red side of the green face and is
+blue. The third is on the red side of the blue face and is green.
+The residue-one side qubits have neighbors
+\[
+ (i,1),\quad(i+2,0),\quad(i-1,0).
+\]
+Their faces are green $(i+1,0)$ and blue $(i-1,1)$, giving respective
+edge colors red, blue, and green again.
+The coordinates remain in the domain even next to a corner: the
+least positive residue-zero $i$ is $3$, and the greatest residue-one
+$i$ is $L-2$.
+
+At $(0,0)$ the sole face is the blue face centered at $(0,1)$.
+Its cyclic polygon gives exactly neighbors $(1,0)$ and $(0,2)$.
+The edges lie on red and green sides and have colors $g$ and $r$,
+respectively. There is no blue edge there.
+
+The rotation $R(i,j)=(L-i-j,i)$ preserves $\Omega_t$, the residue
+$i-j\bmod3$, and the cyclic neighbor list up to permutation.
+It permutes face colors and side colors by
+$g\mapsto r,\ r\mapsto b,\ b\mapsto g$.
+It therefore proves the other two open-side cases and other corners.
+The same edge lists show that boundary edges join consecutive retained
+side qubits, so these cases exhaust the physical boundary.
+
+The red side has $L+1=3t+1$ integer sites, of which $t$ have the
+excluded residue $i\equiv2\pmod3$. Thus $|Q_r|=2t+1=d$.
+Rotation gives the other counts; the side equations give their intersections.
+\end{proof}
+
+\begin{remark}[Corner membership]
+A corner belongs to both incident physical sides. Its third,
+absent-side color labels its sole real face.
+For fixed $c$, the two corners on $\Gamma_c$ and the opposite corner
+therefore have different stage-2 incidences.
+\end{remark}
+
+\section{The ordinary concatenated-matching decoder}\label{sec:decoder}
+\subsection{Two graphs and two bijections}
+Fix $c$ and let $\{c_1,c_2\}=\C\setminus\{c\}$.
+Vertex unions are tagged disjoint unions. A primal edge used as a
+stage-2 vertex is not a stage-2 edge.
+
+\begin{definition}[Stage 1: restricted lattice]\label{def:stage1}
+The graph $\LL_{\neg c}^*$ has vertex set
+$F_{c_1}\sqcup F_{c_2}\sqcup\{\bd\}$.
+For each $e\in E_c$ introduce one labelled edge $\eps_{\neg c}(e)$.
+It joins the two real faces separated by $e$, or the one incident real
+face to $\bd$ when $e$ is a boundary edge. Thus
+\[
+ \eps_{\neg c}:E_c\longrightarrow\Delta_1(\LL_{\neg c}^*)
+\]
+is a bijection.
+\end{definition}
+This is \cite[Sec.~3, Definition~1]{Lee}; $\neg c$ means color $c$
+has been removed, so only the other face colors are real vertices.
+
+\begin{definition}[Stage 2: monochromatic lattice]\label{def:stage2}
+The ordinary graph $\LL_c^*$ has vertex set
+$F_c\sqcup E_c\sqcup\{\bd\}$.
+For each $q\in Q$ introduce exactly one labelled edge $\eps_c(q)$.
+If $n_c^F(q)=n_c^E(q)=1$, it joins the unique incident $c$ face to the
+unique incident primal $c$ edge. If precisely one object is present,
+it joins that object to $\bd$. Lemma~\ref{lem:incidence} ensures
+these are all cases. Hence
+\[
+ \eps_c:Q\longrightarrow\Delta_1(\LL_c^*)
+\]
+is a bijection. Qubit labels are retained even for parallel edges
+with identical endpoint pairs.
+\end{definition}
+This is \cite[Sec.~3, Definition~2]{Lee}, with its local existence
+conditions verified for the chosen family. There is no extra
+physical-qubit edge for an exterior triangle.
+
+\subsection{Artificial boundary and matching parity}
+For either graph let $\partial_1$ be binary graph incidence and
+$\delta$ its restriction to real-vertex rows, deleting the row of $\bd$.
+The notation $\MWPM(s;G,\bd)$ means a minimum-weight edge subset $M$
+with $\delta M=s$. Every violated real check has odd incidence; all
+other real vertices have even incidence. The virtual boundary is
+not a measured check, so its parity is not prescribed as part of $s$
+\cite[Sec.~2.2, p.~4]{Lee}.
+For fixed $s$, the handshake identity determines its incidence parity
+as $\sum_v s_v$. Free boundary parity means no extra check equation,
+not an independently variable bit.
+
+An edge with only one ordinary endpoint is called \emph{dangling}
+before its missing end is attached to $\bd$; afterward it is an
+ordinary two-ended graph edge. This describes an incidence deficit,
+not an identification of the physical boundary circle with a point.
+Different spatial terminations are eligible matching endpoints at
+the same artificial node.
+
+\subsection{The two rounds and the physical correction}\label{sec:rounds}
+Lee's exact set equations are
+\begin{align}
+ \widetilde E_{\pred}^{(c)}
+ &=\MWPM(\sigma_Z^{(c_1)}\sqcup\sigma_Z^{(c_2)};
+                 \LL_{\neg c}^*,\bd),&
+ E_{\pred}^{(c)}
+ &=\eps_{\neg c}^{-1}(\widetilde E_{\pred}^{(c)}),
+ \label{eq:round1}\\
+ \widetilde V_{\pred}^{(c)}
+ &=\MWPM(\sigma_Z^{(c)}\sqcup E_{\pred}^{(c)};
+                 \LL_c^*,\bd),&
+ V_{\pred}^{(c)}
+ &=\eps_c^{-1}(\widetilde V_{\pred}^{(c)}).
+ \label{eq:round2}
+\end{align}
+Images and inverse images of subsets are setwise bijections.
+In the second line $E_{\pred}^{(c)}$ is a set of stage-2 \emph{vertices},
+although it was a set of primal \emph{edges} in the first line.
+The union combines distinct vertex types.
+
+Write $\delta_{\neg c},\delta_c$ for the two real-row incidence maps,
+and $s_c$ for the second-round input. The constraints are
+\[
+ \delta_{\neg c}\widetilde E_{\pred}^{(c)}
+   =\sigma_Z^{(c_1)}+\sigma_Z^{(c_2)},\qquad
+ \delta_c\widetilde V_{\pred}^{(c)}=s_c.
+\]
+For $a=V_{\pred}^{(c)}$, the second equation at a primal-edge vertex
+$e=\{u,v\}$ says $a_u+a_v=(E_{\pred}^{(c)})_e$.
+At a $c$-face vertex it says $(Ha)_f=(\sigma_Z)_f$.
+
+For each non-$c$ face $f$, its qubits are partitioned into its incident
+primal $c$ edges: every qubit of $f$ has exactly one such edge by
+Lemma~\ref{lem:incidence}. The local cyclic incidence and the edge-color
+rule put that edge in $f$: at a bulk or open-side vertex the only edge
+not belonging to $f$ has the color of $f$, and at a corner both edges
+belong to its sole face. Distinct $c$ edges cannot share a qubit. Summing their stage-2 equations gives
+\[
+ (Ha)_f=\sum_{\substack{e\in E_c\\e\subset f}}
+                 (E_{\pred}^{(c)})_e=(\sigma_Z)_f
+\]
+by stage 1. Together with the $c$-face equations this proves
+$Ha=\sigma_Z$. This is the real-coordinate version of Lee's
+validity argument \cite[Appendix~A.2, Claim~1; A.3, Claim~2]{Lee}.
+Validity of two feasible rounds does not imply logical success or
+global minimum-weight decoding. The validity argument is conditional on feasible matching outputs; it
+is not a separate feasibility or connectivity theorem.
+
+The ordinary algorithm repeats both rounds for $r,g,b$ and returns a
+smallest-cardinality candidate among
+$V_{\pred}^{(r)},V_{\pred}^{(g)},V_{\pred}^{(b)}$, with a fixed tie rule
+\cite[Sec.~3, p.~7]{Lee}. For uniform independent $X$ errors with
+$0<p<1/2$, it is most probable among those three candidates.
+In the uniform perfect-measurement presentation each round can use
+unit edge costs. This is ordinary correction selection, not a
+three-color soft-output construction.
+
+\subsection{Chain maps and limits of imported correspondences}
+Lee's Appendix~A represents a physical qubit by a dual triangle or
+by a hyperedge $h_q$ with one endpoint of each color, completing missing
+endpoints with colored exterior labels.
+The ordinary dual boundary of a triangle is its three edges; the
+hypergraph boundary of $h_q$ is its three vertices. These maps differ.
+In the boundary-free source notation, $p_{\mathrm{edge}}^{(c)}h_q$
+is the dual $c$ edge between the two other colors and
+$p_{\mathrm{vert}}^{(c)}h_q$ is its $c$ vertex. The factorization is
+\[
+ \partial_1^{\mathcal H}
+ =p_{\mathrm{vert}}^{(c)}
+  +\partial_1^{\LL_{\neg c}^*}p_{\mathrm{edge}}^{(c)} .
+\]
+The projectors target the two distinct monochromatic vertex summands
+\cite[Appendix~A.1, Eq.~(10)]{Lee}.
+With boundaries, the validity equations hold modulo virtual coordinates
+\cite[Appendix~A.3, Eq.~(13)]{Lee}.
+
+Delfosse's hypergraph/CSS formulation gives an analogous physical complex
+and a projection to restricted surface graphs
+\cite[Secs.~4.1--4.3, Definition~5.5, Theorem~5.6]{Delfosse}.
+It is not the stage-2 support inverse, and its closed-tiling hypotheses
+are not silently extended to corners.
+The local Clifford unfolding of a triangular color code gives a folded
+surface-code patch with attached layers
+\cite[Sec.~III.B, Eq.~(44), Theorem~3]{Kubica}, not an identification
+of a layer with $\LL_c^*$.
+Meister--Pattison--Preskill distinguish the ordinary matching boundary
+from logically distinct surface-code boundary nodes
+\cite[Sec.~II.B.1, pp.~2--3]{Meister}; that surface-code logical
+characterization is not a theorem about Definition~\ref{def:stage2}.
+
+\section{Boundary structure of the ordinary monochromatic graph}
+\label{sec:boundary}
+\begin{definition}[Dangling and missing-object classes]\label{def:classes}
+For fixed $c$, define the edge subsets
+\begin{align*}
+ \mathcal B_c^{\dang}
+  &=\{e\in\Delta_1(\LL_c^*):\bd\text{ is an endpoint of }e\},\\
+ \mathcal B_c^{\missF}
+  &=\{\eps_c(q):\mathcal F_c(q)=\varnothing\},\\
+ \mathcal B_c^{\missE}
+  &=\{\eps_c(q):\mathcal E_c(q)=\varnothing\}.
+\end{align*}
+The superscripts name the \emph{missing} object: a $\missF$ edge
+has a surviving primal-edge vertex and a $\missE$ edge a face vertex.
+\end{definition}
+
+\begin{lemma}[Exact dangling criterion]\label{lem:dangling}
+The counts $n_c^F(q),n_c^E(q)$ are zero or one, their sum is one or two,
+and
+\[
+ \eps_c(q)\in\mathcal B_c^{\dang}
+ \quad\Longleftrightarrow\quad n_c^F(q)+n_c^E(q)=1.
+\]
+In particular
+$\mathcal B_c^{\dang}=\mathcal B_c^{\missF}\sqcup\mathcal B_c^{\missE}$.
+\end{lemma}
+\begin{proof}
+Lemma~\ref{lem:incidence} gives the count bounds. Bulk qubits have both
+counts one. At an open side only the face count of its side color
+vanishes. At $q_{ab}$ the face counts of $a,b$ vanish and their edge
+counts are one; the remaining color has face count one and edge
+count zero. Thus $(0,0)$ never occurs. Definition~\ref{def:stage2}
+attaches precisely the count-one cases to $\bd$.
+\end{proof}
+
+\begin{proposition}[Complete classification]
+\label{prop:classification}
+For every patch in Definition~\ref{def:coords} and
+$\{c,c_1,c_2\}=\C$,
+\begin{align}
+ \mathcal B_c^{\missF}&=\eps_c(Q_c),&
+ |\mathcal B_c^{\missF}|&=d,\label{eq:sideclass}\\
+ \mathcal B_c^{\missE}&=\{\eps_c(q_{c_1c_2})\},&
+ |\mathcal B_c^{\missE}|&=1.\label{eq:cornerclass}
+\end{align}
+Consequently
+\[
+ \eps_c^{-1}(\mathcal B_c^{\dang})
+   =Q_c\sqcup\{q_{c_1c_2}\},\qquad
+ |\mathcal B_c^{\dang}|=d+1.
+\]
+\end{proposition}
+\begin{proof}
+A missing $c$ face occurs exactly on the open $c$ side and at its
+two corners $q_{cc_1},q_{cc_2}$, by Lemma~\ref{lem:incidence}.
+Their union is $Q_c$.
+A missing $c$ edge occurs exactly at the corner whose side colors are
+$c_1,c_2$. That corner is not on $\Gamma_c$.
+The images are disjoint because $\eps_c$ is a labelled-edge bijection;
+their sizes follow from the side count.
+\end{proof}
+
+The fixed-color cases are, explicitly,
+\begin{center}
+\begin{tabular}{@{}lccp{42mm}@{}}
+\toprule
+Physical location & $n_c^F$ & $n_c^E$ & Stage-2 endpoints\\
+\midrule
+Bulk & 1 & 1 & $c$ face, primal $c$ edge\\
+Open $\Gamma_c$ & 0 & 1 & primal $c$ edge, $\bd$\\
+Open $\Gamma_{c_1}$ or $\Gamma_{c_2}$ & 1 & 1 & $c$ face, primal $c$ edge\\
+$q_{cc_1}$ or $q_{cc_2}$ & 0 & 1 & primal $c$ edge, $\bd$\\
+$q_{c_1c_2}$ & 1 & 0 & $c$ face, $\bd$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}[Meaning of the two classes]\label{rem:types}
+One class is a whole closed side; the other is its opposite corner.
+The opposite corner belongs to both other physical sides. No corner
+was assigned arbitrarily to a unique physical boundary.
+These are canonical geometric terminal types, not two connected
+components of the physical boundary circle or of the merged dangling
+star. Their physical logical inequivalence is proved separately in
+Section~\ref{sec:logical}.
+
+Lee's source description retains the boundary labels
+\[
+ \left\{v_{\mathrm{bdry}}^c,\,
+        \{v_{\mathrm{bdry}}^{c_1},v_{\mathrm{bdry}}^{c_2}\}\right\}
+ \qquad\text{\cite[Appendix~A.3, pp.~22--23]{Lee}.}
+\]
+A missing $c$ face has the first provenance. At the opposite corner
+both non-$c$ faces are missing; the would-be dual edge between them
+has the nested-pair provenance. That pair is one virtual stage-2 vertex,
+not two physical vertices or an extra data qubit.
+Proposition~\ref{prop:classification} identifies the physical origins
+of these source labels. The graph construction is given separately
+in Section~\ref{sec:resolved}.
+\end{remark}
+
+\begin{proposition}[What merging records]\label{prop:merging}
+For $S\subseteq\Delta_1(\LL_c^*)$, put
+\[
+ \tau_c^F(S)=|S\cap\mathcal B_c^{\missF}|\bmod2,\qquad
+ \tau_c^E(S)=|S\cap\mathcal B_c^{\missE}|\bmod2 .
+\]
+The ordinary boundary incidence row records only
+\[
+ (\partial_1^{\LL_c^*}S)_{\bd}=\tau_c^F(S)+\tau_c^E(S).
+\]
+It identifies the pairs $(0,0),(1,1)$, and the pairs $(1,0),(0,1)$.
+\end{proposition}
+\begin{proof}
+Every edge at $\bd$ belongs to exactly one missing-object class and
+contributes one to that row. Other edges contribute zero.
+\end{proof}
+
+Merging removes the separate virtual-endpoint coordinates and the
+individual endpoint positions along the physical boundary. Matching
+at the common node maintains no separate terminal-type parity constraint.
+It need not destroy all provenance: retained qubit labels recover
+physical locations, and the tagged type of the surviving endpoint
+already distinguishes $\missF$ from $\missE$.
+The proposition concerns information in the single boundary incidence
+row, not an inability to recover the counts from a labelled edge set.
+Neither count is identified with physical logical parity $\lambda_X$.
+
+\section{The boundary-resolved graph}\label{sec:resolved}
+\subsection{Meaning of the boundary distinction}
+The two nonempty combinatorial classes in
+Proposition~\ref{prop:classification} determine the following graph.
+Its physical logical interpretation is proved in
+Section~\ref{sec:logical}, using the independently known physical
+logical operators.
+
+\begin{definition}[Resolved graph and terminal sets]\label{def:resolved}
+For fixed $c$, let $G_c=\widetilde{\LL}_c^*$ have tagged vertex set
+\[
+ \Delta_0(G_c)=F_c\sqcup E_c\sqcup\{b_c^0,b_c^1\},\qquad
+ \mathcal B_c=\{b_c^0,b_c^1\},\quad
+ \mathcal B_c^{(i)}=\{b_c^i\}.
+\]
+The boundary objects are two individual virtual vertices. Introduce one
+edge $\widetilde\eps_c(q)$ for each physical $q\in Q$, with endpoints
+\begin{equation}
+ \begin{cases}
+ \{f,e\},&
+  \mathcal F_c(q)=\{f\},\quad\mathcal E_c(q)=\{e\},\\
+ \{b_c^0,e\},&
+  \mathcal F_c(q)=\varnothing,\quad\mathcal E_c(q)=\{e\},\\
+ \{f,b_c^1\},&
+  \mathcal F_c(q)=\{f\},\quad\mathcal E_c(q)=\varnothing .
+ \end{cases}                                                   \label{eq:resolved}
+\end{equation}
+Keep qubit labels, including any parallel edges. These cases exhaust $Q$,
+so $\widetilde\eps_c:Q\to\Delta_1(G_c)$ is a bijection.
+\end{definition}
+
+All ordinary real vertices and all real edge-endpoint incidences are
+unchanged. In particular an ordinary edge with two real endpoints is
+unchanged except for its typed resolved-graph label.
+The $d$ edges coming from $Q_c$, including its two corners, terminate
+at $b_c^0$. The unique edge coming from $q_{c_1c_2}$ terminates at
+$b_c^1$. Thus their incident edge sets are disjoint and exhaust the
+formerly dangling edges. Neither terminal is a physical qubit or check.
+No edge between the two terminals is added.
+
+This realizes Lee's two retained source boundary labels as
+$b_c^0=v_{\mathrm{bdry}}^c$ and
+$b_c^1=\{v_{\mathrm{bdry}}^{c_1},v_{\mathrm{bdry}}^{c_2}\}$
+\cite[Appendix~A.3]{Lee}, using only physical-qubit edges.
+The nested source pair is one stage-2 vertex, not an additional edge
+of $G_c$. The singleton terminal sets are not two connected components
+of the full graph, as the following connectivity result makes explicit.
+
+\begin{definition}[Forgetting the distinction]\label{def:quotient}
+The graph map $q_c:G_c\to\LL_c^*$ fixes real vertices and sends both
+$b_c^0,b_c^1$ to $\bd$. On edges it sends
+$\widetilde\eps_c(q)$ to $\eps_c(q)$.
+It is the quotient by identification of the two terminal vertices;
+it does not contract a newly introduced edge.
+\end{definition}
+The endpoint rule \eqref{eq:resolved} and Definition~\ref{def:stage2}
+verify this quotient on every edge, including all corners.
+Its edge map is bijective and its vertex map is surjective.
+Consequently no physical data identity is lost by the quotient's edge map.
+
+\begin{lemma}[Connectivity of the full family]
+\label{lem:connected}
+For every patch in Definition~\ref{def:coords}, $G_c$ is connected.
+In particular its two terminals are joined by a simple graph path.
+\end{lemma}
+\begin{proof}
+It suffices to prove this for red; the rotation of
+Lemma~\ref{lem:incidence} gives the other colors.
+Red face centers have exactly the form
+\[
+ f=(i,j)=(1+3m,2+3n),\qquad m,n\geq0,\quad m+n\leq t-1 .
+\]
+If $n\geq1$, the two qubits $(i,j-1),(i,j-2)$ are the endpoints
+of a primal red edge. To check its existence directly from the polygons,
+they are consecutive support vertices of both faces centered at
+$(i-1,j-1)$ and $(i+1,j-2)$, whose colors are blue and green.
+Those centers lie in $\Omega_t$. The first qubit belongs to the red
+face $f$, and the second to the red face $(i,j-3)$. Their two resolved
+edges therefore give a length-two graph path from $f$ to $(i,j-3)$
+through the corresponding primal-edge vertex.
+
+At $n=0$, the analogous primal red edge has endpoints $(i,1),(i,0)$.
+It belongs to the blue face $(i-1,1)$ and green face $(i+1,0)$;
+these exist since $1\leq i\leq L-2$. The first qubit belongs to
+$(i,2)$ and the second lies on the red side. Its two resolved edges
+join $(i,2)$ to $b_r^0$. Repeated descent in $n$ therefore connects
+every red face vertex to $b_r^0$.
+
+Every primal red-edge vertex has two incident qubit-labelled graph
+edges, one for each physical endpoint. Each of their other endpoints
+is a red face or $b_r^0$, since the missing-red-edge corner cannot
+belong to a primal red edge. Hence every such vertex belongs to the
+same component. Finally $b_r^1$ is joined by its corner edge to a
+real red face. These are all graph vertices.
+For $t=1$ there is just the red face $(1,2)$; the base descent and
+corner edge still apply. Finite connected graphs contain a simple
+path between any two different vertices, giving the last assertion.
+\end{proof}
+This is connectivity only. No physical logical class of that path has
+been evaluated.
+
+\subsection{Chains, boundary projection, and matching compatibility}
+\begin{definition}[Binary incidence and the real-row map]\label{def:chains}
+Set $C_i(G_c)=\F^{\Delta_i(G_c)}$ for $i=0,1$ and let
+$\partial_c:C_1(G_c)\to C_0(G_c)$ send each edge to the sum of its
+two endpoints. No $2$-cells are supplied by this graph notation.
+Let
+\[
+ C_{\mathrm{bdry}}(G_c)=\F^{\mathcal B_c},\qquad
+ W_c=\F^{F_c}\oplus\F^{E_c},\qquad
+ \rho_c:C_0(G_c)\to W_c,\qquad D_c=\rho_c\partial_c ,
+\]
+where $\rho_c$ deletes the two terminal coordinates.
+Thus $W_c$ is naturally $C_0(G_c)/C_{\mathrm{bdry}}(G_c)$.
+Write $q_{c,0}$ and $q_{c,1}$ for the linear maps induced by
+Definition~\ref{def:quotient} on vertices and edges.
+\end{definition}
+
+\begin{lemma}[Exact incidence compatibility]\label{lem:quotient}
+With $\delta_c$ the ordinary real-row map from Section~\ref{sec:rounds},
+\begin{equation}
+ \partial_1^{\LL_c^*}q_{c,1}=q_{c,0}\partial_c,\qquad
+ D_c=\delta_c q_{c,1}.                                      \label{eq:quotient}
+\end{equation}
+\end{lemma}
+\begin{proof}
+Both sides of the first equality send a labelled edge to its two
+ordinary endpoints, by the three cases of \eqref{eq:resolved}.
+Deleting the virtual rows gives the second equality. Extend linearly.
+\end{proof}
+
+\begin{proposition}[Matching compatibility with two free terminals]
+\label{prop:optimization}
+Transport any supplied nonnegative ordinary edge weights by
+$\omega_c(\widetilde\eps_c(q))=\omega_c^{\mathrm{ord}}(\eps_c(q))$.
+For a fixed real stage-2 syndrome $s_c$, the two optimization problems
+\begin{equation}
+ \min_{D_c\Gamma=s_c}\ \sum_{e\in\operatorname{supp}\Gamma}\omega_c(e),
+ \qquad
+ \min_{\delta_c x=s_c}\ \sum_{e\in\operatorname{supp}x}
+                                      \omega_c^{\mathrm{ord}}(e)
+                                                               \label{eq:opt}
+\end{equation}
+have bijectively corresponding feasible chains and minimizers under
+$x=q_{c,1}\Gamma$, and the same optimum value.
+\end{proposition}
+\begin{proof}
+The edge map is a bijection and preserves every weight.
+Equation~\eqref{eq:quotient} identifies their real-row constraints.
+Neither problem imposes a terminal parity check. Therefore the
+bijection preserves precisely the feasible sets and their costs.
+\end{proof}
+
+This proves invariance for these specified problems, not for an arbitrary
+change to a matching software interface. If $b_c^1$ is treated as an
+ordinary even-parity vertex, or separate prescribed terminal parities
+are imposed, the feasible set can shrink. For example at $d=3,c=r$,
+the edge labelled $q_{gb}=(0,3)$ joins $b_r^1$ to the sole red face
+$(1,2)$. For real syndrome consisting only of that face it is a feasible
+unit-cost correction. Requiring even parity at $b_r^1$ rejects it;
+the shortest alternative to $b_r^0$ has two edges and cost two.
+There is no competing one-edge correction to that face without the
+corner edge, since all its other neighbors are real primal-edge vertices.
+
+The operational convention here remains ordinary decoding on $\LL_c^*$,
+followed by relabelling its output through $q_{c,1}^{-1}$ for analysis on
+$G_c$. A solver supporting two genuinely free boundary vertices could
+solve \eqref{eq:opt} directly, but this note changes no decoder.
+Equal minimizer sets do not ensure identical tie-breaking, paths used
+internally by a solver, shortest-path distances, or dual growth data.
+Lee's zero-cost auxiliary boundary connections in a matching reduction
+\cite[Sec.~2.2, footnote~1; Appendix~A.3]{Lee} are not physical edges
+of $G_c$.
+
+For completeness, Lemma~\ref{lem:connected} implies that $D_c$ is
+surjective: for each real vertex choose any graph path to $b_c^0$;
+its real boundary is that vertex alone. Binary sums of these paths
+realize any $s_c$. This is a graph feasibility result, separately proved
+here rather than attributed to Lee's conditional Claims~1--2.
+
+\section{Physical supports and the exact syndrome map}
+\label{sec:physicalmap}
+\begin{definition}[Physical-support and Pauli maps]\label{def:physicalmap}
+Define the linear isomorphism
+\[
+ T_c:C_1(G_c)\longrightarrow A,\qquad
+ T_c\bigl(\widetilde\eps_c(q)\bigr)=q .
+\]
+For an edge subset or binary chain $\Gamma$, put
+\begin{equation}
+ V_\Gamma=\operatorname{supp}(T_c\Gamma),\qquad
+ \mathscr P_{X,c}(\Gamma)=P_X(T_c\Gamma)=\prod_{q\in V_\Gamma}X_q .
+                                                               \label{eq:pauli}
+\end{equation}
+Here $P_X$ retains its original domain $A$. Writing
+$T_c^{\mathrm{ord}}:C_1(\LL_c^*)\to A$ for the linear ordinary
+support inverse, the typed relation is $T_c=T_c^{\mathrm{ord}}q_{c,1}$.
+Equivalently, the support in \eqref{eq:pauli} is obtained with
+$\widetilde\eps_c^{-1}$ applied setwise. No vertex map is inverted.
+\end{definition}
+Lee already identifies monochromatic edges with physical hyperedges
+linearly \cite[Appendix~A.1]{Lee}; this is its explicit physical-qubit
+version after the boundary distinction. The inverse is defined on
+all $C_1(G_c)$, not only on paths or feasible corrections.
+
+\begin{lemma}[Linearity and multiplication]\label{lem:linearity}
+For all $\Gamma_1,\Gamma_2\in C_1(G_c)$,
+\[
+ T_c(\Gamma_1+\Gamma_2)=T_c\Gamma_1+T_c\Gamma_2,\qquad
+ \mathscr P_{X,c}(\Gamma_1+\Gamma_2)
+    =\mathscr P_{X,c}(\Gamma_1)\mathscr P_{X,c}(\Gamma_2).
+\]
+\end{lemma}
+\begin{proof}
+The first identity follows by extending a basis bijection linearly.
+In the second, same-qubit factors cancel because $X_q^2=I$ and
+all $X$ factors commute. The equality is exact in this pure sector,
+not merely up to phase.
+\end{proof}
+The same construction with $Z$ is exact as well.
+Mixed Pauli multiplication can carry a phase; it is not used here.
+CSS separation permits the two syndrome maps to be studied separately,
+without a claim of statistical independence.
+
+\begin{definition}[From stage-2 parity data to physical checks]
+\label{def:syndromemap}
+Let $H_c$ be the $F_c$ row restriction of $H$, and define
+$M_c:A\to\F^{E_c}$ by
+$(M_ca)_e=a_u+a_v$ for the physical edge $e=\{u,v\}$.
+Define $\Lambda_c:W_c\to U$ by
+\begin{equation}
+ (\Lambda_c(y,z))_f=
+ \begin{cases}
+ y_f,& f\in F_c,\\
+ \displaystyle\sum_{\substack{e\in E_c\\e\subset f}}z_e,
+      & f\notin F_c .
+ \end{cases}                                                  \label{eq:Lambda}
+\end{equation}
+All faces in this formula are real. On the second summand this is
+the ordinary restricted incidence $\delta_{\neg c}$ after the
+linear primal-edge identification $\eps_{\neg c}$, embedded in the
+non-$c$ physical face coordinates.
+\end{definition}
+
+\begin{lemma}[Graph boundary and physical syndrome; exact on all chains]
+\label{lem:syndrome}
+For every $\Gamma\in C_1(G_c)$, with $a=T_c\Gamma$,
+\begin{align}
+ D_c\Gamma&=(H_ca,M_ca),\label{eq:auxiliary}\\
+ Ha&=\Lambda_cD_c\Gamma=\Lambda_c\rho_c\partial_c\Gamma .
+                                                        \label{eq:syndrome}
+\end{align}
+In particular the measured $Z$-check syndrome of
+$\mathscr P_{X,c}(\Gamma)$ is exactly \eqref{eq:syndrome}.
+The full graph boundary also records
+\begin{align*}
+ \partial_c\Gamma={}&
+ \sum_{f\in F_c}(Ha)_f f+\sum_{e\in E_c}(M_ca)_e e\\
+ &+\tau_c^F(q_{c,1}\Gamma)b_c^0
+   +\tau_c^E(q_{c,1}\Gamma)b_c^1 .
+\end{align*}
+The last two coordinates are not physical checks.
+\end{lemma}
+\begin{proof}
+At a real face vertex $f\in F_c$, the incident resolved edges are
+precisely those labelled by $q\in f$. Their parity is $(Ha)_f$.
+At a real primal-edge vertex $e=\{u,v\}$ the incident graph edges
+are precisely $\widetilde\eps_c(u),\widetilde\eps_c(v)$,
+giving $(M_ca)_e$. This proves \eqref{eq:auxiliary}.
+
+For a non-$c$ face $f$, the local incidence from
+Lemma~\ref{lem:incidence} partitions its qubits into primal $c$
+edges belonging to $f$, as justified in Section~\ref{sec:rounds}.
+Therefore, for arbitrary $a$,
+\[
+ \sum_{\substack{e\in E_c\\e\subset f}}(M_ca)_e
+       =\sum_{q\in f}a_q=(Ha)_f .
+\]
+Together with the $c$-face row equality, this proves
+\eqref{eq:syndrome}. Finally, the rewiring rule identifies the two
+terminal rows with the two missing-object parities.
+\end{proof}
+
+This is the physical real-row form of the source factorization in
+Lee Appendix~A.1, Eq.~(10), and its boundary-coordinate treatment in
+Appendix~A.3, Claim~2, Eq.~(13). The local proof makes it valid for
+\emph{every} binary chain, not only outputs of a particular decoder.
+It also shows why simply writing $HT_c=D_c$ is ill-typed: $D_c$
+returns $c$-face checks \emph{and} auxiliary primal-edge parities.
+The latter must be passed through restricted incidence to become
+physical non-$c$ checks. Neither of the virtual terminals is a
+syndrome detector.
+
+If a first-round prediction $z=E_{\pred}^{(c)}$ is compatible with
+the non-$c$ measured syndrome and $s_c=(\sigma_Z^{(c)},z)$, then every
+resolved chain with $D_c\Gamma=s_c$ gives physical syndrome
+$\Lambda_cs_c=\sigma_Z$. Thus the relabelled ordinary correction has
+the same physical interpretation, and the stage-1 virtual information
+is precisely the $M_c$ constraint on primal-edge vertices.
+This virtual information is different from the free terminal rows.
+
+\subsection{Paths, walks, cycles, and general supports}\label{sec:paths}
+A simple path is an edge-labelled sequence of distinct vertices with
+the chosen connecting edges; as a binary chain it is their sum.
+A walk may repeat vertices or edges; its associated chain counts
+each traversal modulo two, rather than keeping the set of edges visited
+at least once. For example traversing one edge twice gives the zero
+chain and identity Pauli. A collection of paths gives their binary sum;
+shared edges cancel. A general chain may be disconnected or have
+branching support. None of these distinctions restricts the domain of
+$T_c$.
+
+Define the endpoint contribution
+$\eta_c(v)=\Lambda_c\rho_c(v)\in U$ for a graph vertex $v$.
+The three types are
+\begin{equation}
+ \eta_c(v)=
+ \begin{cases}
+ f,&v=f\in F_c,\\
+ \displaystyle\sum_{\substack{f\notin F_c\\e\subset f}}f,
+       &v=e\in E_c,\\
+ 0,&v\in\mathcal B_c .
+ \end{cases}                                                  \label{eq:endpoint}
+\end{equation}
+Basis faces on the right denote physical syndrome vectors.
+An edge vertex can contribute two real non-$c$ checks, or one when
+its physical edge is on a boundary.
+
+\begin{proposition}[Endpoint syndrome and the cycle limit]
+\label{prop:paths}
+If a path or walk has binary chain $\Gamma$ and endpoints $u,v$,
+then
+\[
+ \partial_c\Gamma=u+v,\qquad
+ H T_c\Gamma=\eta_c(u)+\eta_c(v).
+\]
+A cycle chain, or any chain with $\partial_c\Gamma=0$, has zero
+physical syndrome. A path between the two different virtual terminals
+also has zero physical syndrome.
+\end{proposition}
+\begin{proof}
+In a walk's binary boundary every intermediate occurrence contributes
+twice and cancels, leaving its two endpoints (also cancelling if equal).
+Apply Lemma~\ref{lem:syndrome}. Both terminal contributions vanish by
+\eqref{eq:endpoint}.
+\end{proof}
+Zero syndrome alone places the support in $Z_X$ without deciding its
+class in $Z_X/S_X$. Section~\ref{sec:logical} supplies the additional
+physical parity argument that classifies these cycles and terminal paths.
+The algebraic cycle condition includes binary unions of cycles, not
+just a single simple cycle.
+
+\section{Physical logical topology}\label{sec:logical}
+\subsection{Relative chains and physical equivalence}
+Continue with the fixed color and pure CSS sector. Real primal-edge
+vertices carry the auxiliary stage-1 parity; the terminals have no
+measured parity. The exact identities
+$D_c=\rho_c\partial_c=\delta_cq_{c,1}$ and $HT_c=\Lambda_cD_c$
+are available on every chain.
+The physical comparison uses two independent facts:
+the triangular patch encodes one qubit
+\cite[p.~3, triangular-code construction]{Bombin}, and each complete
+physical side supports logical $X$ and $Z$
+\cite[Sec.~2.1, p.~4]{Lee}.
+
+\begin{definition}[Physical equivalence and relative difference space]
+\label{def:equivalence}
+For arbitrary chains $\Gamma_1,\Gamma_2$ define pure-sector equivalence
+modulo the physical stabilizer group by
+\[
+ \mathscr P_{X,c}(\Gamma_1)\sim_{\mathcal S}
+ \mathscr P_{X,c}(\Gamma_2)
+ \quad\Longleftrightarrow\quad
+ T_c(\Gamma_1+\Gamma_2)\in S_X=\operatorname{im}J .
+\]
+For comparisons within a fixed real stage-2 syndrome, let
+\[
+ K_c=\ker D_c,\qquad
+ R_c=K_c\cap T_c^{-1}(S_X),\qquad \mathcal Q_c=K_c/R_c .
+\]
+Thus $K_c$ consists of graph chains whose boundary is supported only
+on $\mathcal B_c$. By the syndrome lemma $T_cK_c\subseteq Z_X$.
+For $z\in K_c$, the graph handshake identity defines
+\[
+ \beta_c(z)=(\partial_cz)_{b_c^0}=(\partial_cz)_{b_c^1}.
+\]
+No physical interpretation is built into this definition.
+\end{definition}
+
+\begin{lemma}[The physical side detects terminal parity]\label{lem:sideparity}
+For every $z\in K_c$ and every nontrivial physical logical-$Z$ support
+$\ell_Z$ in this one-qubit code,
+\begin{equation}
+ \beta_c(z)=Q_c^{\mathsf T}T_cz
+          =\ell_Z^{\mathsf T}T_cz=\lambda_c(z).
+ \label{eq:target}
+\end{equation}
+\end{lemma}
+\begin{proof}
+Exactly the edges labelled by $Q_c$, including its two corners, meet
+$b_c^0$. Therefore its incidence coefficient is the sum of the
+corresponding qubit coefficients of $T_cz$, namely
+$Q_c^{\mathsf T}T_cz$. This uses the proved terminal classification.
+
+The independently known operator $P_Z(Q_c)$ is nontrivial logical $Z$.
+There is only one nonzero class in the pure $Z$ logical quotient, so
+$\ell_Z+Q_c=Ju$ for some $u\in U$. Since $HT_cz=0$,
+\[
+ (\ell_Z+Q_c)^{\mathsf T}T_cz
+       =u^{\mathsf T}HT_cz=0.
+\]
+This proves the representative-independent equality.
+\end{proof}
+The first equality is a direct qubit-incidence calculation; the second
+uses the physical code, not a surface-code analogy.
+
+\begin{theorem}[Logical-topology correspondence]\label{thm:logical}
+For the stated family, fixed color and pure CSS sector,
+\[
+ R_c=\ker(\beta_c|_{K_c})=\ker\partial_c .
+\]
+Every closed resolved graph chain maps to a product of physical face
+stabilizers. Every $z\in K_c$ with
+$\partial_cz=b_c^0+b_c^1$ maps to the nontrivial physical logical-$X$
+class. The map
+\[
+ \overline T_c:\mathcal Q_c\longrightarrow\mathcal L_X,\qquad
+ [z]\longmapsto[T_cz]
+\]
+is an isomorphism of one-dimensional binary spaces.
+In particular all simple paths joining the two terminals are
+nontrivial physical logical representatives.
+\end{theorem}
+\begin{proof}
+Pure-sector commutation with a nontrivial logical $Z$ detects the
+nonzero $X$ class in a one-qubit code. More explicitly the functional
+$\ell_Z^{\mathsf T}a$ vanishes on $S_X$, descends to the
+one-dimensional $\mathcal L_X$, and is nonzero because the physical
+logical $X,Z$ anticommute. Its kernel on $Z_X$ is exactly $S_X$.
+Apply Lemma~\ref{lem:sideparity} to $T_cz\in Z_X$. This gives
+$R_c=\ker(\beta_c|_{K_c})$.
+For $z\in K_c$, its full boundary is supported on two terminals and
+has even total parity. Hence beta zero is equivalent to
+$\partial_cz=0$, and beta one is equivalent to boundary $b_c^0+b_c^1$.
+
+The induced map is well-defined, and its kernel is precisely the
+defined denominator $R_c$, so it is injective.
+Connectivity supplies a simple terminal-joining path $p$.
+Its beta is one, and the parity lemma proves its physical image
+nonzero. Thus the image contains the unique nonzero class of
+$\mathcal L_X$ and the map is surjective.
+The same argument applies after exchanging the CSS sectors.
+\end{proof}
+
+The theorem covers arbitrary relative chains, not only simple paths.
+It depends on the stated one-qubit physical code and the proved terminal
+incidences. Connectedness supplies existence of a nonzero representative.
+Odd distance and the ordinary boundary assumptions are those of the
+selected family; no claim about arbitrary triangular colexes follows.
+
+\begin{corollary}[Converse, path representative, and fixed-fiber equivalence]
+\label{cor:representatives}
+For $z\in K_c$,
+\[
+ [T_cz]\ne0\ \text{in }\mathcal L_X
+ \quad\Longleftrightarrow\quad [z]\ne0\ \text{in }\mathcal Q_c
+ \quad\Longleftrightarrow\quad \beta_c(z)=1.
+\]
+In that case the support of $z$ contains a simple terminal-joining
+path $p$, and $z+p\in R_c$. Every nontrivial physical logical support
+$a\in Z_X\setminus S_X$ is stabilizer-equivalent to $T_cp$ for such
+a path, but $T_c^{-1}a$ need not itself lie in $K_c$.
+For equal real stage-2 syndromes,
+\[
+ \mathscr P_{X,c}(\Gamma_1)\sim_{\mathcal S}\mathscr P_{X,c}(\Gamma_2)
+ \quad\Longleftrightarrow\quad
+ \partial_c(\Gamma_1+\Gamma_2)=0 .
+\]
+\end{corollary}
+\begin{proof}
+The equivalences follow from the theorem. In the support subgraph of
+a beta-one chain the only odd-degree vertices are the two terminals.
+Each connected component has an even number of odd-degree vertices;
+therefore the two terminals are in the same component. Choose a
+simple path in that component. Its removal modulo two leaves a
+closed chain, hence an element of $R_c$.
+Any other nonzero physical logical support is in the same unique
+nonzero class as $T_cp$, so their difference belongs to $S_X$.
+The last statement applies the theorem to the fixed-syndrome difference.
+\end{proof}
+
+\subsection{Exactly which face products generate the cycles}
+\begin{definition}[Physical non-\(c\) face map]\label{def:facemap}
+Let $F_{\neg c}=F\setminus F_c$, $U_{\neg c}=\F^{F_{\neg c}}$ and
+$\iota_{\neg c}:U_{\neg c}\to U$ be inclusion.
+Define the canonical map from real physical faces by
+\[
+ A_c=T_c^{-1}J\iota_{\neg c}:U_{\neg c}\longrightarrow C_1(G_c).
+\]
+This definition uses physical stabilizer generators, not an arbitrary
+choice of graph cycles.
+\end{definition}
+
+\begin{proposition}[Complete cycle basis]\label{prop:facebasis}
+The map $A_c$ is injective and
+\begin{equation}
+ \operatorname{im}A_c=\ker\partial_c=R_c .
+ \label{eq:facebasis}
+\end{equation}
+Thus every closed chain is uniquely the binary sum of the resolved
+images of non-$c$ physical faces. No extra corner generators or
+relations are required.
+\end{proposition}
+\begin{proof}
+For a non-$c$ face $f$, $HJf=0$. Every primal $c$ edge meets $f$
+in both endpoints or neither, by the local incidence used in
+Lemma~\ref{lem:syndrome}. Thus $M_cJf=0$ and $D_cA_cf=0$.
+Its image is a physical stabilizer, so Theorem~\ref{thm:logical}
+implies $A_cf\in\ker\partial_c$.
+
+We now prove equality by a family-wide count and independence check.
+The red face coordinates in Lemma~\ref{lem:connected} give
+$|F_r|=t(t+1)/2$, and rotation gives the same count for each color.
+Counting $\Omega_t$ and subtracting the face centers gives
+\[
+ n:=|Q|=3t^2+3t+1,\quad
+ |F|=\frac{3t(t+1)}2,\quad
+ |E_c|=\frac{n-1}{2}.
+\]
+The last equality counts qubit incidences with primal $c$ edges:
+every qubit except the opposite corner belongs to one, and every
+such edge has two endpoints.
+Because the physical CSS code has $H_X=H_Z=H$ and one encoded qubit,
+$1=n-2\operatorname{rank}H$. Hence
+$\operatorname{rank}H=(n-1)/2=|F|$, so all real face support vectors
+are independent. In particular $A_c$ is injective.
+
+For a finite connected loopless graph, binary incidence has rank
+$|\Delta_0|-1$: its image has even coordinate sum, and a spanning
+tree attains that rank. Thus
+\[
+ \dim\ker\partial_c
+ =n-(|F_c|+|E_c|+2)+1
+ =t(t+1)
+ =|F_{\neg c}|=\operatorname{rank}A_c.
+\]
+The proved inclusion therefore is equality, including $t=1$.
+\end{proof}
+
+Under $T_c$ this also gives
+$S_X\cap\ker M_c=\operatorname{im}(J\iota_{\neg c})$.
+An unrestricted product of physical stabilizers must not be substituted
+for this intersection when comparing a fixed stage-2 fiber.
+For example $T_c^{-1}Jf$ for a $c$ face is a physical stabilizer chain
+but is outside $K_c$: otherwise it would be a combination of non-$c$
+faces, contrary to the independence just proved.
+
+\begin{definition}[Induced relative-coordinate complex]\label{def:complex}
+The appropriate binary complex for physical equivalence is
+\[
+ \mathfrak C_c:\quad
+ U_{\neg c}\xrightarrow{A_c}C_1(G_c)\xrightarrow{D_c}W_c .
+\]
+The last group is the graph's vertex space modulo terminal coordinates.
+The identities
+\[
+ D_cA_c=0,\qquad T_cA_c=J\iota_{\neg c},\qquad HT_c=\Lambda_cD_c
+\]
+make $(\iota_{\neg c},T_c,\Lambda_c)$ a chain map from this complex
+to the physical CSS complex $U\xrightarrow J A\xrightarrow H U$.
+\end{definition}
+Proposition~\ref{prop:facebasis} and Theorem~\ref{thm:logical} prove
+\[
+ H_1(\mathfrak C_c)=\ker D_c/\operatorname{im}A_c
+      =\mathcal Q_c\ \cong\ \mathcal L_X .
+\]
+This is a precise induced algebraic complex, consistent with the
+binary-complex convention in \cite[Definition~3.1]{Delfosse}.
+No geometric attachment of $2$-cells is assumed.
+By contrast the bare graph pair $(G_c,\mathcal B_c)$ has no $2$-cells;
+its relative $H_1$ is $K_c$, of dimension $t(t+1)+1$, and does not
+kill the $t(t+1)$ independent physical-stabilizer cycles.
+Ordinary homology of the primal disk would also be the wrong object.
+
+\subsection{Cross-checks with physical boundaries, strings, and fibers}
+The parity proof used the physical logical $Z$ on the $c$ side as a
+detector; it did not assume the inverse of that support was a relative
+graph chain. Indeed $T_c^{-1}Q_c\notin K_c$.
+Every $q\in Q_c$ belongs to a primal $c$ edge, and no such edge has
+both endpoints on $\Gamma_c$ (edges along that side have other colors).
+Thus $M_cQ_c\ne0$, even though $HQ_c=0$ and $P_X(Q_c)$ is logical.
+This gives a concrete counterexample to dropping the fixed-fiber
+condition from the cycle/relative-path characterization.
+
+For either other physical side $\Gamma_a$, $a\ne c$,
+$T_c^{-1}Q_a$ is instead a simple terminal-joining path.
+To check this combinatorially, order its retained qubits along the
+side, as in Lemma~\ref{lem:incidence}.
+Its boundary links alternate the two non-$a$ colors.
+Adjacent qubits joined by a $c$ link share the corresponding $E_c$
+vertex; the alternating link belongs to a $c$ face and the two
+qubits share that $F_c$ vertex. Each of these real vertices occurs
+once, since a boundary face has exactly two consecutive side qubits.
+The first corner on $\Gamma_c$ contributes $b_c^0$; the other corner,
+opposite $\Gamma_c$, contributes $b_c^1$.
+This verifies the standard boundary logical representatives directly.
+
+More generally a terminal path starts with the opposite-corner qubit
+and passes through pairs of qubits at each primal $c$-edge vertex.
+Those pairs are the elementary physical $c$ strings of
+Section~\ref{sec:strings}; the shared $c$-face excitations cancel as the
+path continues to the $c$ boundary. The corner excitation is absorbed
+in the same cancellation. Non-$c$ face products deform these relative
+paths without changing the fixed auxiliary parities.
+
+The usual logical three-string nets and global physical logical
+representatives are equivalent modulo physical face stabilizers
+\cite[pp.~2--3, Eqs.~(4)--(6) and Fig.~3]{Bombin}.
+The converse corollary therefore assigns their nontrivial physical
+class a terminal-path representative. It does not assert that an
+arbitrary drawn net is literally a simple path under $T_c^{-1}$.
+Deforming a representative into the chosen fiber may use $c$-face
+stabilizers, which can change auxiliary parities.
+Colored condensation at the physical boundaries remains consistent
+with \cite[Secs.~4.2--4.3]{Kesselring}.
+
+The theorem is independent of the numerical stage-1 prediction:
+for any fixed real stage-2 syndrome its differences have the same
+space $K_c$ and the same quotient. The restriction to that space is
+essential. In particular a true physical error with syndrome $\sigma_Z$
+need not have $M_c$ parity equal to the decoder's stage-1 prediction.
+The result does not claim that stage 1 is correct or that conditioning
+on its output produces independent edge errors.
+
+\section{A Meister-type modified decoding graph}
+\label{sec:meistergraph}
+Only after the physical proof above do we compare with Meister's
+modified graph \cite[Sec.~II.B.1, pp.~2--3]{Meister}.
+Its relevant structure is a weighted edge-error graph with distinct
+virtual boundaries, trivial closed cycles, and nontrivial logical
+paths between different boundaries. Here the effective parity map
+is $D_c$, not the full physical face matrix $H$.
+
+\begin{proposition}[The exact fixed-branch correspondence]\label{prop:meister}
+For the stated patch family and pure CSS sector,
+$(G_c,\mathcal B_c,\omega_c)$ is a boundary-resolved stage-2 decoding
+graph with the logical structure required of a Meister-type modified
+decoding graph, in the following precise sense.
+\begin{enumerate}
+ \item Its edges biject with physical single-qubit errors through
+ $\widetilde\eps_c$, and their Pauli supports are $T_c$.
+ \item Its real-vertex constraint is $D_c\Gamma=s_c$; both terminals
+ have no prescribed parity. Physical syndrome is $\Lambda_cs_c$.
+ \item Relative differences have exactly two physical equivalence
+ classes. Closed chains are precisely the fixed-fiber physical
+ stabilizer differences, and terminal-joining chains are nontrivial.
+ \item Every nontrivial relative class has a simple terminal-joining
+ path representative. Identifying the two terminals recovers the
+ ordinary graph and its physical edge weights.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+The first two statements are Definitions~\ref{def:resolved},
+\ref{def:physicalmap} and Lemma~\ref{lem:syndrome}.
+The third and fourth follow from Theorem~\ref{thm:logical},
+Corollary~\ref{cor:representatives}, and the explicit quotient
+of Definition~\ref{def:quotient}.
+\end{proof}
+
+This establishes the same two-terminal relative logical quotient and
+cycle equivalence as the planar surface-code construction.
+It is not an isomorphism to a particular surface-code lattice or an
+equivalence of the full concatenated decoder to a surface-code decoder.
+In particular $F_c$ vertices are physical checks while $E_c$ vertices
+are stage-1 auxiliary constraints. The reduction of physical string-net
+classes to paths occurs in the fixed-color quotient just proved.
+Neither Delfosse's projection \cite[Definition~5.5, Theorem~5.6]{Delfosse}
+nor Kubica's local-Clifford unfolding
+\cite[Sec.~III.B, Theorem~3]{Kubica} is the map used in this proof.
+
+\subsection{Unmodified physical weights}
+Use the already adopted transport
+\[
+ \omega_c(\widetilde\eps_c(q))
+       =\omega_c^{\mathrm{ord}}(\eps_c(q))\geq0 .
+\]
+Splitting changes endpoints, not the physical support or weight of any
+edge. There is no physical zero-cost edge joining the terminals.
+For uniform independent bit flips with $0<p<1/2$ the usual choice is
+$\omega_c=\log((1-p)/p)>0$, or uniform unit cost for ordinary matching.
+This is a physical error-support cost, not a summed logical-class
+probability or a claim about the distribution conditional on a
+predicted stage-1 parity.
+
+\begin{corollary}[Unmodified path-cost correspondence]\label{cor:pathcost}
+For supplied nonnegative weights,
+\[
+ \min_{\substack{z\in K_c\\\beta_c(z)=1}}
+       \sum_{e\in\operatorname{supp}z}\omega_c(e)
+ =
+ \min_{\substack{p\text{ simple path}\\b_c^0\ \mathrm{to}\ b_c^1}}
+       \sum_{e\in p}\omega_c(e).
+\]
+\end{corollary}
+\begin{proof}
+Every such path is an admissible nontrivial chain.
+Conversely Corollary~\ref{cor:representatives} extracts a path contained
+in any nontrivial chain. Nonnegativity makes the extracted path cost
+no greater. Connectivity and finiteness ensure the sets are nonempty
+and the minima exist.
+\end{proof}
+This is an unmodified shortest-path statement in the fixed-color
+relative space, not a minimum over all physical logical supports
+with arbitrary weights, and not a cluster-contracted swim distance.
+
+\section{Decoder dual data and resolved clusters}\label{sec:clusters}
+Fix the real second-round input $s_c$, and write
+$V=\Delta_0(G_c)$, $E=\Delta_1(G_c)$ in this and subsequent metric
+sections. These local graph aliases do not denote primal edges.
+Initially assume finite strictly positive $\omega_c$.
+Let $X_c$ be the interval realization of $G_c$, with shortest-path
+metric $d_c$ and edge-length measure $|\cdot|_{\omega_c}$.
+The physical edge labels remain available throughout.
+Write $\Sigma_c=\operatorname{supp}s_c$ and let $f_c$ be the
+returned correction relabelled in $G_c$, so $D_cf_c=s_c$.
+
+\subsection{A free-boundary version of the matching dual}
+Meister's clusters use accumulated nonnegative odd-set dual variables,
+not connected components of the final correction
+\cite[Definition~7, Eq.~(6)]{Meister}. To specify their boundary
+meaning, we make the following matching reduction explicit.
+
+\begin{definition}[Boundary-normalized odd-cut dual]\label{def:dual}
+For $u,v\in\Sigma_c$, let
+\[
+ a_u=d_c(u,\mathcal B_c),\qquad
+ d_c^\circ(u,v)=\min\{d_c(u,v),a_u+a_v\},\qquad
+ \mathcal O_c=\{S\subseteq\Sigma_c:|S|\text{ odd}\}.
+\]
+For $y=(y_S)_{S\in\mathcal O_c}$ define
+\[
+ r_u=\sum_{S\ni u}y_S,\qquad
+ l_{uv}(y)=\sum_{S:|\{u,v\}\cap S|=1}y_S,\qquad
+ Y_c=\sum_S y_S .
+\]
+The dual is to maximize $Y_c$ subject to
+\begin{equation}
+ y_S\ge0,\qquad l_{uv}(y)\le d_c^\circ(u,v)\ (u\ne v),\qquad
+ r_u\le a_u .
+ \label{eq:dual}
+\end{equation}
+All nonsyndrome vertices, including both terminals, have radius zero.
+Certified MWPM data consist of a feasible $f_c$, a feasible $y$, and
+the equality $Y_c=\omega_c(f_c)$.
+\end{definition}
+
+\begin{proposition}[Exact free-boundary dual and its realization]
+\label{prop:dual}
+The maximum in \eqref{eq:dual} exists and equals the minimum in
+\eqref{eq:opt}. Hence certified data exist for any optimal $f_c$.
+The same dual can be formed using ordinary merged-graph distances.
+Its radii define balls on $X_c$ without a virtual shortcut between
+$b_c^0$ and $b_c^1$.
+\end{proposition}
+\begin{proof}
+Form the complete metric graph on $\Sigma_c\sqcup\{b\}$, where
+$d(u,b)=a_u$ and $d(u,v)=d_c^\circ(u,v)$. These are precisely the
+distances after identifying the two boundary vertices, hence satisfy
+the triangle inequality. Prescribe odd vertices
+$T=\Sigma_c$ if $|\Sigma_c|$ is even, and
+$T=\Sigma_c\sqcup\{b\}$ otherwise.
+A $T$-join means a nonnegative integer edge multiplicity with exactly
+these odd-degree vertices.
+
+Its minimum weight equals the physical free-boundary optimum.
+Indeed, a physical feasible chain decomposes into edge-disjoint
+trails pairing its odd vertices after the terminals are merged.
+Delete cycles and replace trails by shortest metric edges; visits to
+$b$ may be split there. This gives a metric $T$-join of no greater cost.
+Conversely expand metric edges into ordinary shortest paths and add
+them modulo two. Real parities are $s_c$ and cancellation cannot
+increase cost. Relabel the physical edges in $G_c$. These two
+inequalities identify the optima.
+
+The nonnegative odd-cut description of the $T$-join dominant is the
+parity-polyhedron result of Edmonds--Johnson
+\cite[Sec.~3, pp.~93--95, Eqs.~(3.2), (3.5)--(3.8)]{EdmondsJohnson}.
+Its LP dual assigns a nonnegative variable to each $T$-odd cut.
+Since $|T|$ is even, complementary shores describe the same odd cut.
+Choose the shore excluding $b$ and combine duplicate variables.
+Such shores are exactly the odd subsets of $\Sigma_c$.
+The edge constraints are then \eqref{eq:dual}: edges $ub$ give
+$r_u\le a_u$. Strong duality proves the assertion.
+When $\Sigma_c$ is empty the primal and dual values and all radii
+are zero, which also covers this case.
+
+Finally a path from $u$ using the merged boundary must first travel
+at least $a_u$. Since $r_u\le a_u$, a ball of radius $r_u$ cannot
+travel any positive length beyond that boundary via identification.
+Consequently its covered portions of physical edge intervals are
+exactly those obtained by growing the ball in $X_c$.
+It may touch either or both terminals at equality; these are retained
+as separate endpoints in $X_c$. Zero-measure terminal points do not
+identify the clusters across the two boundaries.
+\end{proof}
+
+This is an explicit free-boundary adaptation of Meister's radius
+formula. The cut inequalities, rather than unrestricted signed
+vertex potentials, justify nonnegative radii. Sparse Blossom's
+standard perfect-matching LP permits signed singleton dual variables
+\cite[Sec.~2.5.2, p.~8, Eqs.~(4)--(6)]{SparseBlossom}.
+The same source explains that its metric-path-graph growth can keep
+singleton radii nonnegative (pp.~10--11); signed values are permitted
+by the general LP, not asserted to occur in that implementation.
+A backend's raw potentials or contracted blossom IDs still
+require a verified conversion to \eqref{eq:dual}; clipping negative
+potentials is not that conversion. Another mathematically concrete
+route is to solve \eqref{eq:dual} as a companion optimization and
+check the certificate equality. It need not reproduce the internal
+growth history of an earlier PyMatching run. Different optimal duals
+may give different clusters, so the dual-selection convention is
+part of this soft-output decoder.
+
+\begin{definition}[MWPM cluster set]\label{def:clusters}
+For a selected optimal dual in Definition~\ref{def:dual}, put
+\[
+ \mathcal C_c=\bigcup_{v\in V}B_{r_v}(v)\subset X_c,\qquad
+ B_r(v)=\{x:d_c(v,x)\le r\}.
+\]
+A cluster is a connected component of $\mathcal C_c$.
+\end{definition}
+This imports the metric-ball convention of Meister
+\cite[Definition~1 and Appendix~B]{Meister}, with the preceding
+boundary-aware dual supplying its input.
+The source's displayed matching primal has singleton equalities,
+while its displayed dual assigns all odd sets nonnegative variables.
+The nonnegative parity-polyhedron formulation above supplies the
+precise LP used here, without silently treating an arbitrary signed
+perfect-matching dual as that certificate.
+Overlapping balls and balls meeting at a point belong to one cluster.
+Radius-zero balls add vertices, not positive-length erased edges.
+Pulling back a single connected component from the merged boundary
+would incorrectly join components touching different terminals.
+The preceding proposition identifies covered edge portions only;
+the connected components must be recomputed on the resolved graph.
+
+\subsection{UF and the practical data interface}
+For a separately specified UF decoder one can use the same metric
+ball definition with the radii from its actual growth run
+\cite[Algorithm~1, Definition~8]{Meister}. A resolved-graph convention
+is to initialize zero radii at syndrome vertices, grow all syndrome centers
+belonging to an odd connected component at equal speed while that
+component touches neither terminal, and stop that component when it
+becomes even or touches a terminal. Recompute components at collision
+events, including simultaneous events. Even components may become
+active again after merging with an odd component. Terminal vertices
+are absorbing, have radius zero, and never transmit growth to the
+other terminal. Stop when every component is even or touches a
+terminal, and choose a correction supported on the covered subgraph
+by a spanning-tree parity solve. Each terminal-free component then
+has even syndrome parity; a terminal-containing component can absorb
+its parity, so such a correction exists.
+A finite connected positive-length graph ensures termination:
+any still-active component expands until it encounters another
+syndrome component or a terminal.
+This is a defined metric UF variant; it differs from the source's
+discrete smallest-odd-cluster schedule. Weighted or discrete backends
+must export their actual coverage and growth convention to use it.
+It is not asserted to match every UF implementation.
+No MWPM optimal-dual bound is asserted for UF.
+
+In the inspected local implementation,
+\texttt{ConcatMatchingDecoder.\_decode\_stage2} constructs
+\texttt{Matching.from\_check\_matrix} with the supplied check matrix and weights
+and calls \texttt{decode\_batch} with \texttt{return\_weights=True}
+\cite{Implementation}. The returned prediction and total weight do
+not contain $y_S$, $r_v$, or metric coverage. The documented public
+decode interfaces expose predictions, matching edges or matched
+detectors and weights, without a promised radius/dual certificate
+\cite{PyMatching}. Neither final-correction components nor a list
+of matched pairs determines the chosen dual.
+
+Required instrumentation is therefore: retain original physical edge
+IDs, weights and syndrome-vertex IDs; export a nonnegative odd-cut
+certificate satisfying \eqref{eq:dual}, including the original
+syndrome membership of each nonzero set; sum its contributions into
+$r_v$; and verify feasibility and $Y_c=\omega_c(f_c)$.
+A companion dual solver is an alternative, with its cost charged
+separately. UF instead exports final radii or covered intervals and
+its boundary-stopping convention. This note supplies the mathematical
+interface and reference checks; it does not install that instrumentation
+in the external circuit-level decoder. A DEM reduction or reweighting
+also needs a separate physical-edge and weight audit before it can
+instantiate this perfect-measurement theory.
+
+\section{Cluster contraction and the swim distance}\label{sec:swim}
+The geometric results below hold for any supplied finite nonnegative
+vertex radii on $X_c$, including the specified MWPM and UF radii.
+The representative bound in the next section requires the certified
+MWPM choice.
+
+\begin{definition}[Contracted length and retained-edge weights]
+\label{def:contraction}
+Contract each connected component of $\mathcal C_c$ to a point.
+Give the resulting interval quotient $\bar X_c$ the length
+pseudometric which charges only travel outside $\mathcal C_c$.
+For each original labelled edge set
+\[
+ \bar\omega_c(e)=|e\setminus\mathcal C_c|_{\omega_c},
+ \qquad \bar G_c=(V,E,\bar\omega_c).
+\]
+For a binary chain $z$, $\bar\omega_c(z)$ is the sum of these weights
+over its support. The bar does not change $D_c$, $T_c$, or physical
+edge identities.
+\end{definition}
+
+\begin{lemma}[Partial-edge formula and quotient equivalence]
+\label{lem:metric}
+Set
+\[
+ h_v=\max\{0,\max_{u\in V}(r_u-d_c(u,v))\}.
+\]
+For every edge $e=uv$ of length $w=\omega_c(e)$,
+\begin{equation}
+ \bar\omega_c(e)=\max\{0,w-h_u-h_v\}.
+ \label{eq:partial}
+\end{equation}
+Distances between original vertices in $\bar X_c$ equal shortest-path
+distances in $\bar G_c$.
+\end{lemma}
+\begin{proof}
+A point at coordinate $x\in[0,w]$ on $uv$ can be reached from a vertex
+$s$ by entering through $u$ or $v$. Its distance is
+$\min\{d_c(s,u)+x,d_c(s,v)+w-x\}$.
+Thus the covered part of the edge is the union of its prefix of
+length $\min(w,h_u)$ and suffix of length $\min(w,h_v)$.
+Their uncovered gap has length \eqref{eq:partial}.
+Subdivide every edge at the coverage endpoints. Each covered
+subinterval has zero cost and each uncovered one retains its length.
+Connected covered components can be contracted without changing
+distances: any traversal of a contracted component can be expanded
+along a path of zero cost inside that component.
+Every new subdivision vertex has degree two before contraction.
+Suppressing these vertices replaces successive subinterval costs by
+their sum, namely $\bar\omega_c(e)$ on the original edge.
+These operations prove the distance identity, including ties and
+zero distances.
+\end{proof}
+
+In particular an edge is not assigned zero just because its endpoints
+belong to the same cluster: that cluster can connect its endpoints
+by another route while leaving the middle of this edge uncovered.
+Contraction nevertheless permits that other zero-cost route.
+An edge of weight $5$ covered for length $1$ at one end and $2$ at
+the other retains weight $2$. Boolean zeroing would miscalculate it.
+
+\begin{definition}[Fixed-color stage-2 swim distance]\label{def:swim}
+For the selected decoder cluster set define
+\begin{equation}
+ \phi_c(\mathcal C_c)=
+ \operatorname{dist}_{\bar X_c}([b_c^0],[b_c^1])
+ =\operatorname{dist}_{\bar G_c}(b_c^0,b_c^1).
+ \label{eq:swim}
+\end{equation}
+Writing $\phi_c(s_c)$ presupposes a fixed decoder and dual/growth
+selection rule. The value is a nonnegative real number.
+\end{definition}
+
+\begin{theorem}[Exact geometric meaning and physical witness]
+\label{thm:swim}
+For the stated triangular family,
+\begin{equation}
+ \phi_c=\min_{\substack{z\in K_c\\\beta_c(z)=1}}\bar\omega_c(z)
+       =\min_{\substack{p\text{ simple path}\\ b_c^0\ {\rm to}\ b_c^1}}
+                      \bar\omega_c(p).
+ \label{eq:swimlogical}
+\end{equation}
+A minimizing original-edge path $p$ maps under $T_c$ to a nontrivial
+physical logical operator. A shortest quotient route can be lifted
+to such a physical representative without increasing its cost.
+\end{theorem}
+\begin{proof}
+Lemma~\ref{lem:metric} gives the shortest original-edge path value.
+Any relative beta-one chain contains a simple terminal path by
+Corollary~\ref{cor:representatives}; removing its other edges cannot
+increase nonnegative cost. Conversely each terminal path is such a
+chain. This proves \eqref{eq:swimlogical}.
+Theorem~\ref{thm:logical} proves $HT_cp=0$ and the nonzero physical
+logical class. For a quotient route, expand each contracted traversal
+using a path inside the connected cluster, retaining original
+terminal endpoints. In the finite subdivided graph this produces
+a walk; its binary reduction has boundary $b_c^0+b_c^1$.
+Degree-two subdivision vertices have zero boundary, so the reduction
+uses either all or none of the segments of each original edge.
+It therefore gives an original physical chain. Remove closed
+portions to extract a simple terminal path. Its cost cannot increase
+and cannot be less than the proved minimum.
+\end{proof}
+
+A cluster touching one terminal contracts onto that terminal.
+If a connected cluster touches both, their quotient points coincide
+and $\phi_c=0$. Its internal path between the \emph{original} terminals
+is still a nontrivial physical logical witness. The empty quotient
+walk alone is not a physical Pauli operator. Merged clusters are
+the connected components of the entire union, not just individual
+balls. With positive original lengths, zero swim distance is
+equivalent to the two terminals lying in one such component.
+
+Although $G_c$ is connected, no connectedness of its cluster set is
+required. In a more general disconnected input, quotient operations
+cannot join different components; if the terminal components differ
+the extended distance is $+\infty$ and no logical witness is returned.
+The present family excludes that case. Negative weights are outside
+the metric construction. Original zero weights can instead be
+treated as a length pseudometric: retain their labels and incidence,
+or contract them for distance computation while retaining expansion
+paths and both original terminals. Formula \eqref{eq:partial} still
+holds, and the same nonnegative-cost proof applies. Never delete a
+zero-cost physical logical chain by forgetting its provenance.
+
+\subsection{Concrete computation and cost}
+Given the ordinary labelled stage-2 graph, nonnegative physical
+weights, real syndrome, correction and selected decoder radii:
+\begin{enumerate}
+ \item Restore $G_c$ using Definition~\ref{def:resolved}: edges with
+ a missing face meet $b_c^0$, and the opposite-corner edge meets $b_c^1$.
+ Relabel the correction through $q_{c,1}^{-1}$ and check $D_cf_c=s_c$.
+ No auxiliary boundary-joining edge is carried into the metric.
+ \item Obtain radii from the specified dual certificate or UF
+ growth run. Record which convention was used. For the analytical
+ MWPM claim, require \eqref{eq:dual} and $Y_c=\omega_c(f_c)$.
+ Missing growth data are an unavailable soft output, not zero radii.
+ \item Compute all $h_v$. Put $R=\max_v r_v$, add a temporary source
+ $o$ with arc $o\to v$ of length $R-r_v$, and run Dijkstra on the
+ original weighted graph. If its distances are $d_o(v)$, then
+ $h_v=\max\{0,R-d_o(v)\}$, since
+ $d_o(v)=\min_u(R-r_u+d_c(u,v))$. Remove this temporary source.
+ \item Compute $\bar\omega_c$ using \eqref{eq:partial} for each
+ labelled edge. This implements interval contraction exactly.
+ \item Run Dijkstra on $\bar G_c$ from $b_c^0$ to $b_c^1$.
+ Return its distance $\phi_c$, the cluster-data convention, and,
+ if requested, a predecessor path with its physical qubit labels.
+ Use a predecessor tree or remove zero-cost cycles to obtain a
+ simple witness. A zero result is retained.
+\end{enumerate}
+With radii supplied, two binary-heap shortest-path runs, construction
+and linear edge passes take $O((|V|+|E|)\log |V|)$ time and
+$O(|V|+|E|)$ storage; a decrease-key Fibonacci heap gives
+$O(|E|+|V|\log|V|)$ amortized time. Here $|V|,|E|=O(d^2)$.
+The temporary source is an algorithmic device, not a physical edge.
+
+These bounds exclude producing and certifying the decoder data.
+For an explicitly stored dual let $L_y=\sum_{S:y_S\ne0}|S|$;
+radius accumulation costs $O(L_y)$.
+A deliberately simple reference solver computes defect distances in
+$O(k(|E|+|V|)\log|V|)$ time and forms the finite LP
+\eqref{eq:dual}, with $2^{k-1}$ variables for $k>0$ and $O(k^2)$
+constraints. Its explicit representation can cost $O(k^2 2^k)$;
+generic rational LP solution is polynomial in that representation
+and its bit length, hence exponential in $k$ here. It is a concrete
+fallback, not an efficient postprocessing claim.
+An instrumented matching solver can avoid this enumeration, but its
+certificate conversion, extraction, and verification overhead has
+not been implemented or benchmarked here.
+For an interval-list UF interface, first merge overlapping intervals
+per edge, charging the input size and sorting cost separately.
+Near-linear geometric postprocessing alone does not establish
+negligible end-to-end overhead.
+
+\section{Certified representative bound and its limits}\label{sec:bound}
+Meister's proof uses dual feasibility, odd-cut counting and a
+physical nontrivial path, rather than square-lattice distances
+\cite[Lemmas~11--12, Theorem~13]{Meister}.
+There are two points to supply explicitly here: free boundary
+endpoints, and path decompositions that may share vertices.
+The source's Definition~4 assumes vertex-disjoint paths; a
+minimum-weight relative chain on our graph need not have that form.
+
+\begin{lemma}[Covered weight of any feasible chain]\label{lem:coverage}
+For feasible $y$ in \eqref{eq:dual}, form its metric-ball set.
+For every binary chain $m$ with $D_cm=s_c$,
+\[
+ |m\cap\mathcal C_c|_{\omega_c}\ge Y_c .
+\]
+In particular, certified MWPM data imply
+$\bar\omega_c(f_c)=0$.
+\end{lemma}
+\begin{proof}
+At every real vertex, pair its incident half-edges of $m$, leaving
+one unpaired exactly when it belongs to $\Sigma_c$. Leave all
+terminal half-edges unpaired. Following the pairings partitions
+the edges into trails and closed trails; every syndrome vertex
+is the endpoint of exactly one open trail. The open trails may
+share vertices, but never edges. Terminal-to-terminal trails and
+closed trails can be ignored for a lower bound.
+
+Consider a trail with endpoints $u,v\in\Sigma_c$.
+Its initial segment of length $r_u$ (or its whole length if shorter)
+lies in $B_{r_u}(u)$; its final segment similarly lies in $B_{r_v}(v)$.
+Hence covered length along it is at least
+$\min\{\text{trail length},r_u+r_v\}\ge l_{uv}(y)$:
+its length is at least $d_c(u,v)\ge d_c^\circ(u,v)\ge l_{uv}(y)$,
+and $r_u+r_v\ge l_{uv}(y)$ by nonnegativity.
+A trail from $u\in\Sigma_c$ to a terminal has length at least
+$a_u\ge r_u$ and covered length at least $r_u$.
+These estimates count length only once within each trail; vertices
+have measure zero, and distinct trails have disjoint edges.
+
+For any odd $S\subseteq\Sigma_c$, the number of these endpoint pairs
+with exactly one endpoint in $S$ is odd, hence at least one:
+every element of $S$ is an endpoint once, internal pairs contribute
+two, and terminal endpoints are outside $S$.
+Summing the lower bounds therefore counts each $y_S$ at least once.
+It proves the inequality. For $m=f_c$ with
+$Y_c=\omega_c(f_c)$, covered weight is at least its entire weight
+and cannot exceed it. The uncovered cost is consequently zero.
+\end{proof}
+
+\begin{definition}[Two fixed-fiber representative weights]\label{def:gap}
+For certified MWPM output $f_c$ define
+\[
+ W_{c,\mathrm{base}}^{(2)}=\omega_c(f_c),\qquad
+ W_{c,\mathrm{opp}}^{(2)}
+ =\min_{\substack{D_cm=s_c\\\beta_c(m+f_c)=1}}\omega_c(m).
+\]
+The opposite set is nonempty by adding a terminal path to $f_c$.
+Both optimizations retain the same stage-1 auxiliary parity.
+\end{definition}
+
+\begin{theorem}[Meister-type bound for certified stage-2 MWPM]
+\label{thm:gap}
+For the stated triangular family, fixed color and real stage-2
+syndrome, nonnegative finite weights, and the certified dual
+cluster construction of Definition~\ref{def:dual},
+\begin{equation}
+ W_{c,\mathrm{opp}}^{(2)}-W_{c,\mathrm{base}}^{(2)}
+ \ \ge\ \phi_c .
+ \label{eq:gap}
+\end{equation}
+For positive weights the clusters use the ordinary interval metric;
+for zero weights they use the labelled pseudometric convention above.
+No stochastic-noise assumption is required for this cost inequality.
+\end{theorem}
+\begin{proof}
+Let $m$ attain the opposite minimum. Lemma~\ref{lem:coverage} gives
+\[
+ \omega_c(m)-\omega_c(f_c)
+ =|m\cap\mathcal C_c|_{\omega_c}
+    -Y_c+\bar\omega_c(m)\ge\bar\omega_c(m).
+\]
+Since all edges of $f_c$ have zero uncovered cost,
+$\bar\omega_c(m)=\bar\omega_c(m+f_c)$.
+Their difference belongs to $K_c$ and has beta one.
+Theorem~\ref{thm:swim} lower-bounds its uncovered cost by $\phi_c$.
+This proves \eqref{eq:gap}.
+\end{proof}
+
+The transfer is conditional on an actual exact optimum and the
+specified optimal nonnegative dual, but existence of those data for
+the mathematical matching problem is proved in Proposition~\ref{prop:dual}.
+It is not conditional on an unproved color-code topological analogy.
+Ties across logical classes force $\phi_c=0$ under these hypotheses.
+Floating-point residuals require an explicit error analysis before
+calling a numerical certificate exact.
+
+An arbitrary feasible but suboptimal dual, arbitrary radii, or UF
+output does not satisfy this theorem. For example at $d=3,c=r$,
+take unit weights and the sole real red-face syndrome.
+Its optimal correction is the one-edge corner path of weight $1$;
+the opposite class has a two-edge path to $b_r^0$ of weight $2$.
+Zero radii give $\phi_r=3$, contradicting a claimed gap bound
+$1\ge3$. They are feasible dual data with value zero, but are not
+optimal. The certified radius at the excited face is instead $1$,
+giving $\phi_r=1$. This isolates the missing hypothesis.
+
+\subsection{What is, and is not, a probability statement}
+Equation~\eqref{eq:swimlogical} is an exact geometric minimum over
+nontrivial fixed-fiber physical logical chains. As a decoder-confidence
+score it is a proxy; calibration is a separate question.
+For independent physical bit flips with $0<p_q<1/2$ and
+$\omega_c(\widetilde\eps_c(q))=\log((1-p_q)/p_q)$, the ratio of
+the probabilities of the two \emph{specific supports} $T_cf_c,T_cm$
+is $\exp(\omega_c(m)-\omega_c(f_c))$.
+Conditioning on a common event containing both supports cancels its
+normalization. This supplies the representative-ratio interpretation
+of \eqref{eq:gap}, consistent with Meister's Theorem~13.
+It does not assert that a true error belongs to the stage-1 predicted
+fiber, nor independence after such a prediction.
+
+Even within the artificial fixed-fiber distribution proportional to
+$e^{-\omega_c(m)}$, the class LLR is
+\[
+ \log\frac{\sum_{D_cm=s_c,\ \beta_c(m+f_c)=0}e^{-\omega_c(m)}}
+               {\sum_{D_cm=s_c,\ \beta_c(m+f_c)=1}e^{-\omega_c(m)}} .
+\]
+These sums include degeneracies, so the representative bound does
+not identify or bound this LLR without further argument.
+The physical syndrome-conditioned class sum additionally includes
+other auxiliary fibers. Meister's exact repetition-code UF identity
+\cite[Theorem~10]{Meister} uses the one-dimensional complementary
+pair and is not transferred. Neither an upper bound, a constant-factor
+approximation, nor an exact posterior failure probability is proved.
+
+The full concatenated decoder also generates stage-1 predictions and
+selects among three color branches. Their errors, cross-fiber costs,
+branch selection, and any aggregate score are outside \eqref{eq:gap}.
+Comparative decoding and general-code postselection already have
+distinct definitions in prior work \cite{Postselection,ForcedGap}.
+They are not renamed as $\phi_c$ here.
+All probability logarithms in this note are natural; a different log
+base rescales both physical weights and the swim distance consistently.
+
+\section{Phase-1 conclusions and remaining scope}\label{sec:next}
+The construction now runs from physical qubits through the resolved
+stage-2 graph, its proved physical logical quotient, actual selected
+dual/UF cluster data, and interval contraction to $\phi_c$.
+The certified-MWPM representative bound is a separate theorem with
+an explicit certificate requirement. Public PyMatching predictions
+alone do not implement that requirement.
+
+The physical inputs are Lee's triangular code and decoder maps,
+Bombin--Martin-Delgado's logical code structure, and the colored
+boundary/string interpretation \cite{Lee,Bombin,Kesselring}.
+The projection and unfolding results remain different maps
+\cite{Delfosse,Kubica}. The contraction and dual proof strategy adapt
+Meister; the free-boundary LP uses the classical parity polyhedron
+\cite{Meister,EdmondsJohnson}. The project-specific incidence,
+logical-parity, face-basis, lifting and boundary-dual arguments are
+proved above, without a priority claim.
+
+Related constructions already extend soft-output methods in other
+directions. Kishi et al.\ define bounded and extra-cluster gaps and
+prove threshold-restricted comparisons on an already valid logical
+decoding graph \cite[Sec.~III.B, Theorems~1--4]{Kishi}.
+Lee--English--Bartlett define cluster-statistics confidence metrics
+for general QLDPC decoders \cite[Secs.~2--3]{Postselection};
+Wills--Yoder--Chuang distinguish summed logical-class likelihoods
+from practical forced-decoding weights \cite[Methods]{ForcedGap}.
+Smith--Brown--Bartlett also study an exclusive UF surviving-distance rule
+\cite[Appendix~E]{Smith}.
+Dinc\u{a}--Chan--Benjamin explicitly retain fractional-edge coverage
+in their swim-distance definition \cite[Definition~5]{Dinca}.
+Chen et al.\ customize PyMatching to extract post-decoding region
+weights and compute logical shortest paths for $\mathbb{RP}^2$
+cultivation \cite[Sec.~VI, pp.~10--12, Fig.~12]{ChenCultivation}.
+That is direct prior work on instrumentation and nonplanar logical
+soft output. Their fill-region convention is not identified with our
+selected optimal odd-cut certificate, and their antipodal cuts are
+not the color-side/corner split of $G_c$.
+These works do not supply the physical fixed-color path theorem used
+here. This note specializes and justifies an established metric strategy;
+it makes no priority claim for cluster contraction, partial coverage,
+instrumentation or soft output beyond planar surface codes.
+The precise source comparisons and exhaustive claim audit are in the
+repository bibliography and review.
+
+Remaining Phase-2 questions are practical dual extraction and its
+overhead, effects of stage-1 errors and conditioning, color aggregation,
+comparison with the complete decoder's comparative/forced gap,
+posterior calibration, and broader noise or code models.
+No numerical calibration, aggregate construction, or performance claim is
+undertaken in this theory note. The separately authorized circuit-level
+extension follows in Part~\ref{part:circuit}.
+
+\input{notes/support/circuit_level_theory.tex}
+\input{notes/support/circuit_level_swim_algorithm.tex}
+
+\begin{thebibliography}{99}
+\raggedright
+\bibitem{Lee}
+S.-H. Lee, A. Li, and S. D. Bartlett,
+\emph{Color code decoder with improved scaling for correcting circuit-level
+noise}, Quantum \textbf{9}, 1609 (2025).
+\href{https://doi.org/10.22331/q-2025-01-27-1609}{doi:10.22331/q-2025-01-27-1609}.
+Inspected: \href{https://arxiv.org/abs/2404.07482v2}{arXiv:2404.07482v2}.
+\bibitem{Bombin}
+H. Bomb\'in and M. A. Mart\'in-Delgado,
+\emph{Topological Quantum Distillation}, Phys. Rev. Lett.
+\textbf{97}, 180501 (2006).
+\href{https://doi.org/10.1103/PhysRevLett.97.180501}{doi:10.1103/PhysRevLett.97.180501}.
+Inspected:
+\href{https://arxiv.org/abs/quant-ph/0605138v3}{arXiv:quant-ph/0605138v3}.
+\bibitem{Kesselring}
+M. S. Kesselring, F. Pastawski, J. Eisert, and B. J. Brown,
+\emph{The boundaries and twist defects of the color code and their
+applications to topological quantum computation}, Quantum \textbf{2},
+101 (2018).
+\href{https://doi.org/10.22331/q-2018-10-19-101}{doi:10.22331/q-2018-10-19-101}.
+Inspected: \href{https://arxiv.org/abs/1806.02820v3}{arXiv:1806.02820v3}.
+\bibitem{Delfosse}
+N. Delfosse, \emph{Decoding color codes by projection onto surface codes},
+Phys. Rev. A \textbf{89}, 012317 (2014).
+\href{https://doi.org/10.1103/PhysRevA.89.012317}{doi:10.1103/PhysRevA.89.012317}.
+Inspected: \href{https://arxiv.org/abs/1308.6207v1}{arXiv:1308.6207v1}.
+\bibitem{Kubica}
+A. Kubica, B. Yoshida, and F. Pastawski, \emph{Unfolding the color code},
+New J. Phys. \textbf{17}, 083026 (2015).
+\href{https://doi.org/10.1088/1367-2630/17/8/083026}{doi:10.1088/1367-2630/17/8/083026}.
+Inspected: \href{https://arxiv.org/abs/1503.02065v1}{arXiv:1503.02065v1}.
+\bibitem{Meister}
+N. Meister, C. A. Pattison, and J. Preskill,
+\emph{Efficient soft-output decoders for the surface code} (2024).
+Inspected: \href{https://arxiv.org/abs/2405.07433v2}{arXiv:2405.07433v2}.
+\bibitem{Implementation}
+S.-H. Lee, \emph{color-code-stim},
+\texttt{src/color\_code\_stim/graph\_builder.py},
+methods \texttt{\_build\_triangular\_graph} and
+\texttt{\_add\_tanner\_edges}; also
+\texttt{src/color\_code\_stim/decoders/concat\_matching\_decoder.py},
+\texttt{\_decode\_stage2}, lines 487--541.
+\href{https://github.com/seokhyung-lee/color-code-stim/tree/0eb35935c1e5ff30ba3db9def30a9d35bca2f16d}{Commit 0eb35935c1e5},
+inspected 11--12 September 2026. Coordinate and interface evidence,
+not a mathematical proof.
+
+\bibitem{EdmondsJohnson}
+J. Edmonds and E. L. Johnson,
+\emph{Matching, Euler tours and the Chinese postman},
+Mathematical Programming \textbf{5}, 88--124 (1973).
+\href{https://doi.org/10.1007/BF01580113}{doi:10.1007/BF01580113}.
+\bibitem{SparseBlossom}
+O. Higgott and C. Gidney,
+\emph{Sparse Blossom: correcting a million errors per core second
+with minimum-weight matching}.
+Quantum \textbf{9}, 1600 (2025).
+\href{https://doi.org/10.22331/q-2025-01-20-1600}{doi:10.22331/q-2025-01-20-1600}.
+Inspected: \href{https://arxiv.org/abs/2303.15933v2}{arXiv:2303.15933v2}.
+\bibitem{PyMatching}
+PyMatching authors, \emph{Python API Documentation}, stable API
+page labelled 2.1.0, inspected 12 September 2026.
+\href{https://pymatching.readthedocs.io/en/stable/api.html}{Official API documentation}.
+\bibitem{Kishi}
+K. Kishi, R. Toshio, J. Fujisaki, H. Oshima, S. Sato, and K. Fujii,
+\emph{Even More Efficient Soft-Output Decoding with Extra-Cluster
+Growth and Early Stopping} (2026).
+Inspected PDF: \href{https://arxiv.org/abs/2602.03336v1}{arXiv:2602.03336v1}.
+\bibitem{Postselection}
+S.-H. Lee, L. H. English, and S. D. Bartlett,
+\emph{Efficient post-selection for general quantum LDPC Codes},
+npj Quantum Information \textbf{12}, 96 (2026).
+\href{https://doi.org/10.1038/s41534-026-01242-x}{doi:10.1038/s41534-026-01242-x}.
+Inspected manuscript: \href{https://arxiv.org/abs/2510.05795v2}{arXiv:2510.05795v2}.
+\bibitem{ForcedGap}
+A. Wills, T. J. Yoder, and I. Chuang,
+\emph{Forced Gap Post-Selection for Quantum LDPC Codes and their Operations}
+(2026). Inspected: \href{https://arxiv.org/abs/2605.20346v1}{arXiv:2605.20346v1}.
+
+\bibitem{Smith}
+S. C. Smith, B. J. Brown, and S. D. Bartlett,
+\emph{Mitigating errors in logical qubits}, Communications Physics
+\textbf{7}, 386 (2024).
+\href{https://doi.org/10.1038/s42005-024-01883-4}{doi:10.1038/s42005-024-01883-4}.
+Inspected: \href{https://arxiv.org/abs/2405.03766v1}{arXiv:2405.03766v1}.
+\bibitem{Dinca}
+M. Dinc\u{a}, T. Chan, and S. C. Benjamin,
+\emph{Error mitigation for logical circuits using decoder confidence}.
+Inspected PDF: \href{https://arxiv.org/abs/2512.15689v3}{arXiv:2512.15689v3} (2026).
+\bibitem{ChenCultivation}
+Z.-H. Chen, M.-C. Chen, C.-Y. Lu, and J.-W. Pan,
+\emph{Efficient Magic State Cultivation on $\mathbb{RP}^2$} (2025).
+Inspected PDF: \href{https://arxiv.org/abs/2503.18657v1}{arXiv:2503.18657v1}.
+\bibitem{StimDEM}
+Stim contributors, \emph{Detector error model file format},
+\href{https://github.com/quantumlib/Stim/blob/main/doc/file_format_dem_detector_error_model.md}{official documentation},
+inspected 12 September 2026, error instructions, separators and offsets.
+\bibitem{StimAPI}
+Stim contributors, \emph{DetectorErrorModel.shortest\_graphlike\_error},
+installed Stim 1.16.0 Python API docstring, inspected 12 September 2026.
+\href{https://github.com/quantumlib/Stim/blob/main/src/stim/dem/detector_error_model.pybind.cc}{Official API source}.
+\bibitem{CircuitImplementation}
+S.-H. Lee, \emph{color-code-stim}, local Phase-2A branch,
+commit \texttt{ba6f7dc8b7aaab237d98ad5f08825be4225864c6}.
+Inspected \texttt{stim\_utils.py}, \texttt{stim\_symbolic.py},
+\texttt{dem\_utils/dem\_manager.py}, \texttt{dem\_utils/dem\_decomp.py},
+and \texttt{decoders/concat\_matching\_decoder.py}, 12 September 2026.
+Source paths are relative to \texttt{src/color\_code\_stim/};
+implementation evidence, not an imported mathematical theorem.
+\bibitem{FaultComplex}
+T. Hillmann, G. Dauphinais, I. Tzitrin, and M. Vasmer,
+\emph{Single-shot and measurement-based quantum error correction via fault complexes},
+Phys. Rev. A \textbf{112}, L040401 (2025).
+Inspected \href{https://arxiv.org/abs/2410.12963v2}{arXiv:2410.12963v2}.
+\bibitem{SpacetimeCodes}
+N. Delfosse and A. Paetznick, \emph{Spacetime codes of Clifford circuits}.
+Inspected \href{https://arxiv.org/abs/2304.05943v2}{arXiv:2304.05943v2} (2023).
+\bibitem{FaultTolerant}
+H. Bomb\'in et al., \emph{Fault-tolerant complexes}.
+Inspected \href{https://arxiv.org/abs/2308.07844v1}{arXiv:2308.07844v1} (2023).
+\bibitem{ColorPipes}
+L. S. Herzog, G. Kishony, R. Wille, and A. Fowler,
+\emph{Towards Lattice Surgery Compilation for the Color Code Using Pipe Diagrams}.
+Inspected \href{https://arxiv.org/abs/2607.05501v1}{arXiv:2607.05501v1} (2026), preprint.
+\bibitem{DerksDEM}
+P.-J. H. S. Derks, A. Townsend-Teague, A. G. Burchards, and J. Eisert,
+\emph{Designing fault-tolerant circuits using detector error models}.
+Inspected \href{https://arxiv.org/abs/2407.13826v2}{arXiv:2407.13826v2}.
+\bibitem{HomologyCovers}
+E. W. Chambers, J. Erickson, K. Fox, and A. Nayyeri,
+\emph{Minimum cuts in surface graphs}, author manuscript, Sec.~5.1.
+\href{https://ekfox.web.illinois.edu/publications/min-cut-surfaces/min-cut-surfaces.pdf}{Author PDF};
+retained local copy inspected 12 September 2026.
+\end{thebibliography}
+\end{document}
