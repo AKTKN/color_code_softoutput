@@ -31,4 +31,3 @@ dependencies:
       - ipykernel==7.3.0
       - nbformat==5.11.1
       - jupyter==1.1.1
-      - sinter==1.16.0
