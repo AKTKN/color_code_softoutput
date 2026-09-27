@@ -400,6 +400,13 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-27 — Recorded the working environment's direct package versions in
+`environment.yml`, updated setup instructions to the merged decoder default
+branches with PyMatching's submodule, and added a single-node PBS job script.
+Conda dry run, YAML/shell checks, local `pip check`, and a 64-shot simulated
+PBS-shell run pass. Next task: create the Conda environment and run the bounded
+PBS smoke on the target cluster.
+
 2026-09-27 — Extended canonical YAML SWIM to the existing closed `rounds=d`
 circuit-level scorer for bit-flip, depolarizing and uniform noise, preserving
 the one-round spatial path. The actual DEM must pass the circuit graph and

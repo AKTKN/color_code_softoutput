@@ -123,20 +123,48 @@ records are in `notes/`, `STATUS.md`, and `REVIEW.md`.
 ## Setup
 
 This project uses modified decoder forks with APIs that are absent from the
-standard PyMatching and color-code-stim releases. Clone them into the ignored
-`external_libs/` directory before running the code-capacity and circuit-level
-SWIM workflows:
+standard PyMatching and color-code-stim releases. The three repositories now
+contain the required changes on their default branches. Clone the decoders into
+the ignored `external_libs/` directory, including PyMatching's `pybind11`
+submodule:
 
 ```bash
 git clone https://github.com/AKTKN/color_code_softoutput.git
 cd color_code_softoutput
 mkdir -p external_libs
-git clone --branch phase2a/swim-distance https://github.com/AKTKN/PyMatching.git external_libs/PyMatching
-git clone --branch phase2a/swim-distance https://github.com/AKTKN/color-code-stim.git external_libs/color-code-stim
+git clone --recurse-submodules https://github.com/AKTKN/PyMatching.git external_libs/PyMatching
+git clone https://github.com/AKTKN/color-code-stim.git external_libs/color-code-stim
 conda env create -f environment.yml
 conda run -n color_code_so env DEBUG=0 CMAKE_BUILD_PARALLEL_LEVEL=4 python -m pip install --no-build-isolation -e external_libs/PyMatching -e external_libs/color-code-stim -e '.[test,notebook]'
 conda run -n color_code_so python -m pytest tests -q
 ```
+
+`environment.yml` records Python 3.12 and the package versions used in the
+local `color_code_so` environment. It does not embed editable installs, so
+clone the repositories before the final `pip install`. PyMatching needs a
+C++20-capable compiler, CMake and Ninja at install time. On a machine with an
+existing environment, use `conda env update -f environment.yml --prune` before
+reinstalling the three editable packages. Anaconda must be on `PATH` for these
+commands; a site module or the full path to `conda` may be needed on a cluster.
+
+### PBS cluster jobs
+
+Create the environment and install the packages on the cluster first, using
+the commands above. Then submit from the repository root, with the cluster's
+Anaconda base directory and a YAML configuration:
+
+```bash
+qsub -v CONDA_BASE=/path/to/anaconda3,CONFIG_FILE=configs/example.yaml scripts/pbs_run_experiment.sh
+```
+
+The [PBS script](scripts/pbs_run_experiment.sh) activates `color_code_so` in
+the batch shell and runs the YAML simulation. Adjust its `#PBS` resource lines
+to the site's queue syntax and workload. Set `simulation.workers` in the YAML
+to no more than the requested `ncpus`; the example requests two CPUs and uses
+two workers. Set `simulation.output_root` to a writable shared or scratch path
+for production runs. The default `results/` is relative to the submission
+directory. The example script uses one node because the simulation uses local
+processes and does not distribute work across nodes.
 
 The path-gap, monotone-Y, and surface-code path-gap experiments use separate
 feature checkouts and, in some cases, local work in progress. Their source
