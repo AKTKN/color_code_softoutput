@@ -1,0 +1,101 @@
+"""Tiny contract checks for the YAML workflow's isolated worker."""
+
+import numpy as np
+import pytest
+
+from color_code_softoutput.simulation import worker
+from color_code_softoutput.simulation.task import ResolvedPoint
+
+
+def point(correlated=False, *, identity="p", shots=8):
+    return ResolvedPoint(identity, "ordinary-label", 3, .05, "bitflip", 1,
+                         "tri", "tri_optimal", shots, (),
+                         (("enable_colorcorrelated_decoding", correlated),), ())
+
+
+def test_observable_failure_reduction():
+    np.testing.assert_array_equal(
+        worker.logical_errors(np.array([0, 1, 1]), np.array([0, 0, 1]), 3),
+        [False, True, False])
+    np.testing.assert_array_equal(
+        worker.logical_errors(np.array([[0, 0], [1, 0], [1, 1]]),
+                              np.array([[0, 0], [0, 0], [1, 0]]), 3),
+        [False, True, True])
+
+
+@pytest.mark.parametrize("baseline,selected,expected", [
+    (3., 2., 1), (3., 3., 0), (3., 4., 0),
+])
+def test_common_prior_comparison(baseline, selected, expected):
+    weights = np.full((1, 12, 1), 10.)
+    weights[0, :3, 0] = baseline
+    weights[0, 3, 0] = selected
+    best = min(baseline, selected)
+    extra = {"candidate_weights": weights, "weights": np.array([best]),
+             "candidate_generation_weights": np.full((1, 12, 1), -1e9)}
+    assert worker.better_common_prior_weight(extra, 1).tolist() == [expected]
+
+
+def test_chunk_same_shots_metrics_and_interval(monkeypatch):
+    seen = []
+
+    class FakeCode:
+        def __init__(self, correlated):
+            self.correlated = correlated
+
+        def sample(self, count, seed):
+            seen.append(("sample", count, seed))
+            return np.array([[0], [1], [0]], dtype=bool), np.array([0, 0, 1], dtype=bool)
+
+        def decode(self, detectors, **options):
+            seen.append(("decode", self.correlated, detectors.copy(), options))
+            if not self.correlated:
+                return np.array([0, 1, 0], dtype=bool)
+            weights = np.full((1, 12, 3), 5.)
+            weights[0, 3] = [4., 4., 4.]
+            return np.array([0, 0, 1], dtype=bool), {
+                "candidate_weights": weights, "weights": np.array([4., 4., 4.]),
+                "candidate_generation_weights": np.full_like(weights, -100.),
+            }
+
+    monkeypatch.setattr(worker, "_codes", lambda _: worker._CodePair(FakeCode(True), FakeCode(False)))
+    p = point(True, shots=10)
+    result = worker.run_chunk(worker.WorkerInput("p", 2, 4, 3, 71, p))
+    assert (result.point_id, result.chunk_id, result.shot_start, result.shot_count) == ("p", 2, 4, 3)
+    assert result.elapsed_seconds >= 0
+    assert [x[0] for x in seen] == ["sample", "decode", "decode"]
+    np.testing.assert_array_equal(seen[1][2], seen[2][2])
+    assert result.metrics["logical_error"].tolist() == [False, False, False]
+    assert result.metrics["default_logical_error"].tolist() == [False, True, True]
+    assert result.metrics["effect_by_color_correlated_decoding"].tolist() == [0, 1, 1]
+    assert result.metrics["better_weight_by_color_correlated_decoding"].tolist() == [1, 1, 1]
+    assert result.metrics["effect_by_color_correlated_decoding"].dtype == np.uint8
+
+
+def test_cache_bounded(monkeypatch):
+    monkeypatch.setattr(worker, "_construct", lambda p: worker._CodePair(object(), None))
+    worker._CODE_CACHE.clear()
+    try:
+        for i in range(worker.CACHE_MAXSIZE + 3):
+            worker._codes(ResolvedPoint(str(i), "label", 3, .01 + i / 100,
+                "bitflip", 1, "tri", "tri_optimal", 8, (), (), ()))
+        assert len(worker._CODE_CACHE) == worker.CACHE_MAXSIZE
+    finally:
+        worker._CODE_CACHE.clear()
+
+
+@pytest.mark.parametrize("correlated", [False, True])
+def test_real_tiny_worker(correlated):
+    worker._CODE_CACHE.clear()
+    p = point(correlated, identity=f"real-{correlated}", shots=2)
+    out = worker.run_chunk(worker.WorkerInput(p.point_id, 0, 0, 2, 3, p))
+    expected = {"logical_error"}
+    if correlated:
+        expected |= {"default_logical_error", "better_weight_by_color_correlated_decoding",
+                     "effect_by_color_correlated_decoding"}
+    assert set(out.metrics) == expected
+    assert all(arr.shape == (2,) for arr in out.metrics.values())
+    if correlated:
+        np.testing.assert_array_equal(out.metrics["effect_by_color_correlated_decoding"],
+            (out.metrics["default_logical_error"] & ~out.metrics["logical_error"]).astype(np.uint8))
+    worker._CODE_CACHE.clear()

@@ -1,5 +1,26 @@
 # Reproducible paired code-capacity study
 
+## YAML workflow worker API
+
+`simulation.worker.WorkerInput(point_id, chunk_id, shot_start, shot_count,
+seed, point)` is the immutable one-chunk request; `point` is a planned
+`ResolvedPoint`, and `point_id` must match it. `run_chunk(input)` returns a
+`WorkerResult` with the same identity and interval, `elapsed_seconds` for
+construction/cache lookup, sampling and decoding, and `metrics`, a dictionary
+of 1D arrays in shot order for `[shot_start, shot_start + shot_count)`.
+`logical_error` is always boolean. If the resolved constructor enables color
+correlated decoding, the result also contains boolean `default_logical_error`
+and uint8 `better_weight_by_color_correlated_decoding` and
+`effect_by_color_correlated_decoding`. The ordinary baseline decodes the same
+detectors. The weight flag compares the selected common-prior candidate with
+the best of the three ordinary candidates under that same prior using exact
+`<`; temporary candidate-generation weights are excluded. Effect is exactly
+`default_logical_error & ~logical_error`.
+
+The worker holds at most four circuit/decoder pairs in a per-process LRU cache
+and writes no files. A future scheduler must use multiprocessing `spawn` and
+bound submitted chunks; scheduling and final storage are not part of this API.
+
 ## YAML workflow planning API
 
 The staged YAML workflow currently provides configuration and sweep planning

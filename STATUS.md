@@ -1,5 +1,17 @@
 # STATUS.md
 
+## YAML workflow worker stage — 2026-09-27
+
+Added an isolated one-chunk worker with a four-entry process-local decoder
+cache, same-shot ordinary baseline for correlated decoding, common-prior
+weight-improvement and exact failure-prevention metrics. The worker samples
+once and returns only bounded per-chunk arrays; it creates no result files.
+Public input/output contract is in `src/color_code_softoutput/README.md`.
+Tiny worker and local correlated-decoder tests pass (16 total); the combined
+planning, sampling, circuit decoder/experiment, worker and correlated-decoder
+regression passes 80 tests. Adaptive scheduling and final storage remain the
+next stage.
+
 ## YAML workflow planning stage — 2026-09-27
 
 Implemented strict YAML parsing, immutable resolved settings/points, exact

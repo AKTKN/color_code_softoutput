@@ -367,6 +367,11 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-27 — Completed Task 02 worker-side sampling and required metrics.
+The worker uses a bounded per-process cache and pairs ordinary/correlated
+decisions on one sample. Public contract and tests are recorded in the package
+README and STATUS. Next task: scheduler and storage integration; no campaign.
+
 2026-09-27 — Completed Task 01 YAML configuration and sweep planning with
 strict option validation, immutable point identities, native noise mapping,
 semantic hash and path-collision preflight. Focused and legacy regression
