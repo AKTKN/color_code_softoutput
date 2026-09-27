@@ -37,6 +37,7 @@ color_code_options:
 # arguments in options; put ColorCode.decode arguments in decode_options.
 # Advanced modes are mutually exclusive within one entry. For each entry,
 # the type and its enable_* option must agree.
+# Tesseract uses its own TesseractConfig options and the original X/Z DEM.
 decoders:
   - type: concat_mwpm
     # Optional: rank the three ordinary corrections under the original X/Z DEM.
@@ -78,3 +79,10 @@ decoders:
       perturbation_alpha: 0.25
       perturbation_seed: 20260927
       color_correlated_weight_basis: original_dem
+
+  # Requires the optional tesseract_decoder Python package.
+  # - type: tesseract
+  #   options:
+  #     det_beam: 5
+  #     beam_climbing: false
+  #     num_det_orders: 20

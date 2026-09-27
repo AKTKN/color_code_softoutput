@@ -400,6 +400,12 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-27 — Added optional Tesseract decoder to the canonical YAML simulation
+workflow. It receives the unchanged original X/Z DEM and saves only its hard
+solution's `logical_error.parquet`. The local decoder checkout is unchanged;
+a bounded native wheel smoke and focused tests pass. Next task: review the
+integration and select a paired same-shot comparison only if needed.
+
 2026-09-27 — Aligned new paired ablation runs with the current
 color-correlated decoder: `original_dem` is required, and `stage2` fails
 before a run root is created. Three focused benchmark tests pass; older saved

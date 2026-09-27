@@ -345,8 +345,21 @@ def parse_workflow_config(data: dict) -> WorkflowConfig:
     for raw in raw_decoders:
         raw = _mapping(raw, "decoder", allowed={"type", "options", "decode_options"}, required={"type"})
         label = _string(raw["type"], "decoder.type")
-        options = _options(raw.get("options", {}), "decoder.options", _CONSTRUCTOR_KEYS)
-        decode_options = _options(raw.get("decode_options", {}), "decoder.decode_options", _DECODE_KEYS)
+        if label == "tesseract":
+            from .tesseract import OPTIONS
+            options = _options(raw.get("options", {}), "decoder.options", OPTIONS)
+            if raw.get("decode_options"):
+                raise ValueError("tesseract does not accept ColorCode decode_options")
+            decode_options = ()
+            if dict(common).get("temp_bdry_type", "Z") in ("Y", "y"):
+                raise ValueError("tesseract XYZ decoding is not supported")
+            if any(dict(common).get(key, False) for key in
+                   ("enable_colorcorrelated_decoding", "enable_cross_color_relifting",
+                    "enable_prior_perturbation", "comparative_decoding")):
+                raise ValueError("tesseract requires ordinary ColorCode circuit options")
+        else:
+            options = _options(raw.get("options", {}), "decoder.options", _CONSTRUCTOR_KEYS)
+            decode_options = _options(raw.get("decode_options", {}), "decoder.decode_options", _DECODE_KEYS)
         if overlap := set(dict(common)) & set(dict(options)):
             raise ValueError(f"Ambiguous constructor options in color_code_options and decoder.options: {sorted(overlap)}")
         merged = dict(common) | dict(options)

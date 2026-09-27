@@ -207,6 +207,26 @@ The worker holds at most four circuit/decoder pairs in a per-process LRU cache
 and writes no files. The scheduler uses multiprocessing `spawn` and bounds
 submitted chunks to the configured worker count.
 
+`type: tesseract` selects the optional Tesseract Python decoder. Install a
+compatible `tesseract_decoder` build in the simulation environment first.
+Its `options` map directly to `TesseractConfig` arguments except `dem`, which
+the worker supplies as the unchanged `ColorCode.dem_xz`. For example:
+
+```yaml
+- type: tesseract
+  options:
+    det_beam: 5
+    beam_climbing: false
+    det_order_method: Index
+```
+
+The worker compiles Tesseract once per cached point and decodes each sampled
+syndrome with its single-shot API. It saves only the resulting
+`logical_error.parquet`. An explicit X or Z `temp_bdry_type` is required for
+noise configurations where `ColorCode` would otherwise choose Y. Tesseract
+points do not accept `decode_options` or color-correlated modes. Sweep points
+use distinct shot seeds, so LER comparisons across decoder types are unpaired.
+
 ## YAML workflow planning API
 
 `load_workflow_config(path)` and `parse_workflow_config(mapping)` return

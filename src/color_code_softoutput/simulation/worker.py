@@ -54,6 +54,7 @@ class WorkerResult:
 class _CodePair:
     configured: ColorCode
     ordinary: ColorCode | None
+    tesseract_decoder: object | None = None
 
 
 _CODE_CACHE: OrderedDict[tuple, _CodePair] = OrderedDict()
@@ -62,16 +63,24 @@ _CODE_CACHE: OrderedDict[tuple, _CodePair] = OrderedDict()
 def _semantics(point: ResolvedPoint) -> tuple:
     return (point.distance, point.physical_error_rate, point.noise_model,
             point.rounds, point.circuit_type, point.cnot_schedule,
-            point.color_code_options, point.decoder_options)
+            point.color_code_options, point.decoder_options, point.decoder_type)
 
 
 def _construct(point: ResolvedPoint) -> _CodePair:
-    options = dict(point.color_code_options) | dict(point.decoder_options)
+    is_tesseract = point.decoder_type == "tesseract"
+    options = dict(point.color_code_options)
+    if not is_tesseract:
+        options.update(point.decoder_options)
     options.update(d=point.distance, rounds=point.rounds,
                    circuit_type=point.circuit_type,
                    cnot_schedule=point.cnot_schedule,
                    noise_model=make_noise_model(point.noise_model, point.physical_error_rate))
     configured = ColorCode(**options)
+    if is_tesseract:
+        if configured.temp_bdry_type not in ("X", "Z"):
+            raise ValueError("tesseract XYZ decoding is not supported; select X or Z temporal boundary")
+        if configured.dem_xz.num_detectors != configured.circuit.num_detectors:
+            raise ValueError("original X/Z DEM detector order does not match sampled circuit")
     ordinary = None
     if options.get("enable_colorcorrelated_decoding", False):
         ordinary = ColorCode(**(options | {"enable_colorcorrelated_decoding": False}))
@@ -79,6 +88,9 @@ def _construct(point: ResolvedPoint) -> _CodePair:
         # observable annotations, including their ordering.
         if ordinary.circuit != configured.circuit:
             raise ValueError("ordinary and correlated circuits differ")
+    if is_tesseract:
+        from .tesseract import compile_tesseract
+        return _CodePair(configured, None, compile_tesseract(configured.dem_xz, point.decoder_options))
     return _CodePair(configured, ordinary)
 
 
@@ -135,6 +147,16 @@ def run_chunk(task: WorkerInput) -> WorkerResult:
     started = perf_counter()
     pair = _codes(task.point)
     detectors, actual = pair.configured.sample(task.shot_count, seed=task.seed)
+    if task.point.decoder_type == "tesseract":
+        from .tesseract import decode_tesseract
+        predicted = decode_tesseract(pair.tesseract_decoder, detectors,
+                                     pair.configured.dem_xz.num_observables)
+        actual_array = np.asarray(actual, dtype=bool)
+        if actual_array.ndim == 1 and predicted.shape[1] == 1:
+            predicted = predicted[:, 0]
+        metrics = {"logical_error": logical_errors(predicted, actual_array, task.shot_count)}
+        return WorkerResult(task.point_id, task.chunk_id, task.shot_start, task.shot_count,
+                            perf_counter() - started, metrics)
     decode_options = dict(task.point.decode_options)
     correlated = pair.ordinary is not None
     options = dict(task.point.color_code_options) | dict(task.point.decoder_options)

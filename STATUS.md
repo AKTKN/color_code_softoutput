@@ -1,5 +1,20 @@
 # STATUS.md
 
+## Tesseract YAML decoder integration — 2026-09-27
+
+The canonical simulation workflow accepts `decoders[].type: tesseract` with
+native `TesseractConfig` options. It constructs the normal `ColorCode` circuit,
+passes its unchanged original X/Z `dem_xz` directly to Tesseract, decodes
+sampled detector rows one at a time, and writes only `logical_error.parquet`.
+The worker caches the compiled decoder with its circuit. Preflight rejects
+color-correlated modes, ColorCode decode options, Y temporal boundaries, and
+detector-count mismatch. A real native-extension three-shot end-to-end run
+passed using an optional wheel unpacked outside the environment; the checked-in
+unit tests also cover DEM identity and hard-output association. This is an
+integration smoke, not an LER or speed comparison. The external Tesseract
+checkout and simulation environment were not changed. See
+`src/color_code_softoutput/README.md` and `tests/test_simulation_tesseract.py`.
+
 ## Adaptive benchmark basis compatibility — 2026-09-27
 
 The paired ablation runner now defaults to and accepts only `original_dem` for
