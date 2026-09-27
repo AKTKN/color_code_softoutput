@@ -1,11 +1,23 @@
 # Reproducible paired code-capacity study
 
+## Canonical YAML simulation
+
+Run `./scripts/run_experiment.sh configs/example.yaml` in `color_code_so`, or
+`python -m color_code_softoutput.simulation.cli --config configs/example.yaml`.
+The example requests 16 shots for each of two d=3 uniform-noise points.
+The runner validates and constructs every point before creating a timestamped
+run directory. It writes one `run_log.json`, streams completed chunks into
+bounded point storage, and finalizes each point when its shots are complete.
+Successful points contain one Parquet file per metric and no `.buffer/`.
+Existing notebook experiment entry points remain historical and unchanged.
+
 ## YAML workflow point storage
 
 `simulation.storage.PointStorage(point, point_dir, buffer_shots)` creates one
 new point directory whose name matches `point_directory_name(point)`.
 Call `accept(WorkerResult)` in the scheduler's main-process callback and
-`finalize()` after all point chunks complete. No runner is wired up yet.
+`finalize()` after all point chunks complete. The YAML runner handles this in
+its scheduler callback.
 Overlapping or duplicate intervals are rejected. Out-of-order chunks spool
 under `.buffer/`, while contiguous rows flush as numbered `part_*.parquet`
 files at `buffer_shots` rows per part. Each temporary part has nonnull
@@ -81,8 +93,7 @@ bound submitted chunks; scheduling and final storage are not part of this API.
 
 ## YAML workflow planning API
 
-The staged YAML workflow currently provides configuration and sweep planning
-only. `load_workflow_config(path)` and `parse_workflow_config(mapping)` return
+`load_workflow_config(path)` and `parse_workflow_config(mapping)` return
 an immutable `WorkflowConfig`; `plan_points(config)` returns immutable
 `ResolvedPoint` records after checking every per-point directory name for
 collisions. `make_noise_model(name, p)` maps `bitflip`, `depol`, and `uniform`

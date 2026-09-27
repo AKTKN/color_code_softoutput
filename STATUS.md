@@ -1,5 +1,21 @@
 # STATUS.md
 
+## YAML workflow runner stage — 2026-09-27
+
+Integrated the validated planner, native-constructor preflight, spawn scheduler,
+bounded point storage, single atomic `run_log.json`, CLI, shell command and
+tiny example YAML. Points finalize from the result callback as soon as their
+shots become contiguous and complete. Historical experiment entry points and
+result directories remain unchanged. The 32-shot example completed with an
+estimating-to-finite ETA transition; focused end-to-end tests cover 1/2 workers,
+ordinary/correlated decoding, all three noise models, verbosity, exact names,
+schemas, counts, clean buffers and failure log closure. No campaign or decoder
+change was performed.
+
+Validation: `conda run -n color_code_so env PYTHONPATH=src:external_libs/color-code-stim/src python -m pytest tests -q`
+passed 246 tests. Focused runner/scheduler tests passed 13 tests. The example
+command completed at `results/26_09_27_13_14_30_574e38e7/`.
+
 ## YAML workflow storage stage — 2026-09-27
 
 Added bounded main-process point storage in

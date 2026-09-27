@@ -1,5 +1,11 @@
 # color-code-softoutput
 
+The canonical YAML simulation command is
+`./scripts/run_experiment.sh configs/example.yaml` in `color_code_so`.
+It creates a timestamped run under `results/` with one `run_log.json` and
+per-point Parquet metrics. The example is a tiny smoke run; see the package
+README for the runner contract.
+
 Research code for paired color-code soft-output experiments and analysis. The
 Python package is in `src/color_code_softoutput/`; reproducible workflows are in
 `notebooks/`, with tests in `tests/`. The mathematical notes and implementation

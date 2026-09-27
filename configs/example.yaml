@@ -1,0 +1,27 @@
+simulation:
+  output_root: results
+  shots: 16
+  workers: 2
+  master_seed: 20260927
+  buffer_shots: 8
+  verbose: true
+chunking:
+  calibration_shots: 4
+  target_chunk_seconds: 1.0
+  min_chunk_shots: 1
+  max_chunk_shots: 8
+  throughput_ema_alpha: 0.5
+sweep:
+  distance: 3
+  physical_error_rate: 0.001
+  noise_model: uniform
+  rounds: distance
+  circuit_type: tri
+  cnot_schedule: tri_optimal
+color_code_options:
+  temp_bdry_type: Z
+decoders:
+  - type: concat_mwpm
+  - type: color_correlated
+    options:
+      enable_colorcorrelated_decoding: true

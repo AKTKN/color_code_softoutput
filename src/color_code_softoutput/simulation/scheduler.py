@@ -185,7 +185,8 @@ def run_scheduler(config: WorkflowConfig, points: Sequence[ResolvedPoint],
             cursor = (selected + 1) % len(states)
             remaining = state.point.shots - state.next_shot_to_schedule
             if not state.calibrated:
-                count = min(config.chunking.calibration_shots, remaining)
+                count = min(config.chunking.calibration_shots, remaining,
+                            config.simulation.buffer_shots)
             else:
                 count = adaptive_chunk_shots(state.seconds_per_shot, remaining, config.chunking,
                                              buffer_shots=config.simulation.buffer_shots)

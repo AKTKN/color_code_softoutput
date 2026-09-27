@@ -367,6 +367,12 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-27 — Completed Task 05 canonical YAML runner, single JSON log, CLI,
+shell command and tiny example. Preflight constructs all points before creating
+the run root; callback finalizes each completed point. Focused smoke and
+regression are recorded in STATUS.md. Historical experiment entry points stay
+unchanged. Next task: pipeline review; no campaign.
+
 2026-09-27 — Completed Task 04 bounded point storage and final Parquet files.
 Out-of-order chunks spool in `.buffer/`; final metric files carry explicit
 int64 shot indices and validated exact dtypes. Focused tests pass. Next task:
