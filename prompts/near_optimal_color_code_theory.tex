@@ -1,0 +1,650 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{listings}
+
+\newcommand{\F}{\mathbb{F}_2}
+\newcommand{\argminop}{\operatorname*{arg\,min}}
+\newcommand{\rgb}{\{r,g,b\}}
+
+\title{Near-Optimal Extensions of Concatenated MWPM for the 6.6.6 Color Code}
+\author{Implementation specification}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Scope}
+
+This note defines two candidate-generation strategies for the concatenated
+minimum-weight perfect matching (MWPM) decoder:
+\begin{enumerate}
+    \item \emph{cross-color relifting}, including pairwise relifting and an
+    all-color, baseline-anchored relifting candidate;
+    \item an \emph{X/Z-DEM prior perturbation ensemble}, in which the
+    pre-color-decomposition detector error model is perturbed and then
+    decomposed for each color.
+\end{enumerate}
+
+The two strategies should initially be evaluated independently. Candidate
+generation may use a modified prior, but candidate selection must follow the
+current common-prior scoring convention already implemented for
+color-correlated decoding.
+
+\section{Common original X/Z DEM}
+
+Let the detector error model after the package's X/Z separation, but before
+color decomposition, contain $m$ independent error mechanisms. Write
+\[
+    x\in\F^m
+\]
+for an error/correction hypothesis in this common original-DEM mechanism
+ordering, and
+\[
+    H\in\F^{n\times m},\qquad Hx=s
+\]
+for its detector syndrome.
+
+Let the original mechanism probabilities be
+\[
+    q=(q_1,\ldots,q_m),\qquad 0<q_i<1,
+\]
+with log-odds
+\[
+    \lambda_i=\log\frac{1-q_i}{q_i}.
+    \tag{1}
+\]
+
+In the current repository this common model is represented by
+\texttt{dem\_manager.dem\_xz} and \texttt{dem\_manager.probs\_xz}.
+
+\section{Color decompositions}
+
+For each target color $c\in\rgb$, define
+\[
+    H_{1,c}\in\F^{n_{1,c}\times m_{1,c}},\qquad
+    H_{2,c}\in\F^{n_{2,c}\times m_{2,c}}.
+\]
+Let
+\[
+    A_{1,c}\in\F^{m_{1,c}\times m},\qquad
+    A_{2,c}\in\F^{m_{2,c}\times m}
+\]
+be the provenance/error-map matrices from decomposed error mechanisms back to
+original X/Z DEM mechanisms.
+
+In \texttt{color-code-stim},
+\begin{align*}
+A_{1,c}
+&\leftrightarrow
+\texttt{dems\_decomposed[c].error\_map\_matrices[0]},\\
+A_{2,c}
+&\leftrightarrow
+\texttt{dems\_decomposed[c].error\_map\_matrices[1]}.
+\end{align*}
+
+The Python implementation uses row-vector convention. Thus a native stage-2
+prediction $v_c\in\F^{m_{2,c}}$ maps to original DEM ordering as
+\[
+    x_c=v_cA_{2,c}\pmod 2.
+    \tag{2}
+\]
+
+\section{Baseline concatenated MWPM}
+
+For each color $c$, ordinary concatenated MWPM produces a stage-1 hypothesis
+\[
+    u_c\in\F^{m_{1,c}}
+\]
+satisfying
+\[
+    H_{1,c}u_c=s_{1,c}.
+    \tag{3}
+\]
+
+The decoder then forms the stage-2 syndrome
+\[
+    t_c(s,u_c)=
+    \begin{pmatrix}
+      s_c\\
+      u_c
+    \end{pmatrix},
+    \tag{4}
+\]
+and runs stage-2 MWPM to obtain $v_c$, then maps it to $x_c$ using Eq.~(2).
+
+Running this for $r,g,b$ requires six MWPM calls.
+
+\section{Cross-color relifting}
+
+\subsection{Required decomposition mode}
+
+Cross-color relifting requires complete original-mechanism provenance and is
+therefore unsupported when
+\[
+    \texttt{remove\_non\_edge\_like\_errors=True}.
+\]
+If cross-color relifting is enabled under this setting, the implementation must
+raise an explicit error before decoding.
+
+When \texttt{remove\_non\_edge\_like\_errors=False}, the implementation must
+still verify that the resulting stage-1/stage-2 matrices are supported by the
+current matching backend. If the full decomposition contains an unsupported
+non-matchable column, fail explicitly rather than dropping it.
+
+\subsection{Pairwise relifting}
+
+Suppose baseline source color $d$ produces
+\[
+    x_d\in\F^m.
+\]
+For a different target color $c\neq d$, define
+\[
+    u_{c\leftarrow d}
+    :=
+    x_dA_{1,c}^{T}\pmod 2.
+    \tag{5}
+\]
+
+Equation~(5) is a parity/XOR projection, not Boolean OR.
+
+For a batch $X_d\in\F^{N\times m}$:
+\begin{lstlisting}[language=Python,basicstyle=\ttfamily\small]
+A1 = decomp_target.error_map_matrices[0]
+u = ((X_d.astype(np.uint8) @ A1.T) % 2).astype(bool)
+\end{lstlisting}
+
+The required invariant is
+\[
+    H_{1,c}u_{c\leftarrow d}=s_{1,c}.
+    \tag{6}
+\]
+This must be checked explicitly.
+
+The pairwise relifted candidate skips target stage 1 and runs only target stage 2:
+\[
+    v_{c\leftarrow d}
+    =
+    D_{2,c}\left(t_c(s,u_{c\leftarrow d});q\right).
+    \tag{7}
+\]
+
+\subsection{Why direct OR and unanchored two-source XOR are not used}
+
+Let $d,e$ be the two colors different from target $c$.
+
+Boolean OR,
+\[
+    u_{c\leftarrow d}\lor u_{c\leftarrow e},
+\]
+does not preserve the linear syndrome equation in general.
+
+Direct XOR gives
+\[
+    H_{1,c}(u_{c\leftarrow d}\oplus u_{c\leftarrow e})
+    =
+    s_{1,c}\oplus s_{1,c}
+    =
+    0,
+\]
+so it is a zero-syndrome deformation, not a valid correction with syndrome
+$s_{1,c}$.
+
+\subsection{All-color baseline-anchored relifting}
+
+Use baseline target-color solution $u_c$ as the anchor. Define
+\[
+    \delta_{c\leftarrow d}
+    =
+    u_c\oplus u_{c\leftarrow d},
+    \qquad
+    \delta_{c\leftarrow e}
+    =
+    u_c\oplus u_{c\leftarrow e}.
+    \tag{8}
+\]
+Then
+\[
+    H_{1,c}\delta_{c\leftarrow d}
+    =
+    H_{1,c}\delta_{c\leftarrow e}
+    =
+    0.
+    \tag{9}
+\]
+
+The all-color anchored hypothesis is
+\begin{align}
+    u_c^{\mathrm{all}}
+    &=
+    u_c
+    \oplus
+    \delta_{c\leftarrow d}
+    \oplus
+    \delta_{c\leftarrow e}
+    \nonumber\\
+    &=
+    u_c
+    \oplus
+    u_{c\leftarrow d}
+    \oplus
+    u_{c\leftarrow e}.
+    \tag{10}
+\end{align}
+
+Therefore
+\[
+    H_{1,c}u_c^{\mathrm{all}}=s_{1,c}.
+    \tag{11}
+\]
+
+The corresponding physical candidate uses one additional target-color
+stage-2 MWPM:
+\[
+    v_c^{\mathrm{all}}
+    =
+    D_{2,c}\left(t_c(s,u_c^{\mathrm{all}});q\right).
+    \tag{12}
+\]
+
+This construction uses all three baseline branches: $u_c$ is the anchor and
+the other two colors supply two independent zero-syndrome deviations.
+
+\subsection{Candidate set and cost}
+
+For one target color, the explored affine set is
+\[
+    u_c+
+    \operatorname{span}_{\F}
+    \{
+      \delta_{c\leftarrow d},
+      \delta_{c\leftarrow e}
+    \}.
+    \tag{13}
+\]
+The four explicit hypotheses are
+\[
+    u_c,\quad
+    u_{c\leftarrow d},\quad
+    u_{c\leftarrow e},\quad
+    u_c^{\mathrm{all}}.
+    \tag{14}
+\]
+
+Across three colors:
+\[
+    3\text{ baseline}
+    +6\text{ pairwise relifts}
+    +3\text{ all-color anchored relifts}
+    =12
+\]
+physical candidates.
+
+Without adaptive pruning, the full relifting family would require
+\[
+    6\text{ baseline}
+    +6\text{ pairwise stage-2}
+    +3\text{ all-color stage-2}
+    =15
+    \tag{15}
+\]
+MWPM calls per logical class.  This is the \emph{maximum} call count.  The
+adaptive rules below must skip provably redundant instances, so the actual
+per-shot count can be lower.
+
+There is no relifting level parameter.
+
+
+\section{Adaptive execution and early termination for relifting}
+
+The relifting candidate family has a fixed \emph{logical} definition, but the
+implementation should avoid executing MWPM instances that are guaranteed to
+duplicate an already known result.
+
+\subsection{Classify the three baseline physical corrections}
+
+After ordinary concatenated MWPM, first map the three baseline final corrections
+to the common original X/Z DEM mechanism ordering:
+\[
+    x_r,\;x_g,\;x_b\in\F^m.
+\]
+
+Define
+\[
+    N_{\rm uniq}
+    :=
+    \left|\{x_r,x_g,x_b\}\right|.
+\]
+
+For each shot, define the relifting run class
+\[
+    \rho_{\rm relift}
+    =
+    \begin{cases}
+        0,&N_{\rm uniq}=1,\\
+        1,&N_{\rm uniq}=2,\\
+        2,&N_{\rm uniq}=3.
+    \end{cases}
+    \tag{23}
+\]
+
+Equality here means exact equality of the Boolean vectors in the original X/Z
+DEM mechanism ordering.
+
+This code is an execution-class label, not the number of MWPM calls.
+
+\subsection{Case $\rho_{\rm relift}=0$: all three baseline corrections agree}
+
+If
+\[
+    x_r=x_g=x_b,
+\]
+then no relifting instance is executed.  The ordinary baseline result is final,
+because every source branch carries the same original-DEM hypothesis.
+
+Thus the additional relifting cost is zero.
+
+\subsection{Case $\rho_{\rm relift}=1$: exactly two baseline corrections agree}
+
+Suppose, for example,
+\[
+    x_g=x_b\neq x_r.
+\]
+
+The two equal colors form one source-equivalence class.  Use the fixed color
+order
+\[
+    r<g<b
+\]
+to choose a canonical representative whenever multiple equal source colors are
+interchangeable.
+
+For the example above:
+\begin{itemize}
+    \item target $r$: $g$ and $b$ are identical sources, so use only
+    $r\leftarrow g$ because $g$ has the smaller color index;
+    \item target $g$: the $b$ source is identical to the target baseline
+    correction, so only $g\leftarrow r$ needs to be considered;
+    \item target $b$: similarly, only $b\leftarrow r$ needs to be considered.
+\end{itemize}
+
+The all-color anchored candidates add no new stage-1 hypothesis in this case.
+For example,
+\[
+    u_r^{\rm all}
+    =
+    u_r\oplus u_{r\leftarrow g}\oplus u_{r\leftarrow b}
+    =
+    u_r
+\]
+because the two relifted source hypotheses are equal.  For target $g$,
+\[
+    u_g^{\rm all}
+    =
+    u_g\oplus u_{g\leftarrow r}\oplus u_{g\leftarrow b}
+    =
+    u_{g\leftarrow r},
+\]
+because $x_b=x_g$ makes the $b$ relift equal to the target baseline hypothesis.
+Therefore no separate all-color stage-2 call is required.
+
+Before the stage-2 early-termination rule below, this case has at most three
+additional stage-2 MWPM calls.
+
+\subsection{Case $\rho_{\rm relift}=2$: all three baseline corrections differ}
+
+If
+\[
+    x_r,\;x_g,\;x_b
+\]
+are pairwise distinct, generate the full relifting family:
+six pairwise relifts and three all-color anchored relifts.
+
+This gives at most nine additional stage-2 MWPM calls, before exact
+stage-2-syndrome deduplication.
+
+\subsection{Stage-2-syndrome early termination}
+
+For a fixed target color $c$, define the baseline stage-2 syndrome
+\[
+    t_c^{(0)}:=t_c(s,u_c).
+\]
+
+For any proposed relifted stage-1 hypothesis $\tilde u$, construct the exact
+stage-2 syndrome
+\[
+    \tilde t_c:=t_c(s,\tilde u)
+\]
+\emph{before} invoking stage-2 MWPM.
+
+If
+\[
+    \tilde t_c=t_c^{(0)},
+    \tag{24}
+\]
+then the target graph, target prior, and syndrome are exactly the same as the
+baseline target-color stage-2 decoding problem.  Deterministic MWPM must
+therefore return the same result.  This relifting instance terminates
+immediately and reuses the baseline target-color candidate; stage-2 MWPM is not
+called.
+
+More generally, the implementation may safely cache already solved target-color
+stage-2 syndromes:
+\[
+    (c,\tilde t_c)\longmapsto
+    \text{stage-2 result}.
+    \tag{25}
+\]
+If a later relifting candidate for the same target color produces a previously
+solved syndrome, reuse that result rather than rerunning MWPM.  Equation~(24),
+comparison against the baseline syndrome, is the required minimum behavior.
+
+The equality test must compare the complete Boolean stage-2 detector vector
+actually passed to PyMatching, including the target-color physical detector
+part and the appended virtual detector/stage-1 part.
+
+\subsection{Fixed logical candidate slots versus executed instances}
+
+For analysis compatibility, the decoder may retain the canonical 12 candidate
+slots
+\[
+    3\text{ baseline}
+    +6\text{ single-source}
+    +3\text{ all-color}
+\]
+even when some slots are aliases of an already computed candidate.
+
+An aliased candidate should reuse the already computed:
+\begin{itemize}
+    \item mapped original correction,
+    \item base-aligned native stage-2 correction,
+    \item selection weight,
+    \item observable prediction.
+\end{itemize}
+
+It must not count as an executed MWPM instance.
+
+This preserves fixed candidate-array shapes while allowing dynamic runtime.
+
+\subsection{Relifting execution sidecar}
+
+The experiment layer should write a per-shot sidecar
+\texttt{relift\_run.parquet}, following the exact shot-identity/schema
+conventions used by the current \texttt{color\_correlated\_run.parquet} writer.
+
+The required per-shot execution-class value is Eq.~(23):
+\[
+    0:\text{ all three baseline original-DEM corrections equal},
+\]
+\[
+    1:\text{ exactly two baseline original-DEM corrections equal},
+\]
+\[
+    2:\text{ all three baseline original-DEM corrections distinct}.
+\]
+
+The sidecar should additionally store the actual number of extra stage-2 MWPM
+calls if the existing sidecar architecture admits such a field, because
+Eq.~(24)--(25) can reduce the executed count below the class-level maximum.
+The class code itself must remain defined only by baseline-correction equality.
+
+
+\section{X/Z-DEM prior perturbation ensemble}
+
+\subsection{Perturb the common pre-color-decomposition DEM}
+
+Perturbation is applied to the common X/Z-separated DEM probability vector $q$,
+not independently to the three color-decomposed stage-1 priors.
+
+Let the total ensemble size be $M\ge1$. Member $m=0$ is exactly unperturbed:
+\[
+    q_i^{(0)}=q_i.
+    \tag{16}
+\]
+
+For each member $m=1,\ldots,M-1$, sample
+\[
+    \xi_i^{(m)}\sim\operatorname{Uniform}[-1,1]
+\]
+independently and define
+\[
+    q_i^{(m)}
+    =
+    \operatorname{clip}
+    \left(
+      q_i(1+\alpha\xi_i^{(m)}),
+      \epsilon,
+      1-\epsilon
+    \right),
+    \qquad
+    0\le\alpha\le1.
+    \tag{17}
+\]
+
+Before clipping, this is equivalent to
+\[
+    q_i^{(m)}
+    \sim
+    \operatorname{Uniform}
+    \left[
+      (1-\alpha)q_i,
+      (1+\alpha)q_i
+    \right].
+\]
+
+For each member $m$, build one temporary X/Z DEM by replacing only the error
+probabilities while preserving source ordering and targets. Then construct all
+three color decompositions from that same temporary X/Z DEM:
+\[
+    \left(
+      \mathcal D_{1,c}^{(m)},
+      \mathcal D_{2,c}^{(m)}
+    \right)
+    =
+    \operatorname{Decompose}_c
+    \left(
+      \mathcal D_{XZ}^{(m)}
+    \right).
+    \tag{18}
+\]
+
+Each color then runs a complete two-stage concatenated decoder:
+\[
+    u_c^{(m)}
+    =
+    D_{1,c}(s_{1,c};q^{(m)}),
+\]
+\[
+    v_c^{(m)}
+    =
+    D_{2,c}(t_c(s,u_c^{(m)});q^{(m)}).
+    \tag{19}
+\]
+
+Thus both induced stages are perturbed consistently from one common physical
+prior.
+
+The candidate count is $3M$ and the MWPM call count is $6M$ per logical class.
+
+The perturbation table is fixed for the decoder instance/seed and reused across
+shots, batches, and logical classes. It is not redrawn per shot.
+
+\section{Candidate scoring under the unmodified base prior}
+
+Candidate generation and candidate selection are distinct.
+
+The current color-correlated implementation supports two common-prior scoring
+bases. New strategies must use the same implementation path.
+
+\subsection{Base stage-2 basis}
+
+Let $p_{2,c}$ be the unmodified base stage-2 probabilities and
+\[
+    \lambda_{2,c,j}
+    =
+    \log\frac{1-p_{2,c,j}}{p_{2,c,j}}.
+    \tag{20}
+\]
+
+A candidate must first be represented in the \emph{base} target-color stage-2
+column ordering, denoted $\bar v_c$, and is scored as
+\[
+    C_{\mathrm{stage2}}(\bar v_c)
+    =
+    \langle\lambda_{2,c},\bar v_c\rangle.
+    \tag{21}
+\]
+
+For a temporary decomposition, the native stage-2 order can differ from the
+base order. The implementation must reuse the current
+\texttt{align\_stage2\_to\_base} logic before applying Eq.~(21).
+
+Relifting uses the base decomposition directly, so its native stage-2 vector is
+already in base order.
+
+\subsection{Original-DEM basis}
+
+After mapping a candidate to original X/Z DEM ordering $x$, score
+\[
+    C_{\mathrm{org}}(x)
+    =
+    \langle\lambda,x\rangle,
+    \tag{22}
+\]
+with $\lambda$ from Eq.~(1).
+
+\subsection{Selection invariant}
+
+All candidates in one decode call are compared under the same unmodified
+base-prior basis. Temporary/generation weights from perturbed or conditioned
+priors are diagnostic only.
+
+For comparative decoding, minimize over candidate hypotheses within each
+logical class first, then compare the logical-class minima. Logical gaps are
+computed from those minima.
+
+\section{Implementation invariants}
+
+\begin{enumerate}
+    \item With new options disabled, historical output is unchanged.
+    \item Relifting with
+    \texttt{remove\_non\_edge\_like\_errors=True} raises explicitly.
+    \item Every pairwise and all-color relifted stage-1 hypothesis satisfies
+    the target stage-1 syndrome equation.
+    \item The all-color relift uses Eq.~(10), not OR and not unanchored
+    two-source XOR.
+    \item Perturbation acts on one common X/Z DEM and the same member prior
+    generates all three color decompositions.
+    \item Ensemble member $0$ is exactly the ordinary decoder.
+    \item Base DEMs and base decompositions are never mutated.
+    \item Temporary stage-2 outputs are aligned to base ordering before
+    stage2-basis scoring.
+    \item Selection weights use the current common-prior convention;
+    generation weights never control final selection.
+\end{enumerate}
+
+\end{document}

@@ -20,8 +20,13 @@ _METRIC_TYPES = {
     "better_weight_by_color_correlated_decoding": pa.uint8(),
     "effect_by_color_correlated_decoding": pa.uint8(),
     "color_correlated_run": pa.uint8(),
+    "relift_run": pa.uint8(),
 }
-_CORRELATED = tuple(_METRIC_TYPES)
+_PAIRED = ("logical_error", "default_logical_error",
+           "better_weight_by_color_correlated_decoding",
+           "effect_by_color_correlated_decoding")
+_CORRELATED = (*_PAIRED, "color_correlated_run")
+_RELIFTING = (*_PAIRED, "relift_run")
 
 
 def _schema(names: tuple[str, ...]) -> pa.Schema:
@@ -35,15 +40,18 @@ def _check_table(table: pa.Table, schema: pa.Schema, start: int) -> None:
     index = table.column("shot_index").to_numpy()
     if not np.array_equal(index, np.arange(start, start + len(table), dtype=np.int64)):
         raise ValueError("temporary part has invalid shot indices")
-    if set(_CORRELATED).issubset(schema.names):
+    if set(_PAIRED).issubset(schema.names):
         logical = table.column("logical_error").to_numpy()
         default = table.column("default_logical_error").to_numpy()
         effect = table.column("effect_by_color_correlated_decoding").to_numpy()
         better = table.column("better_weight_by_color_correlated_decoding").to_numpy()
-        category = table.column("color_correlated_run").to_numpy()
         if (not np.array_equal(effect, (default & ~logical).astype(np.uint8))
-                or np.any(better > 1) or np.any(category > 2)):
-            raise ValueError("correlated metrics are inconsistent")
+                or np.any(better > 1)):
+            raise ValueError("paired decoder metrics are inconsistent")
+    if "color_correlated_run" in schema.names and np.any(table.column("color_correlated_run").to_numpy() > 2):
+        raise ValueError("correlated run class is inconsistent")
+    if "relift_run" in schema.names and np.any(table.column("relift_run").to_numpy() > 2):
+        raise ValueError("relift run class is inconsistent")
 
 
 @dataclass(frozen=True)
@@ -70,7 +78,10 @@ class PointStorage:
             raise ValueError("point directory does not match planned name")
         self.buffer_shots = buffer_shots
         options = dict(point.color_code_options) | dict(point.decoder_options)
-        self.names = _CORRELATED if options.get("enable_colorcorrelated_decoding", False) else ("logical_error",)
+        self.names = (_CORRELATED if options.get("enable_colorcorrelated_decoding", False)
+                      else _RELIFTING if options.get("enable_cross_color_relifting", False)
+                      else _PAIRED if options.get("enable_prior_perturbation", False)
+                      else ("logical_error",))
         self.schema = _schema(self.names)
         self.point_dir.mkdir(parents=True, exist_ok=False)
         self.buffer_dir = self.point_dir / ".buffer"

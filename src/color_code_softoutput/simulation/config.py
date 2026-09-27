@@ -135,10 +135,13 @@ _SWEEP_KEYS = frozenset({"distance", "physical_error_rate", "noise_model", "roun
 _CONSTRUCTOR_KEYS = frozenset({"temp_bdry_type", "superdense_circuit", "perfect_logical_initialization",
     "perfect_logical_measurement", "perfect_first_syndrome_extraction", "perfect_init_final",
     "remove_non_edge_like_errors", "comparative_decoding", "enable_colorcorrelated_decoding",
-    "color_correlated_weight_basis",
+    "enable_cross_color_relifting", "enable_prior_perturbation", "perturbation_ensemble_size",
+    "perturbation_alpha", "perturbation_seed",
+    "color_correlated_weight_basis", "color_correlated_b",
     "exclude_non_essential_pauli_detectors"})
 _DECODE_KEYS = frozenset({"colors", "compute_swim_distance", "full_output", "check_validity", "verbose"})
-_BOOLEAN_OPTIONS = (_CONSTRUCTOR_KEYS - {"temp_bdry_type", "color_correlated_weight_basis"}) | (_DECODE_KEYS - {"colors"})
+_BOOLEAN_OPTIONS = (_CONSTRUCTOR_KEYS - {"temp_bdry_type", "color_correlated_weight_basis", "color_correlated_b",
+    "perturbation_ensemble_size", "perturbation_alpha", "perturbation_seed"}) | (_DECODE_KEYS - {"colors"})
 _SWEEP_ALIASES = frozenset({"d", "rounds", "circuit_type", "cnot_schedule", "noise_model",
     "p_bitflip", "p_depol", "p_reset", "p_meas", "p_cnot", "p_idle", "p_circuit"})
 
@@ -216,6 +219,14 @@ def _options(value, name, allowed):
     if ("color_correlated_weight_basis" in value
             and value["color_correlated_weight_basis"] not in ("stage2", "original_dem")):
         raise ValueError(f"{name}.color_correlated_weight_basis must be stage2 or original_dem")
+    if "color_correlated_b" in value:
+        _positive_number(value["color_correlated_b"], "color_correlated_b")
+    if "perturbation_ensemble_size" in value:
+        _positive_int(value["perturbation_ensemble_size"], "perturbation_ensemble_size")
+    if "perturbation_alpha" in value and _probability(value["perturbation_alpha"]) != value["perturbation_alpha"]:
+        raise ValueError("invalid perturbation_alpha")
+    if "perturbation_seed" in value and value["perturbation_seed"] is not None:
+        _positive_int(value["perturbation_seed"], "perturbation_seed", zero=True)
     if "colors" in value:
         colors = value["colors"]
         if colors != "all" and colors not in ("r", "g", "b") and not (
@@ -339,8 +350,19 @@ def parse_workflow_config(data: dict) -> WorkflowConfig:
         if overlap := set(dict(common)) & set(dict(options)):
             raise ValueError(f"Ambiguous constructor options in color_code_options and decoder.options: {sorted(overlap)}")
         merged = dict(common) | dict(options)
-        if merged.get("enable_colorcorrelated_decoding", False) and dict(decode_options).get("compute_swim_distance", False):
-            raise ValueError("Color-correlated decoding cannot compute matching-growth SWIM")
+        if merged.get("enable_colorcorrelated_decoding", False) and merged.get(
+                "color_correlated_weight_basis", "original_dem") != "original_dem":
+            raise ValueError("color-correlated decoding requires original_dem selection basis")
+        if label == "concat_mwpm_stage2_base" and merged.get(
+                "color_correlated_weight_basis", "stage2") != "stage2":
+            raise ValueError("concat_mwpm_stage2_base requires color_correlated_weight_basis: stage2")
+        advanced = ("enable_colorcorrelated_decoding", "enable_cross_color_relifting", "enable_prior_perturbation")
+        if sum(bool(merged.get(key, False)) for key in advanced) > 1:
+            raise ValueError("advanced decoder modes are mutually exclusive")
+        if merged.get("enable_cross_color_relifting", False) and merged.get("remove_non_edge_like_errors", False):
+            raise ValueError("cross-color relifting requires remove_non_edge_like_errors=False")
+        if any(merged.get(key, False) for key in advanced) and dict(decode_options).get("compute_swim_distance", False):
+            raise ValueError("advanced decoding cannot compute matching-growth SWIM")
         decoders.append(DecoderSettings(label, options, decode_options))
     return WorkflowConfig(simulation, chunking, sweep_settings, common, tuple(decoders))
 

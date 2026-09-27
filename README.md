@@ -37,6 +37,14 @@ decoders:
     options:
       enable_colorcorrelated_decoding: false
       comparative_decoding: false
+      # Optional: compare ordinary color corrections using the base X/Z DEM.
+      # The default is the historical stage-2 matching-weight comparison.
+      color_correlated_weight_basis: original_dem
+    decode_options:
+      colors: all
+  - type: concat_mwpm_stage2_base
+    options:
+      color_correlated_weight_basis: stage2
     decode_options:
       colors: all
 ```

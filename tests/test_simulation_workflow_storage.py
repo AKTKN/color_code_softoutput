@@ -97,6 +97,45 @@ def test_bad_metric_and_effect_rejected(tmp_path):
         store.accept(bad)
 
 
+def test_relift_run_sidecar_uses_existing_shot_schema(tmp_path):
+    point = ResolvedPoint("point", "relifting", 3, .01, "bitflip", 1, "tri",
+                          "tri_optimal", 3, (), (("enable_cross_color_relifting", True),), ())
+    store = PointStorage(point, tmp_path / point_directory_name(point), 2)
+    default = np.array([False, True, True])
+    logical = np.array([False, True, False])
+    result = WorkerResult("point", 0, 0, 3, .01,
+                          {"logical_error": logical,
+                           "default_logical_error": default,
+                           "better_weight_by_color_correlated_decoding": np.array([0, 0, 1], dtype=np.uint8),
+                           "effect_by_color_correlated_decoding": (default & ~logical).astype(np.uint8),
+                           "relift_run": np.array([0, 1, 2], dtype=np.uint8)})
+    store.accept(result)
+    paths = store.finalize()
+    assert {path.name for path in paths} == {f"{name}.parquet" for name in store.names}
+    table = pq.read_table(store.point_dir / "relift_run.parquet")
+    assert table.schema == pa.schema([pa.field("shot_index", pa.int64(), nullable=False),
+                                      pa.field("relift_run", pa.uint8(), nullable=False)])
+    assert table.column("shot_index").to_pylist() == [0, 1, 2]
+    assert table.column("relift_run").to_pylist() == [0, 1, 2]
+
+
+def test_perturbation_paired_metric_storage(tmp_path):
+    point = ResolvedPoint("point", "perturbation", 3, .01, "bitflip", 1, "tri",
+                          "tri_optimal", 2, (), (("enable_prior_perturbation", True),), ())
+    store = PointStorage(point, tmp_path / point_directory_name(point), 2)
+    result = WorkerResult("point", 0, 0, 2, .01, {
+        "logical_error": np.array([False, False]),
+        "default_logical_error": np.array([True, False]),
+        "better_weight_by_color_correlated_decoding": np.array([1, 0], dtype=np.uint8),
+        "effect_by_color_correlated_decoding": np.array([1, 0], dtype=np.uint8),
+    })
+    store.accept(result)
+    paths = store.finalize()
+    assert {path.name for path in paths} == {f"{name}.parquet" for name in store.names}
+    assert pq.read_table(store.point_dir / "default_logical_error.parquet").column(
+        "default_logical_error").to_pylist() == [True, False]
+
+
 def test_failure_preserves_buffer_and_no_final_names(tmp_path, monkeypatch):
     point = _point(True, shots=5)
     store = PointStorage(point, tmp_path / point_directory_name(point), 2)

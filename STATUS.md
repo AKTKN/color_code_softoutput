@@ -1,5 +1,110 @@
 # STATUS.md
 
+## Adaptive benchmark basis compatibility — 2026-09-27
+
+The paired ablation runner now defaults to and accepts only `original_dem` for
+new runs, matching the current color-correlated decoder's required final
+selection basis. A `stage2` request fails before creating a run directory.
+Historical saved `adaptive_v2` results remain readable. The focused benchmark
+suite passes three tests. This change resolves two full-root regression
+failures caused by the older stage-2 ablation setting. The full root suite
+passes 273 tests.
+
+## Paired worsening and signed net effect — 2026-09-27
+
+Saved-run `effect_table` now adds `worsened_count` and `net_effect_count` to
+the existing `effect_count` rescue count. For paired baseline/new failures,
+`worsened_count = new_failures - baseline_failures + effect_count` and
+`net_effect_count = effect_count - worsened_count = baseline_failures -
+new_failures`; positive net means fewer failures. The counts derive from the
+saved paired outcome and rescue metrics, with consistency bounds checked.
+Ordinary and legacy points without paired sidecars retain missing values.
+The notebook's table explanation and saved outputs were refreshed for its
+current 18-point run; all three effect columns appear. Eight analysis tests
+pass, including mixed rescue/worsening and legacy-sidecar cases. No new
+simulation was run.
+
+## Power-guide saved-run analysis reload — 2026-09-27
+
+`ColorCorrelatedRun` now calls the workflow config parser through its module,
+so reloading that module updates analysis in a live notebook kernel. The first
+cell of `notebooks/color_correlated_decoding.ipynb` explicitly reloads config
+and analysis before loading a run. The reported run
+`results/26_09_27_20_02_55_852c7ea2` loads all six points and produces 12 LER
+rows and six rows in each flag table. A simulated stale-parser notebook cell
+reloads and loads the same run. Synthetic saved-run regression with
+`color_correlated_b: 2.0` and focused validation: eight tests passed. No
+simulation data were changed.
+
+## Power-guide stage-1 color-correlated candidates — 2026-09-27
+
+The current color-correlated decoder replaces guide-selected original X/Z DEM
+source priors by `q**(1/color_correlated_b)` for stage 1 only. Stage 2 uses
+unchanged base matrices/priors; final candidate selection is fixed to the
+unchanged original X/Z DEM log odds. The default `b=1` gives no guide
+reweighting. The YAML constructor option accepts any positive finite `b` and
+rejects an explicit `stage2` selection basis for this decoder. The decoder
+reuses fixed symbolic maps, bounded guide-specific stage-1 prior/matcher
+caches, and three base stage-2 matchers. A full-decomposition oracle checks
+stage-1 equivalence. A bounded 12-guide subroutine timing measured 0.0019 s
+versus 0.4047 s for full re-decomposition, without claiming an end-to-end
+speedup. Decoder and focused root tests: 213 passed, two existing skips;
+subsequent 26-test focused check passed. No new sampling campaign. See
+`notes/support/COLOR_CORRELATED_POWER_GUIDE.md`.
+
+## Two ordinary weight bases in one YAML run — 2026-09-27
+
+The workflow accepts `concat_mwpm_stage2_base` as a distinct point label for
+ordinary `concat_mwpm` with the `stage2` selection basis. It rejects
+`original_dem` under that label. `concat_mwpm` with `original_dem` and the new
+stage-2 label can therefore share one YAML run without a path collision.
+`configs/example.yaml` and the package README show both entries. Focused
+runner/planning tests: 31 passed, including a two-point end-to-end run.
+Each point retains its own point-derived sampling seed, so these two saved
+rows are independent-shot comparisons even if `master_seed` is shared.
+
+## Ordinary concat-MWPM original-DEM selection basis — 2026-09-27
+
+Ordinary `concat_mwpm` now honors `color_correlated_weight_basis="original_dem"`:
+the three unmodified stage-2 matching solutions are mapped to original X/Z
+DEM mechanism order and ranked by the sum of unchanged original log odds.
+Stage 1 and stage 2 candidate generation remain unchanged. The default
+`"stage2"` retains the historical matching-weight selection. The YAML workflow
+already accepted this constructor option; `configs/example.yaml` now shows it
+for `concat_mwpm`, and a tiny end-to-end runner check validates the path.
+Decoder tests: 158 passed, two existing skips; focused decoder/runner/worker
+checks: 33 passed, plus ten focused SWIM checks. In a bounded 256-shot
+same-shot comparison at d=5 and d=9,
+one-round bit-flip p=0.05, both bases produced identical corrections and
+observables; maximum selected-weight differences were below 4e-15. For these
+conditions, each stage-2 column mapped to one original mechanism with equal
+prior. A d=3, three-round uniform-circuit check also found unit source maps
+and equal priors for every stage-2 column. No larger sampling campaign was run.
+Separate YAML decoder points use
+different point-derived sample seeds, even with the same master seed.
+
+## Paired YAML baselines for relifting and perturbation — 2026-09-27
+
+The canonical YAML worker now records `default_logical_error.parquet`,
+`better_weight_by_color_correlated_decoding.parquet`, and
+`effect_by_color_correlated_decoding.parquet` for relifting and perturbation as
+well as color-correlated decoding. The unchanged metric filenames keep one
+analysis/storage contract. Relifting reuses its ordinary r/g/b candidates;
+perturbation reuses ensemble member 0, which has the unmodified DEM prior.
+The decoder exports their native-weight ordinary baseline prediction in full
+output; no second baseline decode is needed. Tests compare this prediction
+against a separate ordinary `ColorCode.decode` on identical shots for both
+selection bases. Saved-run analysis supports all three modes, plots one
+deterministic baseline representative per physical condition, and exposes
+separate filters for better-weight and rescue tables. Different decoder
+points in the YAML workflow may use independent sampled shots, so observed
+baseline counts can differ; relifting's required full-decomposition setting
+may also differ from other modes. Existing saved runs were not rewritten.
+Validation: 267 root tests passed before the final legacy-read compatibility
+check; that six-test analysis module passes afterward. Decoder tests: 156
+passed with two existing skips. Focused notebook cells compile. No new
+campaign was run.
+
 ## Color-correlated candidate scheduling and run category — 2026-09-27
 
 The decoder now compares its three ordinary corrections after mapping them
@@ -962,3 +1067,38 @@ extraction, stage-1 uncertainty/failures, aggregation of the three colors,
 interaction with final branch selection, full comparative/forced gaps,
 posterior calibration, circuit-level extensions, or BP-LSD/hypergraphs.
 None of those later tasks was implemented by this Phase-1 completion run.
+# Adaptive near-optimal pipeline stage 05 (2026-09-27)
+
+The independent decoder now reports pairwise same-baseline Stage-2 syndrome
+counts and exact same-target cache skips alongside its existing class,
+execution, alias, and common-prior candidate arrays. A new paired benchmark
+under `src/color_code_softoutput/simulation/adaptive_benchmark.py` samples
+once and runs ordinary, color-correlated, relifting and prior perturbation
+decoders on the same detector outcomes. The new `adaptive_v2` result root
+contains both `color_correlated_run.parquet` and `relift_run.parquet` with the
+existing shot-index/uint8 convention, diagnostic sidecars, candidate-weight
+tables and an atomic provenance manifest. Analysis is in
+`src/color_code_softoutput/analysis/adaptive_benchmark.py`. Only bounded
+smokes were run; the production command is in the package README. Stage-05
+acceptance: 33 focused root tests and 37 focused decoder tests pass, both Git
+trees pass `git diff --check`, and a 16-shot d=3 original-DEM-basis paired
+smoke in four batches produced and reloaded both run-class sidecars plus all
+diagnostic and candidate-weight tables. The smoke contains class counts 3/7/6
+and its independent candidate-weight audit passes. The saved result is under
+`/tmp/adaptive-stage05-final-batched/adaptive_v2/20260927T080530Z_4409f8c3`.
+# Stage 06 adaptive ablation benchmark (2026-09-27)
+
+The paired `adaptive_v2` benchmark now records observed MWPM calls, decode
+runtime, run classes, candidate selection, relift Stage-2 early exits, and
+perturbation hypothesis/member diversity. The report exports Wilson LER,
+paired rescue/regression, class-conditioned outcomes, call distributions,
+perturbation saturation, and basis-labelled plots. The requested d/p/M/alpha
+grid is available but was not launched. See
+`notes/support/ADAPTIVE_ABLATION_BENCHMARK.md`. Acceptance:
+`PYTHONPATH=src:external_libs/color-code-stim/src conda run -n color_code_so
+pytest -q tests/test_adaptive_benchmark.py tests/test_simulation_runner.py
+tests/test_simulation_workflow_storage.py` (24 passed), and the decoder's
+three focused suites (37 passed). The bounded test run covers both score
+bases and a two-shot reduced grid. No commit, push or campaign was performed.
+The full root suite passed (260 tests) and the full decoder suite passed
+(156 tests, two existing skips). Both repositories passed `git diff --check`.

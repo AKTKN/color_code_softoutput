@@ -1,24 +1,75 @@
 # Reproducible paired code-capacity study
 
+## Paired adaptive decoder benchmark (schema `adaptive_v2`)
+
+Run a bounded smoke with
+`PYTHONPATH=src:external_libs/color-code-stim/src python -m color_code_softoutput.simulation.adaptive_benchmark --output-root results --shots 16 --distance 3`.
+This command samples each physical detector/observable outcome once, then
+decodes the identical batch with ordinary concat-MWPM, adaptive
+color-correlated decoding, adaptive cross-color relifting and the fixed
+pre-decomposition prior perturbation ensemble. All four constructors use
+`remove_non_edge_like_errors=False`; circuit equality is checked before
+sampling. The decoder supplies `candidate_weights`,
+`candidate_weight_basis`, and selected `weights`; the benchmark saves and
+reads these with unchanged-prior scoring audits on up to four shots.
+
+The command creates a fresh `results/adaptive_v2/<timestamp>_<id>/` root.
+`manifest.json` contains the semantic configuration ID, ordered batch seeds,
+batch size and count,
+source digest, decoder elapsed times, selected-kind codes, and score basis. Each metric file has
+`shot_index: int64` and one value in the same row order as the existing
+`color_correlated_run.parquet` sidecar. Run classes are `uint8` values 0, 1,
+or 2 from the shared original-DEM baseline-equality helper. The additional
+relifting sidecars store actual extra Stage-2 calls, total calls, 12 logical
+slots, unique solved Stage-2 syndromes, alias counts, selected kind, six
+pairwise baseline-syndrome comparisons and same-target cache skips. Total
+calls and unique solved problems count the one logical class used by this
+benchmark. Files are atomically promoted; the manifest is written last,
+and an interrupted write cannot be opened by `AdaptiveBenchmarkRun`.
+
+`analysis.adaptive_benchmark.AdaptiveBenchmarkRun(path)` validates identities,
+types, paired run classes and saved candidate weights. `by_class("relift")`
+reports class shot fractions, LER, rescue and regression rates, mean and
+median extra calls, and selected-kind composition. `by_class("color_correlated")`
+reports matching class outcomes, extra Stage-2 calls and baseline/guided
+selection composition. `overall_relift()` reports the fraction
+of all six pairwise target syndromes equal to their baseline targets,
+the cache-skip fraction among proposed relift problems, and the distribution
+of unique solved Stage-2 problems.
+
+Production command (reported only; no campaign launched):
+
+```bash
+PYTHONPATH=src:external_libs/color-code-stim/src python -m color_code_softoutput.simulation.adaptive_benchmark --output-root results --shots 1000000 --batch-shots 256 --distance 7 --physical-error-rate 0.003 --ensemble-size 3 --alpha 0.2 --weight-basis original_dem
+```
+
 ## Canonical YAML simulation
 
 Run `./scripts/run_experiment.sh configs/example.yaml` in `color_code_so`, or
 `python -m color_code_softoutput.simulation.cli --config configs/example.yaml`.
-The example requests 16 shots for each of two d=3 uniform-noise points.
+The example requests 16 shots for each of three d=3 superdense uniform-noise
+points. Relifting requires a separate ordinary-circuit configuration, shown as
+commented YAML because this superdense decomposition is not graphlike for it.
 The runner validates and constructs every point before creating a timestamped
 run directory. It writes one `run_log.json`, streams completed chunks into
 bounded point storage, and finalizes each point when its shots are complete.
 Successful points contain one Parquet file per metric and no `.buffer/`.
 Existing notebook experiment entry points remain historical and unchanged.
 
-## Saved color-correlated run analysis
+## Saved adaptive-decoder run analysis
 
 `analysis.color_correlated.ColorCorrelatedRun(run_path)` reads the canonical
 `run_log.json` and planned point directories. `catalog` previews available
 conditions; `summary(filter=...)` streams each selected Parquet metric into
 per-point shot/failure counts and logical error rates. `count_table(filter=...)`
-reports the two color-correlated flags per experiment condition, with missing
-values for ordinary decoder points. `plot_ler(filter=..., group_by=[...])`
+reports both advanced-decoder flags per condition, with missing values for
+ordinary decoder points. `better_weight_table(filter=...)` and
+`effect_table(filter=...)` allow separate selections. The effect table reports
+rescued shots (`effect_count`), worsened shots (`worsened_count`), and signed
+net improvement (`net_effect_count = effect_count - worsened_count`) against
+each point's paired ordinary baseline. Positive net counts mean fewer logical
+failures; no new simulation sidecar is required.
+`plot_ler(filter=..., group_by=[...])`
 plots physical versus logical error rate with 99% Wilson bands. The first
 group key controls color and the optional second key controls marker. The
 legend is a boxed grid above a separately sized plot. Set `yscale="log"`
@@ -27,9 +78,14 @@ while the returned table keeps their measured rate of zero. Other varying
 conditions must be fixed by `filter`. See
 `notebooks/color_correlated_decoding.ipynb` for an editable example.
 With `baseline_compare=True` and `decoder_type` in `group_by`, the plot also
-adds `decoder_type=baseline` from each selected color-correlated point's
-`default_logical_error.parquet`. This uses the same shots as that point's
-`logical_error.parquet`; the returned plot table records `metric` and
+adds `decoder_type=baseline` from a selected advanced point's paired
+`default_logical_error.parquet`. When multiple decoder types cover the same
+physical configuration, it plots one representative, preferring
+color-correlated, then relifting, then perturbation. These modes can have
+different sampled shots in the YAML workflow, so their measured baseline
+counts need not be identical. Relifting also requires the full decomposition
+(`remove_non_edge_like_errors=False`), which can differ from another mode's
+ordinary decoder setting. The returned table records `metric` and
 `source_decoder_type`. Ordinary `concat_mwpm` points remain separate samples.
 For `noise_model=uniform`, `logical_error_rate` and its Wilson limits are
 reported per round as `1 - (1 - P_fail) ** (1 / rounds)`; the measured
@@ -49,14 +105,21 @@ Overlapping or duplicate intervals are rejected. Out-of-order chunks spool
 under `.buffer/`, while contiguous rows flush as numbered `part_*.parquet`
 files at `buffer_shots` rows per part. Each temporary part has nonnull
 `shot_index: int64` plus all metrics for the point: `logical_error: bool`
-always, and for color-correlated decoding also
+always, and for color-correlated, relifting, or perturbation also
 `default_logical_error: bool`,
 `better_weight_by_color_correlated_decoding: uint8`, and
-`effect_by_color_correlated_decoding: uint8`, and
-`color_correlated_run: uint8`.
-The last value is 0 when the three ordinary original-DEM corrections agree,
+`effect_by_color_correlated_decoding: uint8`. The historical metric filenames
+are retained for all three modes. The baseline for relifting and perturbation
+comes from their already computed ordinary r/g/b candidates; perturbation's
+member 0 has the unmodified prior. `better_weight` means a strict reduction
+in the selected common-prior score relative to those three candidates;
+`effect_by` means a baseline failure rescued by the advanced decision.
+Color-correlated decoding additionally writes `color_correlated_run: uint8`.
+Its value is 0 when the three ordinary original-DEM corrections agree,
 1 when exactly two agree, and 2 when all differ. These cases run 0, 3 and 9
 extra guided candidates, respectively.
+Relifting additionally writes `relift_run: uint8` with the same 0/1/2
+baseline-multiplicity definition. Perturbation has no run-class sidecar.
 
 Finalization streams parts into one two-column Parquet file per metric, with
 the metric name as filename and data column. Every file has explicit nonnull
@@ -119,15 +182,26 @@ detectors. The weight flag compares the selected common-prior candidate with
 the best of the three ordinary candidates under that same prior using exact
 `<`; temporary candidate-generation weights are excluded. Effect is exactly
 `default_logical_error & ~logical_error`.
-For each extra color-correlated candidate, guide-selected mechanisms are
-conditioned in a temporary copy of the pre-decomposition X/Z DEM. That DEM
-is decomposed anew for the target color before both matching stages run.
+For each extra color-correlated candidate, guide-selected original X/Z DEM
+mechanism priors become `q**(1/color_correlated_b)` for stage 1. Stage 2
+uses the unchanged base matrix and prior. Final selection always uses the
+unchanged original X/Z DEM prior; that mode requires `original_dem`.
 Set `decoders[].options.color_correlated_weight_basis: original_dem` to score
-and select color-correlated candidates by their mapped correction under the
-unchanged pre-decomposition X/Z DEM prior. The default is `stage2`. The
-weight flag always compares all twelve candidates with the ordinary three
-using the same selected basis. Saved runs cannot be reinterpreted under a
+and select ordinary, color-correlated, relifting, or perturbation candidates by
+their mapped correction under the unchanged pre-decomposition X/Z DEM prior.
+The default for other modes is `stage2`. For ordinary `concat_mwpm`, this option changes only
+the final comparison among the three color corrections; both matching stages
+still use their usual priors. For color-correlated decoding, the better-weight
+flag compares the twelve candidates with the ordinary three using the same
+selected basis. Saved runs cannot be reinterpreted under a
 different basis without decoding their shots again.
+
+To save both ordinary bases in one run, use `type: concat_mwpm` with
+`color_correlated_weight_basis: original_dem` and
+`type: concat_mwpm_stage2_base` with `color_correlated_weight_basis: stage2`.
+The latter is a workflow label for the same ordinary decoder; its basis is
+validated. These are separate points with point-derived sampling seeds, so
+the two saved LER rows are not a paired same-shot comparison.
 
 The worker holds at most four circuit/decoder pairs in a per-process LRU cache
 and writes no files. The scheduler uses multiprocessing `spawn` and bounds

@@ -8,6 +8,8 @@ from color_code_softoutput.simulation.task import ResolvedPoint
 
 
 def point(correlated=False, *, identity="p", shots=8, weight_basis="stage2"):
+    if correlated and weight_basis == "stage2":
+        weight_basis = "original_dem"
     return ResolvedPoint(identity, "ordinary-label", 3, .05, "bitflip", 1,
                          "tri", "tri_optimal", shots, (),
                          (("enable_colorcorrelated_decoding", correlated),
@@ -96,7 +98,8 @@ def test_cache_bounded(monkeypatch):
 
 
 @pytest.mark.parametrize("correlated,weight_basis", [
-    (False, "stage2"), (True, "stage2"), (True, "original_dem"),
+    (False, "stage2"), (False, "original_dem"),
+    (True, "stage2"), (True, "original_dem"),
 ])
 def test_real_tiny_worker(correlated, weight_basis):
     worker._CODE_CACHE.clear()
@@ -114,4 +117,40 @@ def test_real_tiny_worker(correlated, weight_basis):
             (out.metrics["default_logical_error"] & ~out.metrics["logical_error"]).astype(np.uint8))
         assert out.metrics["color_correlated_run"].dtype == np.uint8
         assert np.all(out.metrics["color_correlated_run"] <= 2)
+    worker._CODE_CACHE.clear()
+
+
+@pytest.mark.parametrize("mode", ["relifting", "perturbation"])
+@pytest.mark.parametrize("basis", ["stage2", "original_dem"])
+def test_advanced_worker_reuses_internal_baseline(mode, basis):
+    from color_code_stim import ColorCode
+    from color_code_softoutput.simulation.noise import make_noise_model
+
+    option = ({"enable_cross_color_relifting": True, "remove_non_edge_like_errors": False}
+              if mode == "relifting" else
+              {"enable_prior_perturbation": True, "perturbation_ensemble_size": 2,
+               "perturbation_alpha": .25, "perturbation_seed": 11})
+    options = option | {"color_correlated_weight_basis": basis, "temp_bdry_type": "Z"}
+    p = ResolvedPoint(f"{mode}-{basis}", mode, 3, .01, "uniform", 3,
+                      "tri", "tri_optimal", 2, (), tuple(sorted(options.items())), ())
+    worker._CODE_CACHE.clear()
+    task = worker.WorkerInput(p.point_id, 0, 0, 2, 31, p)
+    out = worker.run_chunk(task)
+    expected = {"logical_error", "default_logical_error",
+                "better_weight_by_color_correlated_decoding",
+                "effect_by_color_correlated_decoding"}
+    if mode == "relifting":
+        expected.add("relift_run")
+    assert set(out.metrics) == expected
+    configured = worker._construct(p).configured
+    detectors, actual = configured.sample(2, seed=31)
+    baseline_options = options | {"enable_cross_color_relifting": False,
+                                  "enable_prior_perturbation": False}
+    ordinary = ColorCode(d=3, rounds=3, circuit_type="tri", cnot_schedule="tri_optimal",
+                         noise_model=make_noise_model("uniform", .01), **baseline_options)
+    ordinary_fail = worker.logical_errors(ordinary.decode(detectors), actual, 2)
+    np.testing.assert_array_equal(out.metrics["default_logical_error"], ordinary_fail)
+    np.testing.assert_array_equal(out.metrics["effect_by_color_correlated_decoding"],
+        (ordinary_fail & ~out.metrics["logical_error"]).astype(np.uint8))
+    assert out.metrics["better_weight_by_color_correlated_decoding"].dtype == np.uint8
     worker._CODE_CACHE.clear()

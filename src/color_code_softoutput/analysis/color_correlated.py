@@ -13,7 +13,7 @@ import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from ..simulation.config import parse_workflow_config
+from ..simulation import config as workflow_config
 from ..simulation.planner import plan_points, point_directory_name
 from .statistics import wilson_interval
 
@@ -26,7 +26,7 @@ COUNTS = (
     "better_weight_by_color_correlated_decoding",
     "effect_by_color_correlated_decoding",
 )
-_METRICS = ("logical_error", "default_logical_error", *COUNTS)
+_PAIRED_METRICS = ("logical_error", "default_logical_error", *COUNTS)
 _MARKERS = (
     "o", "s", "^", "D", "v", "P", "X", "<", ">", "h",
     "*", "p", "8", "H", "d", "1", "2", "3", "4", "+",
@@ -79,7 +79,7 @@ class ColorCorrelatedRun:
             self.run_log = json.load(stream)
         if not self.run_log.get("simulation_end_time"):
             raise ValueError(f"Run has no completion time: {log_path}")
-        self.config = parse_workflow_config(self.run_log["config"])
+        self.config = workflow_config.parse_workflow_config(self.run_log["config"])
         points = plan_points(self.config)
         self._point_dirs = {
             point_directory_name(point): point for point in points
@@ -123,8 +123,17 @@ class ColorCorrelatedRun:
         point = self._point_dirs[name]
         directory = self.run_directory / name
         options = dict(point.color_code_options) | dict(point.decoder_options)
-        correlated = options.get("enable_colorcorrelated_decoding", False)
-        metrics = _METRICS if correlated else ("logical_error",)
+        advanced = any(options.get(flag, False) for flag in (
+            "enable_colorcorrelated_decoding", "enable_cross_color_relifting",
+            "enable_prior_perturbation"))
+        paired_paths = [directory / f"{metric}.parquet" for metric in _PAIRED_METRICS[1:]]
+        paired_files = [path.is_file() for path in paired_paths]
+        if any(paired_files) and not all(paired_files):
+            raise FileNotFoundError(f"Incomplete paired metrics: {directory}")
+        # Old relifting runs predate these three sidecars. Keep them readable,
+        # while requiring the established color-correlated contract.
+        paired = advanced and (all(paired_files) or options.get("enable_colorcorrelated_decoding", False))
+        metrics = _PAIRED_METRICS if paired else ("logical_error",)
         counts = {
             metric: _metric_count(directory / f"{metric}.parquet", metric, point.shots)
             for metric in metrics
@@ -140,19 +149,32 @@ class ColorCorrelatedRun:
             "default_failures": counts.get("default_logical_error", pd.NA),
             "default_logical_error_rate_total": (
                 counts["default_logical_error"] / point.shots
-                if correlated else np.nan
+                if paired else np.nan
             ),
             "default_logical_error_rate": (
                 to_rate(counts["default_logical_error"] / point.shots)
-                if correlated else np.nan
+                if paired else np.nan
             ),
             "better_weight_count": counts.get(COUNTS[0], pd.NA),
             "effect_count": counts.get(COUNTS[1], pd.NA),
         }
+        if paired:
+            # B - N = rescued - worsened for paired baseline/new failure bits.
+            # The saved effect flag is exactly rescued = B & ~N, so the
+            # worsening count follows without another pass over Parquet data.
+            worsened = counts["logical_error"] - counts["default_logical_error"] + counts[COUNTS[1]]
+            if not (0 <= worsened <= min(counts["logical_error"],
+                                          point.shots - counts["default_logical_error"])):
+                raise ValueError(f"Inconsistent paired logical-error/effect counts: {directory}")
+            record["worsened_count"] = worsened
+            record["net_effect_count"] = counts[COUNTS[1]] - worsened
+        else:
+            record["worsened_count"] = pd.NA
+            record["net_effect_count"] = pd.NA
         low, high = wilson_interval(record["failures"], point.shots)
         record["ler_low"] = to_rate(float(low))
         record["ler_high"] = to_rate(float(high))
-        if correlated:
+        if paired:
             low, high = wilson_interval(counts["default_logical_error"], point.shots)
             record["default_ler_low"] = to_rate(float(low))
             record["default_ler_high"] = to_rate(float(high))
@@ -169,16 +191,26 @@ class ColorCorrelatedRun:
             self._summarize_point(name) for name in selected["point_directory"]
         ])
         result = selected.merge(aggregates, on="point_directory", validate="one_to_one")
-        for name in ("default_failures", "better_weight_count", "effect_count"):
+        for name in ("default_failures", "better_weight_count", "effect_count",
+                     "worsened_count", "net_effect_count"):
             result[name] = result[name].astype("Int64")
         return result.drop(columns=["data_available"]).sort_values(
             ["distance", "physical_error_rate", "decoder_type"]
         ).reset_index(drop=True)
 
     def count_table(self, filter: Mapping[str, object] | None = None) -> pd.DataFrame:
-        """Show the two correlated-decoding flag counts for every selected config."""
+        """Show the two advanced-decoder flag counts for selected points."""
         columns = [*PARAMETERS, "shots", "better_weight_count", "effect_count"]
         return self.summary(filter)[columns]
+
+    def better_weight_table(self, filter: Mapping[str, object] | None = None) -> pd.DataFrame:
+        """Filter per-point strict common-prior weight-improvement counts."""
+        return self.count_table(filter)[[*PARAMETERS, "shots", "better_weight_count"]]
+
+    def effect_table(self, filter: Mapping[str, object] | None = None) -> pd.DataFrame:
+        """Show rescued, worsened, and net rescued shots against each paired baseline."""
+        return self.summary(filter)[[*PARAMETERS, "shots", "effect_count",
+                                     "worsened_count", "net_effect_count"]]
 
     def plot_ler(
         self,
@@ -219,13 +251,20 @@ class ColorCorrelatedRun:
         if baseline_compare:
             if (table["decoder_type"] == "baseline").any():
                 raise ValueError("decoder_type='baseline' is reserved for baseline_compare")
-            correlated = table["default_failures"].notna()
-            if not correlated.any():
-                raise ValueError("No color-correlated points selected for baseline_compare")
+            paired = table["default_failures"].notna()
+            if not paired.any():
+                raise ValueError("No advanced-decoder points selected for baseline_compare")
             table = table.copy()
             table["source_decoder_type"] = table["decoder_type"]
             table["metric"] = "logical_error"
-            baseline = table.loc[correlated].copy()
+            baseline = table.loc[paired].copy()
+            # Each advanced decoder has its own sampled baseline. Plot one
+            # deterministic representative for each physical configuration.
+            priority = {"color_correlated": 0, "relifting": 1, "perturbation": 2}
+            baseline["_priority"] = baseline["source_decoder_type"].map(priority).fillna(3)
+            condition = [name for name in PARAMETERS if name != "decoder_type"]
+            baseline = (baseline.sort_values(["_priority", "source_decoder_type"])
+                        .drop_duplicates(condition).drop(columns="_priority"))
             baseline["decoder_type"] = "baseline"
             baseline["metric"] = "default_logical_error"
             baseline["failures"] = baseline["default_failures"].astype("int64")
@@ -233,6 +272,9 @@ class ColorCorrelatedRun:
             baseline["logical_error_rate"] = baseline["default_logical_error_rate"]
             baseline["ler_low"] = baseline["default_ler_low"]
             baseline["ler_high"] = baseline["default_ler_high"]
+            for name in ("better_weight_count", "effect_count", "worsened_count",
+                         "net_effect_count"):
+                baseline[name] = pd.NA
             table = pd.concat([table, baseline], ignore_index=True).sort_values(
                 ["distance", "physical_error_rate", "decoder_type"]
             ).reset_index(drop=True)

@@ -85,12 +85,111 @@ def test_preflight_rejects_before_creating_run(tmp_path):
 
 def test_original_dem_weight_basis_option(tmp_path):
     raw = settings(tmp_path)
+    raw["decoders"][0]["options"] = {"color_correlated_weight_basis": "original_dem"}
     raw["decoders"][1]["options"]["color_correlated_weight_basis"] = "original_dem"
     config = parse_workflow_config(raw)
+    assert dict(config.decoders[0].options)["color_correlated_weight_basis"] == "original_dem"
     assert dict(config.decoders[1].options)["color_correlated_weight_basis"] == "original_dem"
     raw["decoders"][1]["options"]["color_correlated_weight_basis"] = "unknown"
     with pytest.raises(ValueError, match="color_correlated_weight_basis"):
         parse_workflow_config(raw)
+    raw["decoders"][1]["options"]["color_correlated_weight_basis"] = "stage2"
+    with pytest.raises(ValueError, match="requires original_dem"):
+        parse_workflow_config(raw)
+    raw["decoders"][1]["options"]["color_correlated_weight_basis"] = "original_dem"
+    raw["decoders"][1]["options"]["color_correlated_b"] = 2.0
+    assert dict(parse_workflow_config(raw).decoders[1].options)["color_correlated_b"] == 2.0
+    raw["decoders"][1]["options"]["color_correlated_b"] = 0
+    with pytest.raises(ValueError, match="color_correlated_b"):
+        parse_workflow_config(raw)
+
+
+def test_ordinary_original_dem_runner(tmp_path):
+    raw = settings(tmp_path)
+    raw["simulation"]["shots"] = 2
+    raw["decoders"] = [{"type": "concat_mwpm", "options": {
+        "color_correlated_weight_basis": "original_dem"},
+        "decode_options": {"colors": "all"}}]
+    root = run_experiment(parse_workflow_config(raw), reporter=lambda _: None)
+    point_dir = next(root.glob("decoder_type=concat_mwpm,*"))
+    assert pq.read_table(point_dir / "logical_error.parquet").num_rows == 2
+
+
+def test_two_ordinary_weight_bases_have_distinct_points(tmp_path):
+    raw = settings(tmp_path)
+    raw["simulation"]["shots"] = 2
+    raw["decoders"] = [
+        {"type": "concat_mwpm", "options": {
+            "color_correlated_weight_basis": "original_dem"},
+            "decode_options": {"colors": "all"}},
+        {"type": "concat_mwpm_stage2_base", "options": {
+            "color_correlated_weight_basis": "stage2"},
+            "decode_options": {"colors": "all"}},
+    ]
+    root = run_experiment(parse_workflow_config(raw), reporter=lambda _: None)
+    assert len(list(root.glob("decoder_type=concat_mwpm,*"))) == 1
+    assert len(list(root.glob("decoder_type=concat_mwpm_stage2_base,*"))) == 1
+    for path in root.glob("decoder_type=concat_mwpm*,*"):
+        assert pq.read_table(path / "logical_error.parquet").num_rows == 2
+
+    raw["decoders"][1]["options"]["color_correlated_weight_basis"] = "original_dem"
+    with pytest.raises(ValueError, match="requires color_correlated_weight_basis: stage2"):
+        parse_workflow_config(raw)
+
+
+def test_relifting_option_validation(tmp_path):
+    raw = settings(tmp_path)
+    raw["decoders"] = [{"type": "relifting", "options": {
+        "enable_cross_color_relifting": True, "remove_non_edge_like_errors": False}}]
+    assert dict(parse_workflow_config(raw).decoders[0].options)["enable_cross_color_relifting"]
+    raw["decoders"][0]["options"]["enable_colorcorrelated_decoding"] = True
+    with pytest.raises(ValueError, match="mutually exclusive"):
+        parse_workflow_config(raw)
+    del raw["decoders"][0]["options"]["enable_colorcorrelated_decoding"]
+    raw["decoders"][0]["options"]["remove_non_edge_like_errors"] = True
+    with pytest.raises(ValueError, match="remove_non_edge_like_errors"):
+        parse_workflow_config(raw)
+
+
+def test_relifting_runner_writes_run_class_sidecar(tmp_path):
+    raw = settings(tmp_path, noise="uniform")
+    raw["simulation"]["shots"] = 2
+    raw["sweep"]["physical_error_rate"] = .03
+    raw["decoders"] = [{"type": "relifting", "options": {
+        "enable_cross_color_relifting": True, "remove_non_edge_like_errors": False}}]
+    root = run_experiment(parse_workflow_config(raw), reporter=lambda _: None)
+    sidecars = list(root.glob("*/relift_run.parquet"))
+    assert len(sidecars) == 1
+    table = pq.read_table(sidecars[0])
+    assert table.column_names == ["shot_index", "relift_run"]
+    assert table.column("shot_index").to_pylist() == [0, 1]
+    assert set(table.column("relift_run").to_pylist()) <= {0, 1, 2}
+    point_dir = sidecars[0].parent
+    assert {p.stem for p in point_dir.glob("*.parquet")} == {
+        "logical_error", "default_logical_error",
+        "better_weight_by_color_correlated_decoding",
+        "effect_by_color_correlated_decoding", "relift_run"}
+
+
+def test_perturbation_runner_writes_paired_metrics(tmp_path):
+    raw = settings(tmp_path, noise="uniform")
+    raw["simulation"]["shots"] = 2
+    raw["decoders"] = [{"type": "perturbation", "options": {
+        "enable_prior_perturbation": True, "perturbation_ensemble_size": 2,
+        "perturbation_alpha": .25, "perturbation_seed": 11}}]
+    root = run_experiment(parse_workflow_config(raw), reporter=lambda _: None)
+    point_dir = next(root.glob("decoder_type=perturbation,*"))
+    assert {p.stem for p in point_dir.glob("*.parquet")} == {
+        "logical_error", "default_logical_error",
+        "better_weight_by_color_correlated_decoding",
+        "effect_by_color_correlated_decoding"}
+    default = pq.read_table(point_dir / "default_logical_error.parquet").column(
+        "default_logical_error").to_numpy()
+    logical = pq.read_table(point_dir / "logical_error.parquet").column(
+        "logical_error").to_numpy()
+    effect = pq.read_table(point_dir / "effect_by_color_correlated_decoding.parquet").column(
+        "effect_by_color_correlated_decoding").to_numpy()
+    assert (effect == (default & ~logical).astype("uint8")).all()
 
 
 def test_failure_still_closes_single_log(tmp_path, monkeypatch):

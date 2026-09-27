@@ -24,11 +24,16 @@ def _now() -> datetime:
 
 def _preflight_point(point: ResolvedPoint) -> None:
     """Check the native constructor and public decode options before any run exists."""
-    if point.decoder_type not in ("concat_mwpm", "color_correlated"):
+    if point.decoder_type not in ("concat_mwpm", "concat_mwpm_stage2_base",
+                                  "color_correlated", "relifting", "perturbation"):
         raise ValueError(f"unsupported decoder type: {point.decoder_type}")
     correlated = dict(point.color_code_options) | dict(point.decoder_options)
     if (point.decoder_type == "color_correlated") != correlated.get("enable_colorcorrelated_decoding", False):
         raise ValueError(f"decoder type and correlated option disagree: {point.decoder_type}")
+    for label, flag in (("relifting", "enable_cross_color_relifting"),
+                        ("perturbation", "enable_prior_perturbation")):
+        if (point.decoder_type == label) != correlated.get(flag, False):
+            raise ValueError(f"decoder type and {flag} option disagree: {point.decoder_type}")
     inspect.signature(ColorCode.decode).bind(None, None, **dict(point.decode_options))
     _construct(point)
 

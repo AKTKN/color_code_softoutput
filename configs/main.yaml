@@ -1,19 +1,19 @@
 simulation:
   output_root: results
   shots: 100000
-  workers: 4
+  workers: 6
   master_seed: 20260927
   buffer_shots: 1000
   verbose: true
 chunking:
-  calibration_shots: 4
-  target_chunk_seconds: 1.0
+  calibration_shots: 100
+  target_chunk_seconds: 4.0
   min_chunk_shots: 1
   max_chunk_shots: 1000
   throughput_ema_alpha: 0.5
 sweep:
-  distance: [3, 5, 7]
-  physical_error_rate: [0.04, 0.03, 0.02, 0.01,]
+  distance: [5, 7, 9]
+  physical_error_rate: [0.02, 0.04, 0.05]
   noise_model: bitflip
   rounds: 1
   circuit_type: tri
@@ -21,6 +21,29 @@ sweep:
 color_code_options:
   temp_bdry_type: Z
 decoders:
+  # - type: concat_mwpm
+  #   options:
+  #     color_correlated_weight_basis: original_dem
+  #   decode_options:
+  #     colors: all
+
+  # - type: concat_mwpm_stage2_base
+  #   options:
+  #     color_correlated_weight_basis: stage2
+  #   decode_options:
+  #     colors: all
   - type: color_correlated
     options:
       enable_colorcorrelated_decoding: true
+      remove_non_edge_like_errors: true
+      color_correlated_b: 1.5
+
+  - type: perturbation
+    options:
+      enable_prior_perturbation: true
+      # M includes the unperturbed baseline member (member 0).
+      perturbation_ensemble_size: 8
+      perturbation_alpha: 1.0
+      perturbation_seed: 20260927
+      color_correlated_weight_basis: original_dem
+      remove_non_edge_like_errors: true

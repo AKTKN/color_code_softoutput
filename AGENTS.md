@@ -1,5 +1,16 @@
 # AGENTS.md
 
+## Current power-guide color-correlated rule (2026-09-27)
+
+The latest user request supersedes the older hard-conditioning guide rule
+below. A guide-selected original X/Z DEM source probability becomes
+`q**(1/color_correlated_b)` for stage 1 only. Stage 2 uses the original target
+color decomposition and final selection uses original X/Z DEM log odds.
+Avoid per-shot DEM reconstruction and re-decomposition; retain the bounded
+symbolic-prior and matching caches. See
+`notes/support/COLOR_CORRELATED_POWER_GUIDE.md` and STATUS.md. Older saved
+color-correlated runs are not results of this rule.
+
 ## GitHub publication (2026-09-27)
 
 The workspace root is now its own Git repository, published publicly at
@@ -389,6 +400,65 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-27 — Aligned new paired ablation runs with the current
+color-correlated decoder: `original_dem` is required, and `stage2` fails
+before a run root is created. Three focused benchmark tests pass; older saved
+reports remain readable. The full root suite passes 273 tests. Next task:
+publish the current root commit.
+
+2026-09-27 — Saved-run `effect_table` adds worsened-shot and signed net-effect
+counts from the paired baseline/new failures and rescue sidecar. The current
+18-point analysis notebook was re-executed to show the new columns. Eight
+analysis tests pass; no new simulation. Next task: review the updated table.
+
+2026-09-27 — Fixed live-notebook analysis after adding `color_correlated_b`:
+analysis resolves the parser through the config module, and the notebook's
+first cell reloads both modules. The reported six-point run loads, plots 12
+LER rows and both six-row flag tables. Eight focused tests pass. Next task:
+rerun the notebook cells in the existing kernel to replace stale outputs.
+
+2026-09-27 — Replaced color-correlated hard conditioning by guide-power
+stage-1 reweighting, fixed stage-2 base matching and original X/Z DEM final
+scoring. Bounded priors/matchers/maps caches remove per-shot re-decomposition.
+Decoder and focused root tests: 213 passed/two existing skips; final focused
+26-test check passed. Next task: user review of `b` and any new experiment;
+historical runs cannot be reinterpreted.
+
+2026-09-27 — Added the `concat_mwpm_stage2_base` YAML point label so ordinary
+original-DEM and stage-2 selection can coexist in one run. The label requires
+the stage-2 basis. Focused runner/planning tests: 31 passed, including an
+end-to-end two-point check. The points use different sampling seeds; same
+`master_seed` does not pair shots. Next task: review whether a paired sampler
+is needed for the comparison.
+
+2026-09-27 — Ordinary `concat_mwpm` now supports the
+`color_correlated_weight_basis: original_dem` constructor option in the decoder
+and YAML workflow. The default remains stage-2 matching weight. Decoder tests:
+158 passed/two existing skips; focused integration: 33 passed. In the bounded
+one-round bit-flip check, both bases selected the same corrections at d=5,9.
+Next task: compare bases only in conditions where their candidate scores can
+differ; no campaign was launched.
+
+2026-09-27 — Extended canonical YAML paired metrics to relifting and
+perturbation using already computed ordinary candidates. Saved-run analysis
+supports both, deduplicates plotted baselines by physical condition, and
+filters the two flag tables independently. Full tests: 267 root passes,
+156 decoder passes/two existing skips; final six-test analysis check passes.
+Next task: review new-run plots and
+tables; historical runs are unchanged.
+
+2026-09-27 — Stage 06 adaptive ablation benchmark records paired accuracy,
+actual call counts, runtime, run-class outcomes, relift early exits, and
+perturbation diversity with basis-labelled report plots. Both score bases and
+a reduced grid pass bounded smoke tests; no campaign was launched. See
+`notes/support/ADAPTIVE_ABLATION_BENCHMARK.md`. Next task: user review of
+the stage 06 report and decision on any larger study.
+
+2026-09-27 — Stage 05 adaptive benchmark integration adds a separate
+`adaptive_v2` same-shot result root, both run-class sidecars, relifting
+runtime diagnostics, candidate-weight audit and per-class analysis.
+Bounded smoke only. Next task: stage 06 final audit; no campaign.
+
 2026-09-27 — Added saved-run color-correlated analysis and a notebook for
 filtered LER curves and per-condition flag counts. The 36-point saved run
 loads successfully; two focused tests and five notebook cells pass. No new
@@ -599,8 +669,23 @@ limitations and the missing dual certificate remain explicit in the review.
 
 ## Next task
 
-Implement the staged workflow worker adapters after the Task 01 planning
-layer, preserving paired shots and existing soft-output definitions.
+Review the updated `effect_table` columns in the saved-run analysis notebook;
+positive `net_effect_count` means fewer logical failures than the paired
+ordinary baseline.
+
+Review the power-guide `color_correlated_b` choice before launching a new
+campaign. Existing saved color-correlated data use earlier guide semantics.
+
+For same-shot comparison of the two ordinary selection bases, add an explicit
+paired sampling path if requested; the two YAML point labels currently use
+different point-derived seeds.
+
+For ordinary concat-MWPM, use the new original-DEM basis option and first
+identify circuit/noise conditions with candidate-score disagreement before
+running a larger performance comparison.
+
+Review the new paired YAML outputs and saved-run plots/tables. Historical
+Parquet runs do not gain the newly added metrics automatically.
 
 Circuit DEM-Y is ready for bounded use via the feature worktree
 `examples/circuit_dem_y_gap.py`; see `notes/support/CIRCUIT_DEM_Y.md`. Review

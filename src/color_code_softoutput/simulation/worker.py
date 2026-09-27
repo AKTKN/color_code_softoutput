@@ -108,16 +108,16 @@ def logical_errors(prediction: np.ndarray, actual: np.ndarray, shots: int) -> np
 def better_common_prior_weight(extra: dict, shots: int) -> np.ndarray:
     """Strict improvement over the ordinary three candidates in common prior.
 
-    The first three candidates are the ordinary r/g/b matchings. All twelve
+    The first three candidates are the ordinary r/g/b matchings. All
     candidate_weights use the selected common basis: unchanged color stage-2
     priors or unchanged original X/Z DEM priors. Temporary generation weights
     are deliberately ignored.
     """
     weights = np.asarray(extra["candidate_weights"], dtype=float)
-    if (weights.ndim != 3 or weights.shape[1:] != (12, shots)
+    if (weights.ndim != 3 or weights.shape[1] < 3 or weights.shape[2] != shots
             or not np.isfinite(weights[:, :3, :]).all()
             or np.isnan(weights).any() or np.isneginf(weights).any()):
-        raise ValueError("expected finite ordinary weights and finite/+inf candidate weights shaped (classes, 12, shots)")
+        raise ValueError("expected finite ordinary weights and finite/+inf candidate weights shaped (classes, candidates>=3, shots)")
     ordinary = np.min(weights[:, :3, :], axis=(0, 1))
     selected = np.asarray(extra["weights"], dtype=float)
     if selected.shape != (shots,) or not np.isfinite(selected).all():
@@ -137,7 +137,10 @@ def run_chunk(task: WorkerInput) -> WorkerResult:
     detectors, actual = pair.configured.sample(task.shot_count, seed=task.seed)
     decode_options = dict(task.point.decode_options)
     correlated = pair.ordinary is not None
-    if correlated:
+    options = dict(task.point.color_code_options) | dict(task.point.decoder_options)
+    relifting = options.get("enable_cross_color_relifting", False)
+    perturbation = options.get("enable_prior_perturbation", False)
+    if correlated or relifting or perturbation:
         # The common-prior comparison requires the public full-output fields.
         decode_options["full_output"] = True
     configured_result = pair.configured.decode(detectors, **decode_options)
@@ -147,20 +150,31 @@ def run_chunk(task: WorkerInput) -> WorkerResult:
         prediction, extra = configured_result, None
     final_fail = logical_errors(prediction, actual, task.shot_count)
     metrics = {"logical_error": final_fail}
-    if correlated:
-        baseline_options = decode_options | {"full_output": False}
-        default_pred = pair.ordinary.decode(detectors, **baseline_options)
-        default_fail = logical_errors(default_pred, actual, task.shot_count)
-        run_category = np.asarray(extra["color_correlated_run"])
+    if relifting:
+        run_category = np.asarray(extra["relift_run_class"])
         if (run_category.shape != (task.shot_count,)
                 or not np.issubdtype(run_category.dtype, np.integer)
-                or np.any(run_category > 2) or np.any(run_category < 0)):
-            raise ValueError("color_correlated_run must contain 0, 1, or 2 per shot")
+                or np.any((run_category < 0) | (run_category > 2))):
+            raise ValueError("relift_run must contain 0, 1, or 2 per shot")
+        metrics["relift_run"] = run_category.astype(np.uint8)
+    if correlated or relifting or perturbation:
+        if correlated:
+            baseline_options = decode_options | {"full_output": False}
+            default_pred = pair.ordinary.decode(detectors, **baseline_options)
+        else:
+            default_pred = extra["baseline_predictions"]
+        default_fail = logical_errors(default_pred, actual, task.shot_count)
         metrics.update(
             default_logical_error=default_fail,
             better_weight_by_color_correlated_decoding=better_common_prior_weight(extra, task.shot_count),
             effect_by_color_correlated_decoding=(default_fail & ~final_fail).astype(np.uint8),
-            color_correlated_run=run_category.astype(np.uint8),
         )
+        if correlated:
+            run_category = np.asarray(extra["color_correlated_run"])
+            if (run_category.shape != (task.shot_count,)
+                    or not np.issubdtype(run_category.dtype, np.integer)
+                    or np.any(run_category > 2) or np.any(run_category < 0)):
+                raise ValueError("color_correlated_run must contain 0, 1, or 2 per shot")
+            metrics["color_correlated_run"] = run_category.astype(np.uint8)
     return WorkerResult(task.point_id, task.chunk_id, task.shot_start, task.shot_count,
                         perf_counter() - started, metrics)
