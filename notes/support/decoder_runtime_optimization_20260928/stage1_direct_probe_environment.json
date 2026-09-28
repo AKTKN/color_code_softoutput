@@ -1,0 +1,37 @@
+{
+  "start_utc": "2026-09-28T14:51:52.997018+00:00",
+  "script_sha256": "0fe4a4c0d4dfa9d7946db971d6c337e5751d01287d368f27364df365ca690849",
+  "prototype_only": true,
+  "production_decoder_changed": false,
+  "input_weight_mutation": {
+    "before": [
+      0,
+      1
+    ],
+    "after_input_mutation": [
+      0,
+      1
+    ],
+    "fresh_matching": [
+      1,
+      0
+    ]
+  },
+  "setup": {
+    "p": 0.001,
+    "rounds": "d",
+    "M": 12,
+    "alpha": 1.0,
+    "seed": 20260927,
+    "full_output": true,
+    "comparative": false,
+    "weight_basis": "original_dem",
+    "circuit_type": "tri",
+    "temp_bdry_type": "Z",
+    "cnot_schedule": "tri_optimal"
+  },
+  "end_utc": "2026-09-28T14:52:35.410133+00:00",
+  "same_semantics_plan_full_outputs": "exact equality in every measured pair",
+  "physical_candidate_syndromes": "all candidates in every mode/call verified outside timing",
+  "stage1_ms_includes_graph_construction": true
+}

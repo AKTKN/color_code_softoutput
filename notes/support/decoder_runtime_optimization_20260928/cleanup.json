@@ -1,0 +1,10 @@
+{
+  "completed_utc": "2026-09-28T14:38:50.957593+00:00",
+  "removed_programs": [
+    "/tmp/color_code_runtime_reference_20260928/benchmark.py",
+    "/tmp/color_code_runtime_reference_20260928/legacy_comparison.py"
+  ],
+  "removed_reference_directory": "/tmp/color_code_runtime_reference_20260928",
+  "directory_absent": true,
+  "retained": "reports, raw CSVs, environment/hash metadata and tests; no measurement programs"
+}

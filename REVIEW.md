@@ -1,5 +1,23 @@
 # REVIEW.md
 
+## Per-shot runtime optimization audit — 2026-09-28
+
+Same-agent source review and independent fresh-build oracles establish exact
+hard/full-output equivalence under matched per-shot draws. Frozen pristine
+072a87d fixtures cover ordinary decoding, guide scheduling, relifting, M=1
+and alpha=0 with comparative decoding off/on. Cache construction, mutations,
+parallel-edge winners, ties, chunked streams, save/load and hard-output
+allocation regressions pass. The installed PyMatching fork has no verified
+cheap bulk reweighting path preserving check-matrix merging; new stochastic
+weights still require complete graph construction.
+
+M>1, alpha>0 results intentionally differ from historical fixed-ensemble
+runs. Timing against that implementation includes the authorized sampling
+change and must not be attributed solely to optimization. Bounded benchmark
+results and source limits are in
+`notes/support/decoder_runtime_optimization_20260928/report.md` and `audit.md`.
+No metric theorem, confidence interpretation or asymptotic claim is added.
+
 ## Ensemble stage-2 SWIM integration audit — 2026-09-27
 
 The `ba6f7dc` color-code-stim stage-2 backend and PyMatching `83cee05cc`

@@ -1,0 +1,21 @@
+{
+  "start_utc": "2026-09-28T13:50:24.247473+00:00",
+  "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+  "python_executable": "/home/quantum_teresheys/anaconda3/envs/color_code_so/bin/python",
+  "numpy": "1.26.4",
+  "stim": "1.16.0",
+  "pymatching": "2.2.dev2",
+  "pymatching_path": "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/PyMatching/src/pymatching/__init__.py",
+  "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "cpu": "x86_64",
+  "benchmark_sha256": "0f1f18c1ba6e8f8c1816f3a910bf53ceb543fd8ff9d62e530cfa182cbbe46ef3",
+  "perturbation_seed": 20260927,
+  "detector_seed": 20260927,
+  "warmup_detector_seed": 20260928,
+  "alpha": 1.0,
+  "weight_basis": "original_dem",
+  "prior_stage2": "perturbed",
+  "full_output": false,
+  "end_utc": "2026-09-28T14:09:13.699420+00:00",
+  "paired_predictions_random_states_and_candidate_digests": "exact equality in every timed pair"
+}

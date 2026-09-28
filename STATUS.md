@@ -1,3 +1,82 @@
+# Direct stage-1 perturbation probe (2026-09-28)
+
+Answered the user's performance question with a temporary in-memory sampler
+prototype, leaving production decoder source unchanged. d9/d13, M12, uniform
+p=.001, rounds=d, full_output=True, steady 10-shot batch: original-DEM perturbation
+with original stage2 takes 85.16/250.11 ms per shot; direct stage1-prior
+perturbation with original stage2 takes 58.07/150.51 ms, a 1.47/1.66x speedup.
+Both still construct 33 new stage1 weighted matchings per shot. Input-array
+mutation does not update an already constructed PyMatching object; native
+replacement invalidates/prepares the internal MWPM on the next decode.
+
+An additional prototype preserves original-DEM draws and outputs but skips
+unused stage2 probability/sorting/map computation: 64.37/191.73 ms per shot,
+with every full-output field exactly equal to the current original-stage2
+mode. All candidate syndromes in all probe calls pass independent parity
+checks. Direct stage1 is a different candidate-generation rule, including
+different cross-color prior correlations; no LER conclusion is drawn.
+The report, 40 raw rows and environment are in
+`notes/support/decoder_runtime_optimization_20260928/stage1_direct_probe.md`.
+Program and temporary directory were deleted. No production mode was added,
+no commit/push and no campaign. The earlier 6–7x historical slowdown measured
+perturbed stage2, not the original-stage2 setting.
+
+# Per-shot perturbation runtime implementation (2026-09-28)
+
+Implemented the corrected runtime prompt locally on
+`external_libs/color-code-stim/` main, starting at `072a87d`. Each shot/member
+receives a fresh common-X/Z-DEM perturbation shared across colors and logical
+hypotheses. RNG/cursor state resumes after save/load; M1/alpha0 retain original
+batched arithmetic. Six fixed base matchings, exact dynamic LRU32 plus
+current-shot references, symbolic probability/source plans and hard-output
+retention reductions remove repeated fixed work while preserving dynamic
+column ordering, source maps, candidate scoring/selection, guide and SWIM rules.
+
+Independent fresh DEM/decomposition/matching oracles match all per-shot
+outputs; pristine fixtures match all unaffected modes. Final decoder suite:
+231 passed, two existing skips; root suite: 318 passed. Mutation/ties,
+comparative graph sharing, chunk/empty/single calls, persistence and allocation
+regressions pass. PyMatching, configs, saved runs and other feature worktrees
+are unchanged. No native weight mutation, new threading or installation.
+
+Bounded d=9/13/17, uniform p=.001, rounds=d timings, environment, raw CSVs
+and audit are in `notes/support/decoder_runtime_optimization_20260928/`.
+M1 full-output/10shot improves 6.3–9.4x (84–89% shorter) against pristine
+main. Same-spec M12 improves 37–64x against uncached per-shot reconstruction.
+Historical fixed-ensemble M12 batches are a different comparison: new
+full-output/10shot is 6.0–7.1x slower at d9/d13 because it constructs 660
+graphs rather than sharing 72 across that batch. Warm/initialization and
+resident memory are recorded separately. This is finite runtime evidence,
+not an asymptotic/LER claim. Measurement scripts and temporary reference
+packages were deleted after execution. No commit/push or campaign was done.
+
+# Historical runtime-optimization prompt correction (2026-09-28)
+
+Created `prompts/codex_decoder_runtime_optimization_prompt.md` from the supplied
+optimization prompt. The user requires fresh independent original-X/Z-DEM
+perturbations for every shot, with each shot/member draw shared across colors
+and comparative hypotheses. Revised cache expectations, bounded dynamic
+storage, RNG/chunk/output equivalence tests, persistence checks and benchmark
+comparisons accordingly. At this checkpoint the decoder still used a fixed
+ensemble; the prompt identifies per-shot resampling as the authorized semantic
+correction and requires optimization equivalence against an uncached per-shot
+reference using identical draws. Document consistency checks pass. No decoder
+implementation, sampling campaign, test suite, or benchmark was run for this
+prompt-editing request.
+
+# Decoder timing scaling (2026-09-28)
+
+Measured paired 10-shot wall times at d=9,11,13,15,17 with uniform circuit
+noise p=0.001 and rounds=d for perturbation M=12/M=1 and Tesseract. The report,
+scaling figure, 215-row summary CSV, 150-row per-shot CSV and initialization
+CSV are in `notes/support/decoder_timing_scaling_20260928/`. Includes stagewise
+PyMatching API/native call times, graph construction, candidate evaluation,
+residual work and per-call averages. All call counts, wrapper prediction/weight
+equivalence and CSV arithmetic checks pass. At d=17, Tesseract's mean
+166.756 ms is affected by a 931.803 ms shot; its median is 78.216 ms.
+Temporary scripts/instrumentation were removed; decoder source and YAML
+remain unchanged. These bounded timings do not establish asymptotic scaling.
+
 # Ensemble-size figure (2026-09-28)
 
 Added `analysis/ensemble_size.py` with parameter-based ensemble-size tables

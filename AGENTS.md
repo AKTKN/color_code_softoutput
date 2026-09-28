@@ -1,5 +1,19 @@
 # AGENTS.md
 
+## Current per-shot perturbation and runtime rule (2026-09-28)
+
+The user requested the corrected runtime prompt implementation on the current
+`external_libs/color-code-stim/` main checkout. Nonbaseline perturbations are
+now independently resampled per shot/member, shared across colors and logical
+hypotheses. The advancing RNG/shot cursor survives save/load. Do not restore
+the historical fixed ensemble. Decoder-owned matching caches have six fixed
+base graphs and an exact dynamic LRU of 32, plus current-shot references;
+new dynamic weights still require graph construction. Symbolic plans preserve
+probability products and dynamic stage-2 column/source ordering. See
+`notes/support/decoder_runtime_optimization_20260928/report.md` and STATUS.md.
+The implementation is local/uncommitted; no new campaign or publication was
+performed. Old fixed-ensemble M>1 runs have different sampling semantics.
+
 ## Current decoder working branch (2026-09-28)
 
 The user requested publishing the latest color-code-stim change to `main`
@@ -409,6 +423,43 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-28 — Temporary direct-stage1 perturbation probe: original stage2
+graphs are cached; direct stage1 reduces d9/d13 full-output 10-shot wall time
+from 85.16/250.11 to 58.07/150.51 ms per shot (1.47/1.66x). New stage1 graphs
+remain 33 per shot. Original-DEM sampling with only unused stage2 prior work
+removed also improves to 64.37/191.73 with all outputs exactly unchanged.
+Report is `notes/support/decoder_runtime_optimization_20260928/stage1_direct_probe.md`.
+Production source is unchanged; measurement program removed. Direct stage1
+would change candidate-generation/cross-color correlations and is not yet a
+production option. Next task: user review before any requested implementation.
+
+2026-09-28 — Implemented per-shot perturbation and runtime refactor on decoder
+main: shared advancing draws, symbolic plans, six fixed matching graphs,
+bounded dynamic cache, hard-output tensor reductions and RNG persistence.
+Decoder tests: 231 passed/two existing skips; workspace: 318 passed.
+Bounded d=9/13/17 timings and raw CSVs are in
+`notes/support/decoder_runtime_optimization_20260928/`. M1 full-output/10shot
+improves 6.3–9.4x against pristine main; same-spec M12 improves 37–64x against
+uncached per-shot reconstruction. M12 full-output/10shot is 6.0–7.1x slower
+than historical fixed-ensemble batching because draws now change per shot.
+Measurement programs/reference copies were removed after execution.
+Next task: review the bounded report before any additional optimization/study.
+
+2026-09-28 — Revised the supplied runtime-optimization prompt in
+`prompts/codex_decoder_runtime_optimization_prompt.md` to require fresh
+per-shot perturbations. Removed lifetime-fixed ensemble cache assumptions;
+specified shared shot/member draws, advancing RNG state, chunk equivalence,
+bounded dynamic caches and matched-draw regression/benchmark references.
+At that checkpoint this was a prompt revision only and the decoder still
+used a fixed ensemble. The subsequent implementation is recorded above.
+
+2026-09-28 — Completed paired 10-shot decoder timing at d=9/11/13/15/17,
+uniform circuit noise p=0.001 and rounds=d. Report, plot and CSVs are under
+notes/support/decoder_timing_scaling_20260928/. Includes perturbation M=12/M=1,
+Tesseract and matching/graph/candidate timing breakdowns. Temporary scripts
+were removed; decoder and YAML are unchanged. Next task: review the bounded
+timing report before separately authorizing any decoder optimization.
+
 2026-09-28 — Added ensemble-size LER plotting at p=0.03 with distance colors,
 ordinary baseline and imported Tesseract references. Notebook exports zero-pad
 assets and a captionless standalone PDF under the 7f861167 run's
@@ -793,6 +844,12 @@ The primary crossing is unresolved at the upper grid endpoint; numerical
 limitations and the missing dual certificate remain explicit in the review.
 
 ## Next task
+
+Review `notes/support/decoder_runtime_optimization_20260928/report.md` for
+the completed runtime refactor and separate same-spec/historical comparisons.
+The earlier `notes/support/decoder_timing_scaling_20260928/report.md` measured
+the historical fixed-ensemble implementation. Further native optimization or
+a sampling campaign requires a separate objective.
 
 Rerun `notebooks/color_correlated_decoding.ipynb` with its primary run and
 selected additional_sources. Inspect source_run and baseline_source_run

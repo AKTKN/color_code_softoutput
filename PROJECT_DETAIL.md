@@ -1,5 +1,22 @@
 # PROJECT_DETAIL.md
 
+## Per-shot prior perturbation and runtime refactor — 2026-09-28
+
+The user-authorized runtime prompt corrects the historical lifetime-fixed
+ensemble to independent common-X/Z-DEM perturbations for each shot/member.
+Each draw is shared across colors and comparative hypotheses; shot-major RNG
+state persists across calls and save/load. Unaffected modes retain their
+existing candidate ordering, scoring, logical interpretation and SWIM rules.
+
+The current main decoder uses six fixed base matchings, a 32-entry exact
+dynamic matching LRU, current-shot graph references and symbolic probability
+plans with the original dynamic stage-2 column order. Hard output omits
+diagnostic tensors while preserving required original-DEM reconstruction and
+candidate scoring. Exact independent fresh-build and pristine-output tests
+separate the sampling correction from optimization. See
+`notes/support/decoder_runtime_optimization_20260928/report.md` for bounded
+measurements; no theorem, metric definition or saved campaign is changed.
+
 ## Ensemble SWIM numerical integration — 2026-09-27
 
 The user-authorized canonical YAML extension evaluates the original
