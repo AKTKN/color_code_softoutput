@@ -1,5 +1,29 @@
 # Implementation status
 
+## Native stage-1 perturbation — 2026-09-29
+
+Completed the approved implementation and bounded acceptance. PyMatching
+retains fixed topology, both graph weight sets, original/work MWPM solvers
+and resettable queues/arenas. Its opt-in API returns shot-major ensembles
+with scheme-1 absolute-shot streams. color-code-stim uses cached original
+stage 2 and unchanged selection/output rules. Root YAML, worker offsets,
+shared entropy seeds and metadata are connected; main config and physical
+sampling are preserved.
+
+Final tests: root 325; decoder 252/two existing skips; PyMatching Python 129;
+C++ 99 with ASan/UBSan/leak checks. Independent fresh references, M1/alpha0,
+comparative shared draws, worker/cache/batch/persistence checks pass. Warm
+native graph construction is zero in both stages.
+
+d9/13/17 M12/full-output/10shot total: 3.499/10.171/25.956 ms/shot,
+11.61/11.77/11.66x faster than same-law fresh builds. Original-DEM ratios
+24.58/27.72/41.83x include a candidate-law change; M1 improvement is not
+established. Conditions, raw CSVs, memory/cold/stage breakdowns, commands,
+environment, cleanup and exact dependency SHAs:
+`notes/support/native_stage1_perturbation_20260929/`. Timing programs deleted.
+Checkpoint/native branches published; main not merged. README and the new
+comparison YAML describe setup. No larger campaign was run.
+
 ## Monotone-Y simulation and analysis integration — 2026-09-19
 
 Implemented the user's follow-up with a new thin notebook,

@@ -1,0 +1,12 @@
+{
+  "same_stage1_specification_all_output_digests_equal": true,
+  "M1_all_modes_equal": true,
+  "repeats_per_case": 3,
+  "measurement_rows": 216,
+  "profile_rows": 72,
+  "candidate_syndromes_valid_in_all_full_output_calls": true,
+  "warm_native_factory_and_cpp_build_counts_zero": true,
+  "warm_stage2_factory_and_cpp_build_counts_zero_in_all_modes": true,
+  "original_dem_checkpoint": "ddfd777",
+  "reference_uses_native_rng_diagnostic_and_pristine_member0_solver": true
+}

@@ -1,3 +1,45 @@
+# Native stage-1 perturbation implementation (2026-09-29)
+
+Completed the user-approved three-package plan. PyMatching supplies shot-major
+ensembles from original decomposed stage-1 priors, a pristine solver and a
+reusable work solver. Both MatchingGraph and SearchGraph weight slots are
+updated with existing quantization/normalization rules; queues and arenas
+reset safely, including recovery after failed syndromes. False retains
+ordinary/SWIM/path-gap APIs. Native unsupported cases fail explicitly.
+
+ColorCode/decoder `stage1_perturbation=True` canonicalizes effective prior
+flags, preserves member 0 and final outputs, shares draws across comparative
+classes and reuses original stage-2 matchings. False retains checkpoint
+original-DEM perturbation. Seed, scheme and cursor survive save/load; legacy
+files default False. Root YAML/planner/worker/metadata integration forwards
+absolute shot indices and shares one resolved entropy seed across workers.
+The dedicated config is `configs/native_stage1_perturbation_comparison.yaml`;
+main.yaml and physical Stim sampling are unchanged.
+
+Before publication: decoder 231 passed/two existing skips, root 318,
+PyMatching Python 117 and C++ 95 passed. Final: **root 325; decoder 252/two
+existing skips; PyMatching Python 129 and C++ 99 passed**. C++ ASan/UBSan/leak
+checks pass. Independent random/fresh matching/full-pipeline oracles,
+all candidates/scoring, M1/alpha0, boundaries/ties/>64 fault IDs, recovery,
+SWIM/validity, batching, worker 1/2, cache recreation and persistence pass.
+
+Bounded d9/13/17, uniform p=.001, rounds=d, M1/12, alpha1, N1/10, three-repeat
+evidence: `notes/support/native_stage1_perturbation_20260929/`. M12/full-output/
+10-shot native means are **3.499/10.171/25.956 ms/shot**, **11.61/11.77/11.66x**
+faster than same-law fresh stage-1 builds and **24.58/27.72/41.83x** faster
+than original-DEM perturbation with fixed stage 2. The latter changes the
+candidate law and does not establish a LER improvement. M1 shows no consistent
+runtime improvement. Warm native factory/C++ builds are zero in both stages.
+Cold setup, profiles, RSS, raw CSVs and source/environment hashes are separate.
+Timing programs and temporary checkpoint/data/child JSONs were deleted.
+
+Published checkpoints on `codex/per-shot-runtime-20260929`: root `5c7d355`,
+decoder `ddfd777`. All three feature branches are
+`codex/native-stage1-perturbation-20260929`, based on these checkpoints and
+PyMatching `7a26e6a8e`. Exact dependency SHAs:
+`notes/support/native_stage1_perturbation_20260929/dependencies.json`.
+No main merge, larger campaign or new soft-output theorem was performed.
+
 # Direct stage-1 perturbation probe (2026-09-28)
 
 Answered the user's performance question with a temporary in-memory sampler

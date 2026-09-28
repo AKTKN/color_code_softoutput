@@ -1,5 +1,5 @@
 """Fixed one-round experiment grid and deterministic batch identities."""
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 import hashlib
 import json
@@ -136,7 +136,7 @@ _CONSTRUCTOR_KEYS = frozenset({"temp_bdry_type", "superdense_circuit", "perfect_
     "perfect_logical_measurement", "perfect_first_syndrome_extraction", "perfect_init_final",
     "remove_non_edge_like_errors", "comparative_decoding", "enable_colorcorrelated_decoding",
     "enable_cross_color_relifting", "enable_prior_perturbation", "perturbation_ensemble_size",
-    "perturbation_alpha", "perturbation_seed", "use_original_prior_for_stage2",
+    "perturbation_alpha", "perturbation_seed", "use_original_prior_for_stage2", "stage1_perturbation",
     "color_correlated_weight_basis", "color_correlated_b",
     "exclude_non_essential_pauli_detectors"})
 _DECODE_KEYS = frozenset({"colors", "compute_swim_distance", "full_output", "check_validity", "verbose"})
@@ -306,6 +306,52 @@ class WorkflowConfig:
         return hashlib.sha256(encoded).hexdigest()[:8]
 
 
+def canonical_native_options(common, decoders):
+    """Save effective native flags without changing siblings' inherited settings."""
+    common = dict(common)
+    if not any((common | dict(d.options)).get("stage1_perturbation", False) for d in decoders):
+        return tuple(sorted(common.items())), tuple(decoders)
+    inherited = {key: common.pop(key) for key in ("enable_prior_perturbation", "use_original_prior_for_stage2")
+                 if key in common}
+    resolved = []
+    for decoder in decoders:
+        options = dict(decoder.options)
+        if decoder.type != "tesseract":
+            options = inherited | options
+            if (common | options).get("stage1_perturbation", False):
+                options.update(enable_prior_perturbation=True, use_original_prior_for_stage2=True)
+                seed = (common | options).get("perturbation_seed")
+                if seed is not None and seed >= 2**64:
+                    raise ValueError("Native perturbation_seed must fit uint64")
+        resolved.append(replace(decoder, options=tuple(sorted(options.items()))))
+    return tuple(sorted(common.items())), tuple(resolved)
+
+
+def resolve_native_seeds(config):
+    """Resolve entropy once before planning/spawn; retain the effective seed in the run log."""
+    common, decoders = canonical_native_options(config.color_code_options, config.decoders)
+    common = dict(common)
+    needs_seed = any((common | dict(d.options)).get("stage1_perturbation", False)
+                     and (common | dict(d.options)).get("perturbation_seed") is None for d in decoders)
+    if not needs_seed:
+        return replace(config, color_code_options=tuple(sorted(common.items())), decoders=decoders)
+    import secrets
+    seed = secrets.randbits(64)
+    inherited_none = "perturbation_seed" in common and common["perturbation_seed"] is None
+    if inherited_none:
+        common.pop("perturbation_seed")
+    resolved = []
+    for decoder in decoders:
+        options = dict(decoder.options)
+        if decoder.type != "tesseract":
+            if inherited_none:
+                options.setdefault("perturbation_seed", None)
+            if (common | options).get("stage1_perturbation", False) and (common | options).get("perturbation_seed") is None:
+                options["perturbation_seed"] = seed
+        resolved.append(replace(decoder, options=tuple(sorted(options.items()))))
+    return replace(config, color_code_options=tuple(sorted(common.items())), decoders=tuple(resolved))
+
+
 def parse_workflow_config(data: dict) -> WorkflowConfig:
     """Validate and resolve a YAML mapping without touching output paths."""
     data = _mapping(data, "config", allowed={"simulation", "chunking", "sweep", "color_code_options", "decoders"},
@@ -359,7 +405,7 @@ def parse_workflow_config(data: dict) -> WorkflowConfig:
                 raise ValueError("tesseract XYZ decoding is not supported")
             if any(dict(common).get(key, False) for key in
                    ("enable_colorcorrelated_decoding", "enable_cross_color_relifting",
-                    "enable_prior_perturbation", "comparative_decoding")):
+                    "enable_prior_perturbation", "stage1_perturbation", "comparative_decoding")):
                 raise ValueError("tesseract requires ordinary ColorCode circuit options")
         else:
             options = _options(raw.get("options", {}), "decoder.options", _CONSTRUCTOR_KEYS)
@@ -367,6 +413,8 @@ def parse_workflow_config(data: dict) -> WorkflowConfig:
         if overlap := set(dict(common)) & set(dict(options)):
             raise ValueError(f"Ambiguous constructor options in color_code_options and decoder.options: {sorted(overlap)}")
         merged = dict(common) | dict(options)
+        if merged.get("stage1_perturbation", False):
+            merged.update(enable_prior_perturbation=True, use_original_prior_for_stage2=True)
         if merged.get("enable_colorcorrelated_decoding", False) and merged.get(
                 "color_correlated_weight_basis", "original_dem") != "original_dem":
             raise ValueError("color-correlated decoding requires original_dem selection basis")
@@ -382,7 +430,8 @@ def parse_workflow_config(data: dict) -> WorkflowConfig:
     aliases = [decoder.decoder_alias or decoder.type for decoder in decoders]
     if len(set(aliases)) != len(aliases):
         raise ValueError("decoder_alias collision: aliases (defaulting to type) must be unique; assign aliases for repeated types")
-    return WorkflowConfig(simulation, chunking, sweep_settings, common, tuple(decoders))
+    common, decoders = canonical_native_options(common, decoders)
+    return WorkflowConfig(simulation, chunking, sweep_settings, common, decoders)
 
 
 def load_workflow_config(path: str | Path) -> WorkflowConfig:

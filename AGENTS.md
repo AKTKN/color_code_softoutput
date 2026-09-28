@@ -1,5 +1,31 @@
 # AGENTS.md
 
+## Current native stage-1 perturbation authorization (2026-09-29)
+
+The user authorized the three-repository native implementation, tests, bounded
+timings and branch publication. All three checkouts use
+`codex/native-stage1-perturbation-20260929`; this supersedes the historical
+decoder-main rule for this task. Do not merge main. Published root/decoder
+checkpoints on `codex/per-shot-runtime-20260929` are `5c7d355` / `ddfd777`.
+PyMatching starts at `7a26e6a8ef20080e9eab7240ce33581cc3880d03`, retaining SWIM/path-gap.
+
+`stage1_perturbation=False` keeps per-shot original-DEM perturbation. True
+uses independent decomposed stage-1 edge/colour priors in native PyMatching,
+unchanged member 0, cached original stage 2 and existing scoring/order/ties.
+Effective enable-prior/original-stage-2 flags are True. RNG scheme 1 uses
+resolved uint64 seed, colour streams r=0/g=1/b=2 and absolute per-point shot
+IDs. Comparative classes share draws. Preserve worker `shot_start` forwarding
+and saved seed/version/cursor. Physical Stim sampling retains its chunk-seed
+policy. Native scope is simple, fixed check-matrix graphs with nonnegative
+log odds and no possible negative perturbations.
+
+All-package tests and sanitizer checks pass. Report, source/environment hashes
+and dependency commits: `notes/support/native_stage1_perturbation_20260929/`.
+M12/full-output/10-shot is 11.61–11.77x faster than same-law fresh builds.
+Original-DEM comparisons also change candidate generation; no LER conclusion
+or new metric theorem follows. Timing programs and temporary inputs were
+deleted. Use the README's backend setup for native mode.
+
 ## Current per-shot perturbation and runtime rule (2026-09-28)
 
 The user requested the corrected runtime prompt implementation on the current
@@ -11,8 +37,9 @@ base graphs and an exact dynamic LRU of 32, plus current-shot references;
 new dynamic weights still require graph construction. Symbolic plans preserve
 probability products and dynamic stage-2 column/source ordering. See
 `notes/support/decoder_runtime_optimization_20260928/report.md` and STATUS.md.
-The implementation is local/uncommitted; no new campaign or publication was
-performed. Old fixed-ensemble M>1 runs have different sampling semantics.
+This implementation was published on 2026-09-29 at `ddfd777` on
+`codex/per-shot-runtime-20260929`. Old fixed-ensemble M>1 runs have different
+sampling semantics. The native authorization above is the current branch rule.
 
 ## Current decoder working branch (2026-09-28)
 
@@ -422,6 +449,15 @@ Whenever work is completed:
 - Update the `Last update` and `Next task` fields below.
 
 ## Last update
+
+2026-09-29 — Completed native stage-1 perturbation in PyMatching, decoder and
+YAML workflow. Tests: root 325, decoder 252/two existing skips, PyMatching
+Python 129 and C++ 99; ASan/UBSan/leak checks pass. Warm graph builds are zero
+in both stages. M12/full-output/10-shot improves 11.61–11.77x against same-law
+fresh builds, 24.58–41.83x against original-DEM mode (which changes the law).
+Report/dependency SHAs: notes/support/native_stage1_perturbation_20260929/.
+Feature branches are published without main merge; timing programs removed.
+Next task: review the report and choose any subsequent sampling study.
 
 2026-09-28 — Temporary direct-stage1 perturbation probe: original stage2
 graphs are cached; direct stage1 reduces d9/d13 full-output 10-shot wall time
@@ -845,11 +881,12 @@ limitations and the missing dual certificate remain explicit in the review.
 
 ## Next task
 
-Review `notes/support/decoder_runtime_optimization_20260928/report.md` for
-the completed runtime refactor and separate same-spec/historical comparisons.
-The earlier `notes/support/decoder_timing_scaling_20260928/report.md` measured
-the historical fixed-ensemble implementation. Further native optimization or
-a sampling campaign requires a separate objective.
+Review `notes/support/native_stage1_perturbation_20260929/report.md` and use
+`configs/native_stage1_perturbation_comparison.yaml` with its recorded backend
+dependencies for a separately selected study. Same-input native perturbations
+are reproducible across chunk/worker/cache changes; physical sampling retains
+its existing chunk-seed policy. No new campaign was launched. Earlier runtime
+reports are historical and use different candidate laws.
 
 Rerun `notebooks/color_correlated_decoding.ipynb` with its primary run and
 selected additional_sources. Inspect source_run and baseline_source_run

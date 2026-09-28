@@ -87,7 +87,7 @@ class PointStorage:
         options = dict(point.color_code_options) | dict(point.decoder_options)
         base_names = (_CORRELATED if options.get("enable_colorcorrelated_decoding", False)
                       else _RELIFTING if options.get("enable_cross_color_relifting", False)
-                      else _PAIRED if options.get("enable_prior_perturbation", False)
+                      else _PAIRED if options.get("enable_prior_perturbation", False) or options.get("stage1_perturbation", False)
                       else ("logical_error",))
         self.names = base_names + (("swim_distance",) if dict(point.decode_options).get(
             "compute_swim_distance", False) else ()) + (("logical_gap",) if options.get(

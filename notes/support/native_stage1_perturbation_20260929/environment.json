@@ -1,0 +1,37 @@
+{
+  "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+  "executable": "/home/quantum_teresheys/anaconda3/envs/color_code_so/bin/python",
+  "numpy": "1.26.4",
+  "stim": "1.16.0",
+  "pymatching": "2.2.dev2",
+  "cpu": "13th Gen Intel(R) Core(TM) i7-13700H",
+  "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "visible_cpus": 20,
+  "thread_environment": {
+    "OMP_NUM_THREADS": null,
+    "OPENBLAS_NUM_THREADS": null,
+    "MKL_NUM_THREADS": null
+  },
+  "native_rng_version": 1,
+  "backend_binary_sha256": "aa766a8c5f390f4dc086543c7cc8d862846e07acbcaf21852d8d1eb3cd037ce8",
+  "program_sha256": "31bb3704c9ccd909234e5e477e75c5b0fc3ad573379a010ffe9fc3179ac53a8c",
+  "input_sha256": {
+    "9": "2fb03b4068a596e1afbd58d32d19933644903c034ec69c87d056748e3b197552",
+    "13": "61266174befa994945127ecd5a97093beb266f7f35a1abc2ff0967737000dfb4",
+    "17": "734267057f443b9357682ca004f897d8edc16f7e74e20b5f1e11709d4459f650"
+  },
+  "settings": {
+    "p": 0.001,
+    "rounds": "distance",
+    "alpha": 1.0,
+    "seed": 20260929,
+    "weight_basis": "original_dem",
+    "circuit_type": "tri",
+    "cnot_schedule": "tri_optimal",
+    "stage2": "original prior",
+    "comparative": false
+  },
+  "build": "CMake Release; GNU 11.4.0; -O3 -mno-avx2; identical backend in all comparisons",
+  "backend_compile_flags": "-O3 -DNDEBUG -fPIC -fvisibility=hidden -O3 -mno-avx2 -flto -fno-fat-lto-objects -std=gnu++20",
+  "test_compile_flags": "-O3 -DNDEBUG -fsanitize=address -g -fsanitize=undefined -fno-omit-frame-pointer -coverage -std=gnu++20"
+}

@@ -1,0 +1,28 @@
+{
+  "feature_branch": "codex/native-stage1-perturbation-20260929",
+  "pymatching": {
+    "origin": "https://github.com/AKTKN/PyMatching.git",
+    "commit": "40ef9296f1d73aa4d629460bdc80bcf57bb1f7b5",
+    "base_commit": "7a26e6a8ef20080e9eab7240ce33581cc3880d03",
+    "branch": "codex/native-stage1-perturbation-20260929",
+    "rng_scheme_version": 1
+  },
+  "color_code_stim": {
+    "origin": "https://github.com/AKTKN/color-code-stim.git",
+    "commit": "6a6bd8b30b3de62c0a4132fcf440bde48c3e3f3a",
+    "base_commit": "ddfd777ef9a793e4cf53145db02a11e6e64b29d1",
+    "branch": "codex/native-stage1-perturbation-20260929"
+  },
+  "root": {
+    "origin": "https://github.com/AKTKN/color_code_softoutput.git",
+    "branch": "codex/native-stage1-perturbation-20260929",
+    "base_commit": "5c7d355e76dd1981dbe6611bb3c5ec7286d72203",
+    "commit_note": "This file is included in the root feature commit; resolve its branch HEAD or enclosing Git commit."
+  },
+  "checkpoint_branch": "codex/per-shot-runtime-20260929",
+  "checkpoint_commits": {
+    "color_code_stim": "ddfd777ef9a793e4cf53145db02a11e6e64b29d1",
+    "root": "5c7d355e76dd1981dbe6611bb3c5ec7286d72203"
+  },
+  "main_merged": false
+}

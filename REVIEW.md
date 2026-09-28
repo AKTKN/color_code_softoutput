@@ -1,5 +1,30 @@
 # REVIEW.md
 
+## Native stage-1 perturbation audit — 2026-09-29
+
+Same-agent source review and independent oracles (not external peer review)
+checked original/work isolation, directed MatchingGraph/SearchGraph weight
+slots, integer normalization, queue clocks, arena reuse and failed-syndrome
+recovery. Independent Python MT19937-64 verifies the random law; fresh graphs
+agree in correction and quantized weight, including >64 fault IDs, boundaries
+and ties. Full decoder references agree for all candidate/output fields, both
+scoring bases and comparative off/on. M1/alpha0 and old fixtures agree exactly.
+Batch/worker/cache/persistence and SWIM/validity checks pass. All-package and
+C++ ASan/UBSan/leak tests pass; no unresolved correctness gate remains.
+
+Native scope is simple fixed check-matrix graphs with finite nonnegative log
+odds; negative-producing perturbations, parallel edges, mutations and special
+APIs are rejected. Retained arenas can grow for a new syndrome. Ordinary
+SWIM/path-gap and False behavior pass regression. No metric definition changes.
+
+Native/direct-stage-1 reference timings use identical draws/output digests.
+Original-DEM comparisons change prior/cross-colour law and are not purely
+semantics-preserving acceleration. Three repeats on ten physical shots do not
+establish LER/asymptotic claims; M1 has noise and no consistent improvement.
+Reference RSS includes native templates. Bare/profile timings are separate.
+Report/dependency/source/cleanup evidence:
+`notes/support/native_stage1_perturbation_20260929/`.
+
 ## Per-shot runtime optimization audit — 2026-09-28
 
 Same-agent source review and independent fresh-build oracles establish exact

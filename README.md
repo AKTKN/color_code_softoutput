@@ -1,5 +1,32 @@
 # color-code-softoutput
 
+Native stage-1 perturbation is available through
+[`configs/native_stage1_perturbation_comparison.yaml`](configs/native_stage1_perturbation_comparison.yaml).
+Set `stage1_perturbation: true` under a `type: perturbation` decoder; M includes
+the unperturbed member. Stage 2 always uses cached original priors. False keeps
+the original-DEM perturbation workflow. The new mode changes candidate
+generation, while final scoring and existing output semantics are retained.
+
+Use the `codex/native-stage1-perturbation-20260929` branches of both external
+repositories for this option. In the `color_code_so` environment, rebuild the
+PyMatching backend with
+`CMAKE_BUILD_PARALLEL_LEVEL=4 python -m pip install --no-build-isolation -e external_libs/PyMatching`.
+The decoder must also be imported from the corresponding editable checkout.
+See the decoder's
+[native mode guide](https://github.com/AKTKN/color-code-stim/blob/codex/native-stage1-perturbation-20260929/docs/native_stage1_perturbation.md)
+and PyMatching's
+[API guide](https://github.com/AKTKN/PyMatching/blob/codex/native-stage1-perturbation-20260929/docs/native_perturbation.md).
+
+The workflow saves the resolved native seed and RNG scheme version and uses
+absolute per-point shot indices, so worker scheduling/cache reconstruction
+does not change perturbations for the same supplied shots. Stim sampling and
+its existing chunk-seed policy remain unchanged. Timing reports separate
+same-prior-specification acceleration from comparisons against the old mode.
+The [implementation and timing report](notes/support/native_stage1_perturbation_20260929/report.md)
+records regression tests, cold/warm timings, graph counts, memory and exact
+dependency commits. YAML aliases use independent physical samples; the
+report's decoder timings use identical presampled physical shots.
+
 ## Canonical YAML simulation
 
 Run in the `color_code_so` environment. This minimal configuration sweeps two

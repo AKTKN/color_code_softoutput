@@ -166,7 +166,9 @@ def run_chunk(task: WorkerInput) -> WorkerResult:
     correlated = pair.ordinary is not None
     options = dict(task.point.color_code_options) | dict(task.point.decoder_options)
     relifting = options.get("enable_cross_color_relifting", False)
-    perturbation = options.get("enable_prior_perturbation", False)
+    perturbation = options.get("enable_prior_perturbation", False) or options.get("stage1_perturbation", False)
+    if options.get("stage1_perturbation", False):
+        decode_options["perturbation_shot_offset"] = task.shot_start
     swim = decode_options.get("compute_swim_distance", False)
     comparative = options.get("comparative_decoding", False)
     circuit_swim = swim and pair.circuit_swim is not None

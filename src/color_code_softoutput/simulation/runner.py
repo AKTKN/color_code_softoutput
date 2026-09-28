@@ -10,7 +10,7 @@ from pathlib import Path
 
 from color_code_stim import ColorCode
 
-from .config import WorkflowConfig, load_workflow_config
+from .config import WorkflowConfig, load_workflow_config, resolve_native_seeds
 from .planner import plan_points, point_directory_name, run_directory_name
 from .scheduler import run_scheduler
 from .task import ResolvedPoint
@@ -40,6 +40,10 @@ def _preflight_point(point: ResolvedPoint) -> None:
         if correlated.get("comparative_decoding", False):
             raise ValueError("swim distance and comparative decoding cannot be combined")
     pair = _construct(point)
+    if correlated.get("stage1_perturbation", False):
+        import numpy as np
+        # Validate native topology/prior support before creating a run directory.
+        pair.configured.decode(np.zeros((0, pair.configured.dem_manager.H.shape[0]), dtype=bool))
     if dict(point.decode_options).get("compute_swim_distance", False):
         if pair.circuit_swim is None:
             from color_code_stim.soft_output.pymatching_backend import Stage2Backend
@@ -64,6 +68,7 @@ def run_experiment(config: WorkflowConfig | str | Path, *, reporter=print) -> Pa
     """Validate, run a bounded spawn sweep, and return its unique run directory."""
     if not isinstance(config, WorkflowConfig):
         config = load_workflow_config(config)
+    config = resolve_native_seeds(config)
     points = plan_points(config)
     for point in points:
         _preflight_point(point)
@@ -73,6 +78,9 @@ def run_experiment(config: WorkflowConfig | str | Path, *, reporter=print) -> Pa
     stores: dict[str, PointStorage] = {}
     record = {"config": config.semantic_dict(), "simulation_start_time": started.isoformat(),
               "simulation_end_time": None}
+    if any((dict(p.color_code_options) | dict(p.decoder_options)).get("stage1_perturbation", False) for p in points):
+        record["native_stage1_perturbation"] = {
+            "scheme_version": 1, "shot_index": "absolute_per_point", "color_stream_ids": {"r": 0, "g": 1, "b": 2}}
     record["config"]["simulation"]["output_root"] = str(config.simulation.output_root.expanduser().resolve())
     log_path = root / "run_log.json"
     try:

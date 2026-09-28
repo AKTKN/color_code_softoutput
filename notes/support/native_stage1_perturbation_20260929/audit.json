@@ -1,0 +1,25 @@
+{
+  "bare_time_arithmetic": true,
+  "repeat_digests_constant": true,
+  "reference_native_outputs_identical": true,
+  "M1_all_modes_identical": true,
+  "stage2_warm_builds_zero_all_modes": true,
+  "native_warm_stage1_builds_zero": true,
+  "original_reference_M12_builds_33_per_shot": true,
+  "summary_rows": 72,
+  "comparison_rows": 24,
+  "timing_programs_removed": true,
+  "behavioral_sources_match_manifest": true,
+  "source_review": "Same implementing agent, independent numerical oracles; no external peer review",
+  "hashes": {
+    "baseline_cpp.log": "e4bcfc3528f43b83e79343316953e4fc3130f4ff2a9c54d3a42a5db78ce17af6",
+    "comparisons.csv": "f87b99f236a1c30beb39f60eaca501f9d221213bda4f41d8060c062d04f39621",
+    "initialization.csv": "a110efe2c949c2035d54964745fd40037dc501e29e7211f8928fa4baf40cd32a",
+    "measurements.csv": "94fec1fdbdc013eae1ec2dc7f7c95967384ff36040afc009f95f1cfcf84cd01c",
+    "native_cpp.log": "b7a436f634bc2de95e1e534892daa0086dd0b38f938abd00be6214c0ddebe477",
+    "profiles.csv": "5aa79e88f0cd9e7a2279849d704047f9b3d1a907c31e01e4a00fcf3899228997",
+    "root_tests.log": "09e621fef6894415b1561987a43642495478f71ed4c41605c0fa88bf02b16f2f",
+    "summary.csv": "127afb1158f68d90eb32114c7e1602b5c89e175853b1de2b689abb7434e510f6"
+  },
+  "csv_line_endings": "LF normalized from csv.writer CRLF; numeric records unchanged"
+}

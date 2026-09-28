@@ -1,0 +1,69 @@
+{
+  "baseline": {
+    "decoder": {
+      "command": "python -m pytest -q (color-code-stim)",
+      "passed": 231,
+      "skipped": 2
+    },
+    "root": {
+      "command": "python -m pytest -q tests (workspace)",
+      "passed": 318
+    },
+    "pymatching_python": {
+      "command": "python -m pytest -q tests (PyMatching)",
+      "passed": 117
+    },
+    "pymatching_cpp": {
+      "passed": 95,
+      "asan": true,
+      "ubsan": true,
+      "leak_check": true,
+      "command": "ASAN_OPTIONS=detect_leaks=1 /tmp/color-native-stage1-build/pymatching_tests (PyMatching cwd)"
+    }
+  },
+  "checkpoint": {
+    "decoder": "ddfd777",
+    "root": "5c7d355"
+  },
+  "feature_branch": "codex/native-stage1-perturbation-20260929",
+  "native": {
+    "pymatching_python": 129,
+    "pymatching_cpp": 99,
+    "decoder": {
+      "passed": 252,
+      "skipped": 2
+    },
+    "workflow_focused": 7,
+    "cpp_sanitizers": [
+      "address",
+      "undefined",
+      "leak"
+    ],
+    "root": {
+      "passed": 325,
+      "seconds": 122.46,
+      "command": "/home/quantum_teresheys/anaconda3/envs/color_code_so/bin/python -m pytest -q tests (workspace)"
+    }
+  },
+  "commands": {
+    "pymatching_python": {
+      "cwd": "external_libs/PyMatching",
+      "command": "/home/quantum_teresheys/anaconda3/envs/color_code_so/bin/python -m pytest -q tests",
+      "passed": 129
+    },
+    "decoder_python": {
+      "cwd": "external_libs/color-code-stim",
+      "command": "/home/quantum_teresheys/anaconda3/envs/color_code_so/bin/python -m pytest -q tests",
+      "passed": 252,
+      "skipped": 2
+    },
+    "cpp": {
+      "cwd": "external_libs/PyMatching",
+      "command": "ASAN_OPTIONS=detect_leaks=1 /tmp/color-native-stage1-build/pymatching_tests",
+      "passed": 99
+    },
+    "cmake_configure": "cmake -S external_libs/PyMatching -B /tmp/color-native-stage1-build -DCMAKE_BUILD_TYPE=Release -DPYTHON_EXECUTABLE=/home/quantum_teresheys/anaconda3/envs/color_code_so/bin/python",
+    "cmake_build": "cmake --build /tmp/color-native-stage1-build --target _cpp_pymatching pymatching_tests -j4",
+    "cpp_sanitizers": "Existing CMake test target uses AddressSanitizer and UndefinedBehaviorSanitizer; detect_leaks=1"
+  }
+}
