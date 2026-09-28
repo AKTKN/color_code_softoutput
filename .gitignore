@@ -23,6 +23,12 @@ dist/
 .idea/
 .DS_Store
 
+# Cluster machine 
+configs/cluster.yaml
+cluster_results
+scripts/cluster_run_experiment.sh
+scripts/compress.sh
+
 # Separate decoder repositories and generated experiments
 /external_libs/
 /implementation_artifacts/
