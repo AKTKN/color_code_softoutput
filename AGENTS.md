@@ -409,6 +409,48 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-28 — Added ensemble-size LER plotting at p=0.03 with distance colors,
+ordinary baseline and imported Tesseract references. Notebook exports zero-pad
+assets and a captionless standalone PDF under the 7f861167 run's
+analysis/ensemble_size/. Nine focused tests and compiled visual inspection
+pass. Next task: adjust figure styling and caption for manuscript inclusion.
+
+
+2026-09-28 — Added a dedicated stage-2 prior comparison export in the
+analysis notebook: main vector PDF plus independent distance/prior legends
+for the saved 14:38 run. Prepared and compiled a one-page TeX preview and
+editable placement/paragraph templates. Actual figure settings are M=16,
+alpha=1, d=7/9/11, one round and 1M shots/point. The usage guide explains
+notebook fonts/labels and LaTeX widths/spacing; no new sampling.
+Next task: adjust the manuscript legend layout using the supplied template.
+
+2026-09-28 — Added ColorCorrelatedComparison with primary/additional-source
+filters and analysis-only alias renaming. LER/ratio/count/effect/legend APIs
+reuse original files and retain source_run/baseline_source_run provenance.
+Primary representative baselines have priority; imported Tesseract remains
+unpaired. Duplicate points and incompatible recorded configurations fail.
+The notebook combines the 15:33 run with only the 14:38 run's Tesseract:
+120 points, 135 LER rows and 24 p=.03 ratio rows pass saved-data checks.
+Forty-two regression tests and six cross-run tests pass. See STATUS.md.
+Next task: rerun the notebook with selected additional_sources and aliases.
+
+2026-09-28 — LER/improvement/legend defaults now group by decoder_alias.
+Improvement tables expose baseline-source alias/type; summary/count/effect
+views preserve alias filters and identity columns. Updated the existing
+analysis notebook's ratio grouping, displayed columns and examples while
+preserving the chosen saved run. Twenty-seven focused tests and the saved
+60-point run's notebook analysis cells pass (75 LER/12 ratio rows).
+Next task: rerun the notebook's first cell and alias-based analysis cells.
+
+2026-09-28 — Audited saved run `26_09_28_14_38_26_779e2a31`: alias
+`concat_mwpm` is enabled color-correlated decoding with b=2; the plotted
+baseline is its same-shot ordinary decoding. All 15 saved million-shot
+failure/effect pairs are consistent; all 15 bounded current-code baseline
+checks agree with ordinary decoding. See the saved-run alias audit in
+notes/support. No production code or saved run data changed.
+Next task: use type concat_mwpm with color-correlated decoding disabled for
+an ordinary-decoder entry in a future comparison.
+
 2026-09-28 — Merged decoder commit `04123e0` into current `main` and pushed
 merge commit `072a87d`. The decoder checkout now stays on `main` per the
 user's ongoing branch preference. Its tree equals the tested feature branch;
@@ -751,6 +793,14 @@ The primary crossing is unresolved at the upper grid endpoint; numerical
 limitations and the missing dual certificate remain explicit in the review.
 
 ## Next task
+
+Rerun `notebooks/color_correlated_decoding.ipynb` with its primary run and
+selected additional_sources. Inspect source_run and baseline_source_run
+when reusing a decoder from another date; cross-run baselines are unpaired.
+
+Rerun the first cell in `notebooks/color_correlated_decoding.ipynb` to reload
+alias-first LER/improvement/legend defaults, then select aliases and inspect
+the ratio table's baseline_source_decoder_alias/type columns.
 
 Use `configs/perturbation_stage2_comparison.yaml` for True/False stage-2
 prior comparisons; filter/group analysis by `decoder_alias`. The YAML runner

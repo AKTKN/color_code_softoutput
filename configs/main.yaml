@@ -1,21 +1,21 @@
 simulation:
   output_root: results
-  shots: 100000
-  workers: 6
+  shots: 100
+  workers: 1
   master_seed: 20260927
-  buffer_shots: 1000
+  buffer_shots: 10
   verbose: true
 chunking:
-  calibration_shots: 100
+  calibration_shots: 10
   target_chunk_seconds: 4.0
   min_chunk_shots: 1
-  max_chunk_shots: 1000
+  max_chunk_shots: 10
   throughput_ema_alpha: 0.5
 sweep:
-  distance: [7, 9]
-  physical_error_rate: [0.02, 0.03, 0.04]
-  noise_model: bitflip
-  rounds: 1
+  distance: [9, 11]
+  physical_error_rate: [0.001]
+  noise_model: uniform
+  rounds: distance
   circuit_type: tri
   cnot_schedule: tri_optimal
 color_code_options:
@@ -32,11 +32,11 @@ decoders:
   #     color_correlated_weight_basis: stage2
   #   decode_options:
   #     colors: all
-  - type: color_correlated
-    options:
-      enable_colorcorrelated_decoding: true
-      remove_non_edge_like_errors: true
-      color_correlated_b: 2.0
+  # - type: color_correlated
+  #   options:
+  #     enable_colorcorrelated_decoding: true
+  #     remove_non_edge_like_errors: true
+  #     color_correlated_b: 2.0
 
   - type: perturbation
     options:

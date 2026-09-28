@@ -1,0 +1,39 @@
+% Preamble: \usepackage{graphicx}
+% Copy the three PDFs into figures/ and use \graphicspath{{figures/}}.
+% In a two-column manuscript, use figure* instead of figure to span both columns.
+
+% Adjustable placement parameters:
+\providecommand{\StageTwoPlotWidth}{\linewidth}
+\providecommand{\StageTwoDistanceWidth}{0.44\linewidth}
+\providecommand{\StageTwoPriorWidth}{0.47\linewidth}
+\providecommand{\StageTwoLegendGap}{0.04\linewidth}
+\providecommand{\StageTwoVerticalGap}{2mm}
+
+\begin{figure}[tbp]
+    \centering
+    \begin{minipage}[t]{\StageTwoDistanceWidth}
+        \centering
+        \vspace{0pt}
+        \includegraphics[width=\linewidth]{stage2_prior_ler_legend_distance.pdf}
+    \end{minipage}%
+    \hspace{\StageTwoLegendGap}%
+    \begin{minipage}[t]{\StageTwoPriorWidth}
+        \centering
+        \vspace{0pt}
+        \includegraphics[width=\linewidth]{stage2_prior_ler_legend_decoder_alias.pdf}
+    \end{minipage}
+
+    \vspace{\StageTwoVerticalGap}
+    \includegraphics[width=\StageTwoPlotWidth]{stage2_prior_ler.pdf}
+    \caption{Comparison of the stage-2 prior choices in prior-perturbation
+    ensemble decoding for triangular color codes with $d=7,9,11$, one round,
+    and independent bit-flip noise. Both variants use perturbed stage-1 priors;
+    stage 2 uses either the original prior or the perturbed prior of the same
+    ensemble member. The ensemble contains $M=16$ members, including the
+    unperturbed baseline, with perturbation strength $\alpha=1$.
+    Final candidates are selected using the original X/Z DEM log odds in
+    both variants. Each point uses $10^6$ shots; shaded bands show 99\%
+    Wilson confidence intervals. Colors identify the distance and markers
+    identify the stage-2 prior choice.}
+    \label{fig:stage2-prior-comparison}
+\end{figure}

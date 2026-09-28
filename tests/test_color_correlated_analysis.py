@@ -16,7 +16,7 @@ from color_code_softoutput.simulation.config import parse_workflow_config
 from color_code_softoutput.simulation.planner import plan_points, point_directory_name
 
 
-def _run(tmp_path, *, uniform=False, advanced=False, color_b=None, tesseract=False):
+def _run(tmp_path, *, uniform=False, advanced=False, color_b=None, tesseract=False, alias_variants=False):
     raw = {
         "simulation": {"output_root": str(tmp_path), "shots": 3, "workers": 1,
                        "master_seed": 7, "buffer_shots": 3, "verbose": False},
@@ -33,6 +33,13 @@ def _run(tmp_path, *, uniform=False, advanced=False, color_b=None, tesseract=Fal
              "options": {"enable_colorcorrelated_decoding": True}},
         ],
     }
+    if alias_variants:
+        raw["decoders"] = [
+            {"decoder_alias": alias, "type": "perturbation", "options": {
+                "enable_prior_perturbation": True, "perturbation_ensemble_size": 2,
+                "use_original_prior_for_stage2": original}}
+            for alias, original in (("original_s2", True), ("perturbed_s2", False))
+        ]
     if tesseract:
         raw["decoders"].append({"type": "tesseract"})
     if advanced:
@@ -305,7 +312,7 @@ def test_improvement_ratio_baselines_and_shared_filtered_encodings(tmp_path):
     assert subax.lines[0].get_color() == matching[0].get_color()
     legends = run.plot_legends(ler)
     color_legend = legends["distance"][1].get_legend()
-    marker_legend = legends["decoder_type"][1].get_legend()
+    marker_legend = legends["decoder_alias"][1].get_legend()
     assert [h.get_marker() for h in color_legend.legend_handles] == ["None", "None"]
     assert all(h.get_linestyle() == "None" for h in marker_legend.legend_handles)
     assert len(marker_legend.legend_handles) == 3
@@ -365,3 +372,65 @@ def test_uniform_ratio_uses_per_round_rates_and_keeps_custom_axes(tmp_path):
     assert tuple(figure.get_size_inches()) == (5, 3)
     for fig in [figure, *(pair[0] for pair in legends.values())]:
         plt.close(fig)
+
+
+def test_alias_variants_keep_own_baselines_in_improvement_and_tables(tmp_path):
+    run = _run(tmp_path, alias_variants=True, tesseract=True)
+    # Give two variants of the same type different paired baseline failures.
+    for alias, baseline in (("original_s2", [False, True, True]),
+                            ("perturbed_s2", [False, False, True])):
+        for row in run.select({"decoder_alias": alias}).itertuples():
+            values = {"logical_error": [True, False, False],
+                      "default_logical_error": baseline,
+                      "effect_by_color_correlated_decoding": list(map(int, baseline))}
+            for name, bits in values.items():
+                pq.write_table(pa.table({
+                    "shot_index": pa.array([0, 1, 2], type=pa.int64()),
+                    name: pa.array(bits, type=pa.uint8() if name.startswith("effect") else pa.bool_())
+                }), tmp_path / row.point_directory / f"{name}.parquet")
+    _write_errors(run, "tesseract", [True, False, False])
+    # Own paired ratios must remain distinct; the unpaired decoder gets the
+    # deterministic selected representative, without joining on decoder type.
+    ratios = run.improvement_table(physical_error_rate=.01)
+    assert set(ratios[ratios.decoder_alias == "original_s2"].improvement_ratio) == {2.0}
+    assert set(ratios[ratios.decoder_alias == "perturbed_s2"].improvement_ratio) == {1.0}
+    for alias in ("original_s2", "perturbed_s2"):
+        selected = ratios[ratios.decoder_alias == alias]
+        assert selected.baseline_paired.all()
+        assert set(selected.baseline_source_decoder_alias) == {alias}
+        assert set(selected.baseline_source_decoder_type) == {"perturbation"}
+        assert (selected.baseline_point_directory == selected.point_directory).all()
+    external = ratios[ratios.decoder_alias == "tesseract"]
+    assert not external.baseline_paired.any()
+    assert set(external.baseline_source_decoder_alias) == {"original_s2"}
+    assert set(external.baseline_source_decoder_type) == {"perturbation"}
+    assert set(external.improvement_ratio) == {2.0}
+    selected_ratio = run.improvement_table(physical_error_rate=.01,
+                                         filter={"decoder_alias": "perturbed_s2"})
+    assert len(selected_ratio) == 2
+    assert set(selected_ratio.improvement_ratio) == {1.0}
+    for method in (run.summary, run.count_table, run.better_weight_table, run.effect_table):
+        table = method({"decoder_alias": "perturbed_s2"})
+        assert len(table) == 4
+        assert set(table.decoder_alias) == {"perturbed_s2"}
+        assert set(table.decoder_type) == {"perturbation"}
+    assert set(run.effect_table({"decoder_alias": "perturbed_s2"}).net_effect_count) == {0}
+    fig, ax, plotted = run.plot_improvement_ratio(physical_error_rate=.01)
+    assert len(plotted) == 6 and len(ax.lines) == 7  # 2 distances x 3 aliases + reference
+    legends = run.plot_legends(plotted)
+    labels = [text.get_text() for text in legends["decoder_alias"][1].get_legend().get_texts()]
+    assert labels == ["original_s2", "perturbed_s2", "tesseract"]
+    ler_fig, _, ler = run.plot_ler(baseline_compare=True)
+    assert set(ler.decoder_alias) == {"original_s2", "perturbed_s2", "tesseract", "baseline"}
+    with pytest.raises(ValueError, match="decoder_alias"):
+        run.plot_improvement_ratio(physical_error_rate=.01, group_by=("distance", "decoder_type"))
+    for figure in (fig, ler_fig, *(pair[0] for pair in legends.values())):
+        plt.close(figure)
+
+
+def test_legacy_improvement_table_exposes_alias_provenance(tmp_path):
+    run = _run(tmp_path, tesseract=True)
+    table = run.improvement_table(physical_error_rate=.01)
+    assert (table.decoder_alias == table.decoder_type).all()
+    assert set(table.baseline_source_decoder_alias) == {"color_correlated"}
+    assert set(table.baseline_source_decoder_type) == {"color_correlated"}

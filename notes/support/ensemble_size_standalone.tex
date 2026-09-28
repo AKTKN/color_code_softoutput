@@ -1,0 +1,23 @@
+\documentclass[border=0pt]{standalone}
+\usepackage{graphicx}
+\newcommand{\EnsembleCanvasWidth}{170mm}
+\newcommand{\EnsembleDistanceWidth}{0.42\linewidth}
+\newcommand{\EnsembleDecoderWidth}{0.55\linewidth}
+\newcommand{\EnsembleLegendGap}{0.03\linewidth}
+\newcommand{\EnsembleVerticalGap}{1mm}
+\begin{document}
+\begin{minipage}{\EnsembleCanvasWidth}
+    \centering
+    \begin{minipage}[t]{\EnsembleDistanceWidth}
+        \centering\vspace{0pt}%
+        \includegraphics[width=\linewidth]{ensemble_size_legend_distance.pdf}
+    \end{minipage}%
+    \hspace{\EnsembleLegendGap}%
+    \begin{minipage}[t]{\EnsembleDecoderWidth}
+        \centering\vspace{0pt}%
+        \includegraphics[width=\linewidth]{ensemble_size_legend_decoder.pdf}
+    \end{minipage}%
+    \par\nointerlineskip\vspace{\EnsembleVerticalGap}%
+    \includegraphics[width=\linewidth]{ensemble_size_ler.pdf}%
+\end{minipage}
+\end{document}

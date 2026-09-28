@@ -1,4 +1,129 @@
+# Ensemble-size figure (2026-09-28)
+
+Added `analysis/ensemble_size.py` with parameter-based ensemble-size tables
+and plots, source provenance, independent distance/decoder legends, 99% Wilson
+bands and explicit duplicate/settings/reference checks. The notebook's final
+section exports p=0.03 for the primary run 7f861167, importing only Tesseract
+from 779e2a31. The existing representative baseline is m12; no counts are
+pooled. Exported 21 ensemble and six reference rows in
+`cluster_results/26_09_28_15_33_34_7f861167/analysis/ensemble_size/`.
+All assets use zero Matplotlib padding; the captionless standalone vector PDF
+compiled and passed visual inspection. Templates and usage are under
+`notes/support/ensemble_size_*.tex` and `ENSEMBLE_SIZE_FIGURE_USAGE.md`.
+Nine focused ensemble/cross-run tests passed. No sampling or decoder changes.
+
+# Captionless stage-2 figure export (2026-09-28)
+
+Added `notes/support/stage2_prior_standalone.tex` and updated
+`notes/support/STAGE2_PRIOR_FIGURE_USAGE.md` for standalone composition of
+separate legends and the plot, with captions in the manuscript. Zero outer
+border and exact removal of the existing 0.03-inch asset padding minimize
+whitespace. Compiled and visually inspected the captionless one-page PDF in
+`cluster_results/26_09_28_14_38_26_779e2a31/analysis/stage2_prior_comparison/`.
+No simulation or source metrics changed.
+
 # STATUS.md
+
+## Stage-2 prior manuscript figure — 2026-09-28
+
+Added a dedicated export section to the existing analysis notebook for the
+two stage-2 prior variants in `26_09_28_14_38_26_779e2a31`. It exports the
+30-row LER comparison and separate distance/prior vector PDF legends to
+that run's `analysis/stage2_prior_comparison/`, with independent display
+labels, fonts, columns and canvas controls. TeX placement/paragraph examples
+are preserved under notes/support; the generated one-page preview compiles
+with pdflatex and passes visual review. Legend panel widths .44/.47 linewidth
+keep the fonts at approximately equal scale. The caption uses the actual
+M=16, alpha=1, d=7/9/11, one round, 1M shots/point and 99% Wilson bands.
+See `notes/support/STAGE2_PRIOR_FIGURE_USAGE.md` for placement and later
+legend adjustments. No source data or decoder change and no sampling.
+
+
+## Selected cross-run decoder reuse — 2026-09-28
+
+Added `analysis/color_correlated_comparison.py::ColorCorrelatedComparison`
+with a primary run and `additional_sources` mappings containing a source
+run directory, optional point filter and optional analysis-only alias_map.
+It reuses the existing LER/improvement/count/effect/legend API and routes
+aggregation to each source's unchanged files. Absolute composite point keys
+avoid date-folder collisions. Each source keeps its original shot counts
+and Wilson intervals. Duplicate alias/condition points or saved files,
+conflicting decoder settings under one alias and incompatible recorded
+physical circuit options are rejected rather than silently pooled.
+
+The primary run is preferred for representative baselines and figure export.
+Paired points retain their own baseline. Summary/count/effect tables expose
+source_run/data_directory; improvement tables also expose baseline_source_run
+alongside source alias/type and baseline_paired. Imported Tesseract shots
+remain independent of the selected baseline. source_manifest records the
+composition selections; source_runs retains each original reader/config.
+Legacy ColorCorrelatedRun is still available for single-run analysis.
+
+Updated the existing analysis notebook to compose primary
+`26_09_28_15_33_34_7f861167` with only alias tesseract from
+`26_09_28_14_38_26_779e2a31`. All 120 selected files are present. Notebook
+analysis cells execute: 135 LER rows including 15 representative baselines,
+and 24 improvement rows at p=.03. All 15 imported Tesseract failure counts
+and LERs match the original single-run reader. Its ratio numerator comes
+from the primary run's representative (m12 under deterministic alias order),
+and all imported Tesseract rows report baseline_paired=False. No source run,
+metric file, decoder or simulation campaign changed. Changed-run notebook
+outputs were cleared; rerun the first cell then the analysis cells.
+
+Validation in color_code_so: 42 existing analysis/runner/soft-output tests
+pass, plus six independent cross-run tests covering selection, primary
+baseline preference, own paired baselines, provenance, source-filtered
+ratios, alias renaming, duplicate rejection, incompatible flags, conflicting
+same-alias settings and different shot counts. Commands use
+`MPLBACKEND=Agg PYTHONPATH="$PWD/external_libs/color-code-stim/src:$PWD/src" python -m pytest`
+with `tests/test_color_correlated_analysis.py tests/test_simulation_runner.py
+tests/test_workflow_soft_output.py tests/test_workflow_soft_output_plots.py`
+and separately `tests/test_color_correlated_comparison.py`.
+README documents the composition API and reproducible notebook usage.
+
+
+## Alias-first LER improvement and tables — 2026-09-28
+
+Updated `analysis/color_correlated.py` so LER, improvement-ratio and separate
+legend defaults use `(distance, decoder_alias)`. Explicit decoder-type
+filters/groups remain supported when they identify unique variants.
+Summary, count, better-weight and effect tables retain both alias and type;
+the improvement table additionally exposes `baseline_source_decoder_alias`
+and `baseline_source_decoder_type`. Paired variants retain their own baseline;
+unpaired points identify the selected physical-condition representative.
+
+Updated the existing `notebooks/color_correlated_decoding.ipynb` in place:
+its improvement grouping and displayed LER/ratio columns now include aliases,
+source-provenance columns and alias-filter examples. Existing user-selected
+run path and physical error rate were preserved; stale outputs in changed
+code cells were cleared. Rerun the first cell to reload the local modules,
+then the desired analysis cells. README includes alias table/ratio examples.
+
+Validation: in `color_code_so`,
+`MPLBACKEND=Agg PYTHONPATH="$PWD/external_libs/color-code-stim/src:$PWD/src" python -m pytest tests/test_color_correlated_analysis.py tests/test_simulation_runner.py -q`
+passes 27 tests. New independent fixtures give same-type aliases different
+paired baseline counts and verify distinct ratios, source provenance, alias
+filters, default legends/grouping, explicit ambiguous-type rejection, and
+legacy alias fallback. The updated notebook analysis cells executed against
+`cluster_results/26_09_28_14_38_26_779e2a31` without exporting over existing
+figures: 75 LER rows, 12 improvement rows at p=.03, and 15 rows for each
+selected-alias table. No simulation campaign or saved-result edits occurred.
+
+
+## Saved-run baseline/alias audit — 2026-09-28
+
+Audited `cluster_results/26_09_28_14_38_26_779e2a31`: alias `concat_mwpm`
+actually selects `type: color_correlated`, enabled with b=2. The displayed
+baseline uses that entry's same-shot ordinary `default_logical_error` at
+all 15 physical conditions. All 15 million-shot failure pairs and rescue
+sidecars are consistent. Example d=9, p=.04: baseline 4,351 failures, final
+3,806, 666 rescued and 121 worsened. A bounded 128-shot/condition code-path
+check matches the baseline to ordinary decoding at all 15 conditions.
+The saved run contains no independent ordinary concat_mwpm decoder entry.
+No production code, saved run configuration or result arrays were changed.
+See `notes/support/SAVED_RUN_BASELINE_ALIAS_AUDIT_779e2a31.md` for the code
+trace, count table, source/replay limits and corrected future-run entry.
+
 
 ## Decoder main publication — 2026-09-28
 

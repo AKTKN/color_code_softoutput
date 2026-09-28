@@ -176,6 +176,24 @@ fig, ax, table = run.plot_ler(group_by=("distance", "decoder_alias"))
 # Also supported: baseline_compare=True and plot_improvement_ratio(...).
 ```
 
+LER, improvement-ratio plots and their separate legends default to
+`group_by=("distance", "decoder_alias")`. Summary/count/effect tables retain
+both alias and implementation type; all accept alias filters. Improvement
+tables also expose `baseline_source_decoder_alias` and
+`baseline_source_decoder_type`, so the numerator's source is explicit.
+Paired variants each keep their own baseline; unpaired decoders identify the
+representative baseline they use.
+
+```python
+selection = {"decoder_alias": ["Stage2_original_perturbation",
+                               "Stage2_perturbed_perturbation"]}
+ratios = run.improvement_table(physical_error_rate=0.03, filter=selection)
+fig, ax, ratios = run.plot_improvement_ratio(physical_error_rate=0.03,
+                                            filter=selection)
+run.better_weight_table(selection)
+run.effect_table(selection)
+```
+
 SWIM/logical-gap distribution, conditional LER and post-selection APIs in
 `WorkflowSoftOutputRun` likewise accept `filter={"decoder_alias": ...}` and
 `group_by=("decoder_alias",)` when those metrics were saved. Type-only LER
@@ -187,6 +205,61 @@ comparison, with each advanced decoder's baseline evaluated on its own shots.
 The same `perturbation_seed` fixes the same perturbed-prior ensemble across the
 two modes. For a paired physical-shot comparison, sample once with `ColorCode`
 and pass that detector array to both decoder configurations directly.
+
+## Reusing decoders from earlier runs
+
+Compose a primary run with selected historical points using the existing
+LER/improvement/table API. This reads the original files without copying
+shots, resampling or pooling dates:
+
+```python
+from pathlib import Path
+from color_code_softoutput.analysis.color_correlated_comparison import ColorCorrelatedComparison
+
+root = Path("cluster_results")  # resolve relative to the repository root
+run = ColorCorrelatedComparison(
+    root / "26_09_28_15_33_34_7f861167",
+    additional_sources=[{
+        "run_directory": root / "26_09_28_14_38_26_779e2a31",
+        "filter": {"decoder_alias": "tesseract"},
+    }],
+)
+run.plot_ler(baseline_compare=True)
+run.plot_improvement_ratio(physical_error_rate=0.03)
+run.effect_table({"decoder_alias": "m16"})
+```
+
+The primary run is the figure-export destination and has priority when
+choosing a representative baseline at matching distance, physical error
+rate, noise model, rounds, circuit type and schedule. Paired decoders retain
+their own saved baseline. Imported Tesseract has independent shots: its
+ratio uses the preferred matching baseline and reports `baseline_paired=False`.
+`source_run`/`data_directory` identify the original observations;
+`baseline_source_run`/`baseline_source_decoder_alias`/`baseline_source_decoder_type`
+identify the ratio numerator. Count/effect tables retain source provenance
+and cannot invent paired effects for a decoder without paired sidecars.
+
+`run.source_manifest` lists each source's selection and
+`run.source_runs` exposes the underlying single-run readers/configurations.
+Source filters use the usual parameter/alias keys. The reader rejects
+duplicate alias/condition points, duplicate saved files, incompatible
+recorded physical circuit options and different decoder settings sharing an
+alias. It preserves each source's shot count and Wilson intervals.
+To compare different configurations that share a saved alias, give the
+additional source an analysis-only rename:
+
+```python
+{"run_directory": root / "<older-run>",
+ "filter": {"decoder_alias": "tesseract"},
+ "alias_map": {"tesseract": "tesseract_previous"}}
+```
+
+The original logs and metric files remain unchanged. Additional grid points
+may be imported, but an improvement ratio requires an available baseline at
+each plotted physical condition. Comparability checks use the settings
+recorded in the saved logs; the canonical logs do not certify historical
+cluster source versions. `notebooks/color_correlated_decoding.ipynb` now
+uses the two-run example above; set `additional_sources = []` for one run.
 
 ## Setup
 

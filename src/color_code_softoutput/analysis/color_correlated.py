@@ -22,6 +22,7 @@ PARAMETERS = (
     "decoder_alias", "decoder_type", "circuit_type", "distance", "rounds",
     "physical_error_rate", "noise_model", "cnot_schedule",
 )
+TABLE_PROVENANCE = ("source_run", "data_directory")
 COUNTS = (
     "better_weight_by_color_correlated_decoding",
     "effect_by_color_correlated_decoding",
@@ -87,6 +88,9 @@ class ColorCorrelatedRun:
         self._cache: dict[str, dict] = {}
         self.catalog = pd.DataFrame([
             {
+                "source_run": str(self.run_directory),
+                "source_priority": 0,
+                "data_directory": str(self.run_directory / name),
                 "decoder_alias": point.decoder_alias or point.decoder_type,
                 "decoder_type": point.decoder_type,
                 "circuit_type": point.circuit_type,
@@ -108,8 +112,8 @@ class ColorCorrelatedRun:
             raise ValueError("filter must be a mapping of parameter names to values")
         selected = self.catalog
         for name, wanted in (filter or {}).items():
-            if name not in PARAMETERS:
-                raise ValueError(f"Unknown filter: {name}; choose from {PARAMETERS}")
+            if name not in (*PARAMETERS, "source_run"):
+                raise ValueError(f"Unknown filter: {name}; choose from {(*PARAMETERS, 'source_run')}")
             values = wanted if isinstance(wanted, (list, tuple, set)) else [wanted]
             if not values:
                 raise ValueError(f"Empty filter: {name}")
@@ -200,17 +204,17 @@ class ColorCorrelatedRun:
         ).reset_index(drop=True)
 
     def count_table(self, filter: Mapping[str, object] | None = None) -> pd.DataFrame:
-        """Show the two advanced-decoder flag counts for selected points."""
-        columns = [*PARAMETERS, "shots", "better_weight_count", "effect_count"]
+        """Show per-alias advanced-decoder flag counts; filters accept alias/type."""
+        columns = [*PARAMETERS, *TABLE_PROVENANCE, "shots", "better_weight_count", "effect_count"]
         return self.summary(filter)[columns]
 
     def better_weight_table(self, filter: Mapping[str, object] | None = None) -> pd.DataFrame:
         """Filter per-point strict common-prior weight-improvement counts."""
-        return self.count_table(filter)[[*PARAMETERS, "shots", "better_weight_count"]]
+        return self.count_table(filter)[[*PARAMETERS, *TABLE_PROVENANCE, "shots", "better_weight_count"]]
 
     def effect_table(self, filter: Mapping[str, object] | None = None) -> pd.DataFrame:
         """Show rescued, worsened, and net rescued shots against each paired baseline."""
-        return self.summary(filter)[[*PARAMETERS, "shots", "effect_count",
+        return self.summary(filter)[[*PARAMETERS, *TABLE_PROVENANCE, "shots", "effect_count",
                                      "worsened_count", "net_effect_count"]]
 
     def _ler_table(self, filter, baseline_compare=False):
@@ -231,7 +235,7 @@ class ColorCorrelatedRun:
             priority = {"color_correlated": 0, "relifting": 1, "perturbation": 2}
             baseline["_priority"] = baseline["source_decoder_type"].map(priority).fillna(3)
             condition = [name for name in PARAMETERS if name not in ("decoder_type", "decoder_alias")]
-            baseline = (baseline.sort_values(["_priority", "source_decoder_type", "source_decoder_alias"])
+            baseline = (baseline.sort_values(["source_priority", "_priority", "source_decoder_type", "source_decoder_alias"])
                         .drop_duplicates(condition).drop(columns="_priority"))
             baseline["decoder_type"] = "baseline"
             baseline["decoder_alias"] = "baseline"
@@ -298,7 +302,7 @@ class ColorCorrelatedRun:
         return figure, figure.add_axes([.85 / width, .95 / height,
                                         plot_width / width, plot_height / height])
 
-    def plot_legends(self, table, *, group_by=("distance", "decoder_type"),
+    def plot_legends(self, table, *, group_by=("distance", "decoder_alias"),
                      fontsize=10, row_height=.35, width=3.0, ncol=1):
         """Return {field: (figure, axes)} with independent color/marker legends.
 
@@ -355,7 +359,7 @@ class ColorCorrelatedRun:
         ax.set_yscale(yscale)
         ax.grid(alpha=.25)
 
-    def plot_ler(self, *, filter=None, group_by=("distance", "decoder_type"),
+    def plot_ler(self, *, filter=None, group_by=("distance", "decoder_alias"),
                  baseline_compare=False, yscale="log", plot_width=7.4,
                  plot_height=4.6, ax=None):
         """Return (figure, axes, table); use plot_legends for separate figures.
@@ -394,7 +398,8 @@ class ColorCorrelatedRun:
         the same deterministic representative as plot_ler's baseline, matched
         on every physical condition, including rounds. Independent samples
         are labelled in baseline_paired. Positive/zero yields inf; 0/0 yields
-        NaN. These are empirical ratios, with no inferred confidence interval.
+        NaN. baseline_source_decoder_alias/type identify the numerator source.
+        These are empirical ratios, with no inferred confidence interval.
         """
         if not np.isfinite(physical_error_rate) or physical_error_rate <= 0:
             raise ValueError("physical_error_rate must be positive and finite")
@@ -406,7 +411,7 @@ class ColorCorrelatedRun:
                 raise ValueError("physical_error_rate conflicts with filter")
         selection["physical_error_rate"] = physical_error_rate
         table = self.summary(selection)
-        reference_filter = {k: v for k, v in selection.items() if k not in ("decoder_type", "decoder_alias")}
+        reference_filter = {k: v for k, v in selection.items() if k not in ("decoder_type", "decoder_alias", "source_run")}
         references = self._ler_table(reference_filter, True)
         references = references[references.decoder_type == "baseline"]
         condition = [name for name in PARAMETERS if name not in ("decoder_type", "decoder_alias")]
@@ -418,11 +423,15 @@ class ColorCorrelatedRun:
         reference = references.set_index(condition)
         table = table.copy()
         rates, sources, paired_flags = [], [], []
+        source_aliases, source_types, source_runs = [], [], []
         for row in table.itertuples():
             paired = not pd.isna(row.default_failures)
             if paired:
                 rates.append(row.default_logical_error_rate)
                 sources.append(row.point_directory)
+                source_aliases.append(row.decoder_alias)
+                source_types.append(row.decoder_type)
+                source_runs.append(row.source_run)
             else:
                 key = tuple(getattr(row, name) for name in condition)
                 if key not in reference.index:
@@ -430,19 +439,27 @@ class ColorCorrelatedRun:
                 match = reference.loc[key]
                 rates.append(match.logical_error_rate)
                 sources.append(match.point_directory)
+                source_aliases.append(match.source_decoder_alias)
+                source_types.append(match.source_decoder_type)
+                source_runs.append(match.source_run)
             paired_flags.append(paired)
         table["baseline_logical_error_rate"] = rates
         table["baseline_point_directory"] = sources
         table["baseline_paired"] = paired_flags
+        table["baseline_source_decoder_alias"] = source_aliases
+        table["baseline_source_decoder_type"] = source_types
+        table["baseline_source_run"] = source_runs
         with np.errstate(divide="ignore", invalid="ignore"):
             table["improvement_ratio"] = (table.baseline_logical_error_rate.to_numpy(dtype=float)
                                           / table.logical_error_rate.to_numpy(dtype=float))
         return table
 
     def plot_improvement_ratio(self, *, physical_error_rate, filter=None,
-                               x="distance", group_by=("distance", "decoder_type"),
+                               x="distance", group_by=("distance", "decoder_alias"),
                                yscale="linear", plot_width=7.4, plot_height=4.6, ax=None):
-        """Return (figure, axes, table) with shared LER color/marker encodings.
+        """Return (figure, axes, table), grouping decoder variants by alias by default.
+
+        Color/marker encodings are shared with LER plots.
 
         Infinite and undefined ratios are retained in the table and omitted
         from the plot. The reference line at 1 denotes no improvement.

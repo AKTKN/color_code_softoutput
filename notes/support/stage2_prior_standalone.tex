@@ -1,0 +1,30 @@
+% Compile alongside the three exported PDFs: pdflatex stage2_prior_standalone.tex
+\documentclass[border=0pt]{standalone}
+\usepackage{graphicx}
+% Optional: \graphicspath{{figures/}}
+\newcommand{\StageTwoCanvasWidth}{170mm}
+\newcommand{\StageTwoDistanceWidth}{0.44\linewidth}
+\newcommand{\StageTwoPriorWidth}{0.47\linewidth}
+\newcommand{\StageTwoLegendGap}{0.04\linewidth}
+\newcommand{\StageTwoVerticalGap}{1mm}
+% Current notebook exports use pad_inches=0.03: 0.03in = 2.16 PDF points (bp).
+% If exporting with pad_inches=0, change the trim values on each includegraphics line to 0bp.
+\begin{document}
+\begin{minipage}{\StageTwoCanvasWidth}
+    \centering
+    \begin{minipage}[t]{\StageTwoDistanceWidth}
+        \centering
+        \vspace{0pt}%
+        \includegraphics[width=\linewidth,trim={2.16bp 2.16bp 2.16bp 2.16bp},clip]{stage2_prior_ler_legend_distance.pdf}
+    \end{minipage}%
+    \hspace{\StageTwoLegendGap}%
+    \begin{minipage}[t]{\StageTwoPriorWidth}
+        \centering
+        \vspace{0pt}%
+        \includegraphics[width=\linewidth,trim={2.16bp 2.16bp 2.16bp 2.16bp},clip]{stage2_prior_ler_legend_decoder_alias.pdf}
+    \end{minipage}%
+    \par\nointerlineskip
+    \vspace{\StageTwoVerticalGap}%
+    \includegraphics[width=\linewidth,trim={2.16bp 2.16bp 2.16bp 2.16bp},clip]{stage2_prior_ler.pdf}%
+\end{minipage}
+\end{document}

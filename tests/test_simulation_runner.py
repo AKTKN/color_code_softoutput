@@ -238,7 +238,7 @@ def test_same_type_alias_experiment_and_analysis(tmp_path):
         assert len(plotted) == (3 if baseline else 2)
         plt.close(fig)
     with pytest.raises(ValueError, match="decoder_alias"):
-        run.plot_ler()  # type grouping must not silently mix parameter variants
+        run.plot_ler(group_by=("distance", "decoder_type"))  # explicit type grouping cannot mix variants
     ratios = run.improvement_table(physical_error_rate=.05)
     assert len(ratios) == 2 and ratios.baseline_paired.all()
     fig, _, _ = run.plot_improvement_ratio(physical_error_rate=.05, group_by=("decoder_alias",))
