@@ -1,5 +1,67 @@
 # STATUS.md
 
+## Perturbation stage-2 prior switch and decoder aliases — 2026-09-28
+
+The user authorized changes to the current `color-code-stim` checkout and the
+canonical YAML simulation/analysis package, followed by commit/push.
+`ColorCode` and `ConcatMatchingDecoder` now accept
+`use_original_prior_for_stage2=False`. False preserves the existing perturbed
+stage-1/stage-2 matching. True retains perturbed stage-1 hypotheses but runs
+stage 2 on the original X/Z DEM color decomposition. Its correction is already
+in base column order and is evaluated accordingly. Member 0, common-base
+selection weights, candidate budgets and unchanged-prior SWIM scoring retain
+their existing meanings. Save/load persists the option; older saves default
+to False. The new constructor parameter is appended to preserve positional
+argument compatibility. No per-shot DEM reconstruction is introduced.
+
+Each YAML decoder entry can now supply a unique `decoder_alias` alongside
+`type`, `options` and `decode_options`. The alias participates in point IDs,
+configuration hashes, saved directory prefixes and logs. Analysis exposes
+`decoder_alias` in the catalog, filters, count/effect tables and LER/ratio
+plots; the shared soft-output analysis accepts alias filters/groups as well.
+Legacy entries retain their hashes/paths and expose their type as the analysis
+alias. Repeated types require distinct aliases. Baseline representatives are
+matched on physical conditions, excluding both decoder identity fields;
+type-only LER grouping rejects ambiguous variants.
+
+`configs/perturbation_stage2_comparison.yaml` provides both modes with M=12,
+alpha=1, the same ensemble seed, original-DEM final selection and separate
+aliases. README documents valid YAML and alias-based analysis. The adaptive
+runner continues to sample physical shots independently per alias/point;
+each advanced decoder's stored baseline remains paired within that point.
+This bounded configuration is suitable for LER comparison, without claiming
+paired cross-alias shots or a decoder-performance advantage.
+
+Validation uses `color_code_so` with the current decoder checkout on
+`PYTHONPATH`. Tests cover both priors, ordinary/comparative decoding, both
+selection bases, syndrome/observable consistency, batching, persistence,
+zero-alpha/member-0 limits, all three noise models at rounds=1 and 3,
+alias/hash/path validation, spawn execution, baseline plotting and scored-shot
+analysis. The full root run initially exposed a stale historical PyMatching
+SHA assertion; it now checks the exact current checkout SHA in saved metadata.
+The comparison-YAML smoke ran 8 points with 16 shots each (128 total) and
+rendered the alias LER/baseline plot under
+`/tmp/perturbation-stage2-smoke-fcg0g01s/`. No larger campaign ran.
+
+Validation commands/results (executed using
+`/home/quantum_teresheys/anaconda3/envs/color_code_so/bin/python`):
+
+- `PYTHONPATH="$PWD/external_libs/color-code-stim/src:$PWD/src" python -m pytest tests -q`:
+  307 passed (117.19 s).
+- From `external_libs/color-code-stim`, `PYTHONPATH="$PWD/src" python -m pytest tests -q`:
+  178 passed, two existing skips; the subsequently added legacy-save test also
+  passed in `python -m pytest tests/test_prior_perturbation.py -q`
+  (28 passed, including all new perturbation cases).
+- `PYTHONPATH="$PWD/external_libs/color-code-stim/src:$PWD/src" python -m color_code_softoutput.simulation.cli --config /tmp/perturbation-stage2-smoke-fcg0g01s/smoke.yaml`:
+  all eight points completed; saved-log reload and alias LER plotting pass.
+- `git diff --check` passes in both repositories.
+
+Decoder implementation: commit `04123e0` on `phase2a/swim-distance`.
+Main-package changes are on `main`. The existing local edits to
+`notebooks/color_correlated_decoding.ipynb` are preserved and excluded from
+this change.
+
+
 ## SWIM/logical-gap scatter comparison — 2026-09-28
 
 `analysis/workflow_soft_output.py` now provides scatter distributions,

@@ -99,7 +99,11 @@ def test_full_small_run_audit(tmp_path):
     assert 'ordinary_logical_error' not in dataset.metric_rows('forced_gap')
     metadata = json.loads((result.run_directory/'metadata.json').read_text())
     assert metadata['swim_bound_certified'] is False
-    assert metadata['repositories']['PyMatching']['sha'].startswith('83cee05')
+    import subprocess
+    repository = Path(__file__).resolve().parents[2] / 'external_libs' / 'PyMatching'
+    expected_sha = subprocess.check_output(
+        ['git', '-C', str(repository), 'rev-parse', 'HEAD'], text=True).strip()
+    assert metadata['repositories']['PyMatching']['sha'] == expected_sha
 
 
 def test_schema_linkage_and_source_archive(tmp_path):

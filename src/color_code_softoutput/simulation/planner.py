@@ -11,7 +11,8 @@ from .task import ResolvedPoint
 
 def point_directory_name(point: ResolvedPoint) -> str:
     """Return the exact per-point directory component."""
-    return (f"decoder_type={point.decoder_type},circuit_type={point.circuit_type},"
+    alias = f"decoder_alias={point.decoder_alias}," if point.decoder_alias is not None else ""
+    return (alias + f"decoder_type={point.decoder_type},circuit_type={point.circuit_type},"
             f"d={point.distance},r={point.rounds},p={format(point.physical_error_rate, '.12g')},"
             f"noisemodel={point.noise_model},cnot_schedule={point.cnot_schedule}")
 
@@ -36,11 +37,13 @@ def plan_points(config: WorkflowConfig) -> tuple[ResolvedPoint, ...]:
                     "rounds": r, "circuit_type": circuit, "cnot_schedule": schedule,
                     "decoder_type": decoder.type, "color_code_options": dict(config.color_code_options),
                     "decoder_options": dict(decoder.options), "decode_options": dict(decoder.decode_options)}
+        if decoder.decoder_alias is not None:
+            semantic["decoder_alias"] = decoder.decoder_alias
         digest = hashlib.sha256(json.dumps(semantic, sort_keys=True, separators=(",", ":"),
                                          allow_nan=False).encode("utf-8")).hexdigest()
         point = ResolvedPoint(digest, decoder.type, d, p, noise, r, circuit, schedule,
                               config.simulation.shots, config.color_code_options,
-                              decoder.options, decoder.decode_options)
+                              decoder.options, decoder.decode_options, decoder.decoder_alias)
         name = point_directory_name(point)
         if name in seen_names or point.point_id in seen_ids:
             raise ValueError(f"Expanded point path collision: {name}")

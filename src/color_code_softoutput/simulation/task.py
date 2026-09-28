@@ -17,4 +17,4 @@ class ResolvedPoint:
     color_code_options: tuple[tuple[str, object], ...]
     decoder_options: tuple[tuple[str, object], ...]
     decode_options: tuple[tuple[str, object], ...]
-
+    decoder_alias: str | None = None

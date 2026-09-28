@@ -206,3 +206,44 @@ def test_failure_still_closes_single_log(tmp_path, monkeypatch):
     assert len(list(roots[0].glob("*.json"))) == 1
     log = json.loads((roots[0] / "run_log.json").read_text())
     assert log["simulation_end_time"] is not None
+
+
+def test_same_type_alias_experiment_and_analysis(tmp_path):
+    from color_code_softoutput.analysis.color_correlated import ColorCorrelatedRun
+    from color_code_softoutput.analysis.workflow_soft_output import WorkflowSoftOutputRun
+    import matplotlib.pyplot as plt
+
+    raw = settings(tmp_path, workers=2)
+    raw["sweep"].update(rounds=1, physical_error_rate=.05)
+    raw["decoders"] = [
+        {"decoder_alias": alias, "type": "perturbation", "options": {
+            "enable_prior_perturbation": True, "perturbation_ensemble_size": 2,
+            "perturbation_alpha": .7, "perturbation_seed": 19,
+            "color_correlated_weight_basis": "original_dem",
+            "use_original_prior_for_stage2": original},
+         "decode_options": {"compute_swim_distance": True}}
+        for alias, original in (("original_s2", True), ("perturbed_s2", False))
+    ]
+    root = run_experiment(parse_workflow_config(raw))
+    saved = json.loads((root / "run_log.json").read_text())["config"]["decoders"]
+    assert [d["decoder_alias"] for d in saved] == ["original_s2", "perturbed_s2"]
+    assert [d["options"]["use_original_prior_for_stage2"] for d in saved] == [True, False]
+    run = ColorCorrelatedRun(root)
+    table = run.summary()
+    assert set(table.decoder_alias) == {"original_s2", "perturbed_s2"}
+    assert set(table.decoder_type) == {"perturbation"}
+    assert len(run.select({"decoder_alias": "original_s2"})) == 1
+    for baseline in (False, True):
+        fig, _, plotted = run.plot_ler(group_by=("decoder_alias",), baseline_compare=baseline)
+        assert len(plotted) == (3 if baseline else 2)
+        plt.close(fig)
+    with pytest.raises(ValueError, match="decoder_alias"):
+        run.plot_ler()  # type grouping must not silently mix parameter variants
+    ratios = run.improvement_table(physical_error_rate=.05)
+    assert len(ratios) == 2 and ratios.baseline_paired.all()
+    fig, _, _ = run.plot_improvement_ratio(physical_error_rate=.05, group_by=("decoder_alias",))
+    plt.close(fig)
+    soft = WorkflowSoftOutputRun(root)
+    assert soft.available_metrics().swim_distance_available.all()
+    fig, _ = soft.plot_distribution(group_by=("decoder_alias",))
+    plt.close(fig)

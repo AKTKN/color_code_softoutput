@@ -400,6 +400,18 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-28 — Added `use_original_prior_for_stage2` to prior perturbation:
+False retains both perturbed matching stages; True uses original stage-2
+priors while retaining perturbed stage 1 and unchanged final scoring. Added
+unique YAML `decoder_alias` identities for repeated decoder types, saved
+paths/logs and filtered/grouped LER/soft-output analysis. The complete
+comparison config is `configs/perturbation_stage2_comparison.yaml`.
+Root tests: 307 passed; decoder suite: 178 passed/two existing skips, plus
+28 focused perturbation tests including the added legacy-save check.
+A bounded 128-shot, eight-point YAML/plot smoke passes. Decoder commit
+`04123e0` is on `phase2a/swim-distance`. See STATUS.md.
+Next task: choose the desired comparison grid and run the alias configuration.
+
 2026-09-28 — Added SWIM/logical-gap overlays to scatter distributions,
 conditional error probability and shaded post-selection. Signed error scores
 affect distribution display only; every metric retains its own decoder's
@@ -723,6 +735,11 @@ The primary crossing is unresolved at the upper grid endpoint; numerical
 limitations and the missing dual certificate remain explicit in the review.
 
 ## Next task
+
+Use `configs/perturbation_stage2_comparison.yaml` for True/False stage-2
+prior comparisons; filter/group analysis by `decoder_alias`. The YAML runner
+samples each alias independently, with paired baseline metrics within each
+point. A larger comparison remains user-launched.
 
 Use `metrics=["swim_distance", "logical_gap"]` in the workflow SWIM notebook
 to compare saved scores. Signed error-score display is optional and applies

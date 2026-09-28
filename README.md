@@ -123,6 +123,73 @@ Python package is in `src/color_code_softoutput/`; reproducible workflows are in
 `notebooks/`, with tests in `tests/`. The mathematical notes and implementation
 records are in `notes/`, `STATUS.md`, and `REVIEW.md`.
 
+## Comparing decoder parameters by alias
+
+The stage-2 prior option requires the updated `color-code-stim` checkout on
+`phase2a/swim-distance`. After cloning, select it with
+`git -C external_libs/color-code-stim checkout phase2a/swim-distance`
+before installing the editable package.
+
+Give each decoder configuration a unique `decoder_alias`. `type` still selects
+its implementation; the alias identifies the parameter variant in saved paths,
+run logs, tables and plot legends. Omitted aliases default to the type in
+analysis and retain the existing directory names and configuration hashes.
+Repeated types need distinct aliases.
+
+```yaml
+decoders:
+  - decoder_alias: Stage2_original_perturbation
+    type: perturbation
+    options: &perturbation_options
+      enable_prior_perturbation: true
+      perturbation_ensemble_size: 12
+      perturbation_alpha: 1.0
+      perturbation_seed: 20260927
+      color_correlated_weight_basis: original_dem
+      remove_non_edge_like_errors: true
+      use_original_prior_for_stage2: true
+  - decoder_alias: Stage2_perturbed_perturbation
+    type: perturbation
+    options:
+      <<: *perturbation_options
+      use_original_prior_for_stage2: false
+```
+
+`use_original_prior_for_stage2` defaults to `false`: both matching stages use
+the perturbed X/Z DEM's color decomposition. `true` uses that decomposition
+only for stage 1, then runs stage 2 with the original X/Z DEM's color
+decomposition and its column order. Candidate selection uses unchanged base
+priors in both modes. Member 0 remains ordinary decoding.
+
+[configs/perturbation_stage2_comparison.yaml](configs/perturbation_stage2_comparison.yaml)
+is a complete bounded comparison configuration. Run it with:
+
+```bash
+python -m color_code_softoutput.simulation.cli --config configs/perturbation_stage2_comparison.yaml
+```
+
+```python
+from color_code_softoutput.analysis.color_correlated import ColorCorrelatedRun
+
+run = ColorCorrelatedRun("results/<completed-run>")
+run.summary({"decoder_alias": ["Stage2_original_perturbation",
+                               "Stage2_perturbed_perturbation"]})
+fig, ax, table = run.plot_ler(group_by=("distance", "decoder_alias"))
+# Also supported: baseline_compare=True and plot_improvement_ratio(...).
+```
+
+SWIM/logical-gap distribution, conditional LER and post-selection APIs in
+`WorkflowSoftOutputRun` likewise accept `filter={"decoder_alias": ...}` and
+`group_by=("decoder_alias",)` when those metrics were saved. Type-only LER
+grouping requires filtering to one alias per type to avoid mixing variants.
+
+Aliases and parameters participate in point identities and sampling seeds.
+The adaptive YAML runner samples each alias independently; this is an LER
+comparison, with each advanced decoder's baseline evaluated on its own shots.
+The same `perturbation_seed` fixes the same perturbed-prior ensemble across the
+two modes. For a paired physical-shot comparison, sample once with `ColorCode`
+and pass that detector array to both decoder configurations directly.
+
 ## Setup
 
 This project uses modified decoder forks with APIs that are absent from the

@@ -19,7 +19,7 @@ from .statistics import wilson_interval
 
 
 PARAMETERS = (
-    "decoder_type", "circuit_type", "distance", "rounds",
+    "decoder_alias", "decoder_type", "circuit_type", "distance", "rounds",
     "physical_error_rate", "noise_model", "cnot_schedule",
 )
 COUNTS = (
@@ -87,6 +87,7 @@ class ColorCorrelatedRun:
         self._cache: dict[str, dict] = {}
         self.catalog = pd.DataFrame([
             {
+                "decoder_alias": point.decoder_alias or point.decoder_type,
                 "decoder_type": point.decoder_type,
                 "circuit_type": point.circuit_type,
                 "distance": point.distance,
@@ -195,7 +196,7 @@ class ColorCorrelatedRun:
                      "worsened_count", "net_effect_count"):
             result[name] = result[name].astype("Int64")
         return result.drop(columns=["data_available"]).sort_values(
-            ["distance", "physical_error_rate", "decoder_type"]
+            ["distance", "physical_error_rate", "decoder_alias"]
         ).reset_index(drop=True)
 
     def count_table(self, filter: Mapping[str, object] | None = None) -> pd.DataFrame:
@@ -215,23 +216,25 @@ class ColorCorrelatedRun:
     def _ler_table(self, filter, baseline_compare=False):
         table = self.summary(filter)
         if baseline_compare:
-            if (table["decoder_type"] == "baseline").any():
-                raise ValueError("decoder_type='baseline' is reserved for baseline_compare")
+            if (table["decoder_type"] == "baseline").any() or (table["decoder_alias"] == "baseline").any():
+                raise ValueError("decoder_type/decoder_alias='baseline' is reserved for baseline_compare")
             paired = table["default_failures"].notna()
             if not paired.any():
                 raise ValueError("No advanced-decoder points selected for baseline_compare")
             table = table.copy()
             table["source_decoder_type"] = table["decoder_type"]
+            table["source_decoder_alias"] = table["decoder_alias"]
             table["metric"] = "logical_error"
             baseline = table.loc[paired].copy()
             # Each advanced decoder has its own sampled baseline. Plot one
             # deterministic representative for each physical configuration.
             priority = {"color_correlated": 0, "relifting": 1, "perturbation": 2}
             baseline["_priority"] = baseline["source_decoder_type"].map(priority).fillna(3)
-            condition = [name for name in PARAMETERS if name != "decoder_type"]
-            baseline = (baseline.sort_values(["_priority", "source_decoder_type"])
+            condition = [name for name in PARAMETERS if name not in ("decoder_type", "decoder_alias")]
+            baseline = (baseline.sort_values(["_priority", "source_decoder_type", "source_decoder_alias"])
                         .drop_duplicates(condition).drop(columns="_priority"))
             baseline["decoder_type"] = "baseline"
+            baseline["decoder_alias"] = "baseline"
             baseline["metric"] = "default_logical_error"
             baseline["failures"] = baseline["default_failures"].astype("int64")
             baseline["logical_error_rate_total"] = baseline["default_logical_error_rate_total"]
@@ -242,7 +245,7 @@ class ColorCorrelatedRun:
                          "net_effect_count"):
                 baseline[name] = pd.NA
             table = pd.concat([table, baseline], ignore_index=True).sort_values(
-                ["distance", "physical_error_rate", "decoder_type"]
+                ["distance", "physical_error_rate", "decoder_alias"]
             ).reset_index(drop=True)
         return table
 
@@ -250,7 +253,7 @@ class ColorCorrelatedRun:
         """Use run-wide value ordering so filters and plots share encodings."""
         names = tuple(group_by)
         value_lists = [sorted(set(self.catalog[name]) | set(table[name])
-                              | ({"baseline"} if name == "decoder_type" else set()))
+                              | ({"baseline"} if name in ("decoder_type", "decoder_alias") else set()))
                        for name in names]
         first = value_lists[0] if names else [None]
         second = value_lists[1] if len(names) == 2 else [None]
@@ -270,6 +273,12 @@ class ColorCorrelatedRun:
         if any(name not in PARAMETERS or name in ("physical_error_rate", "rounds") for name in names):
             raise ValueError("group_by must use config parameters other than physical_error_rate and rounds")
         ungrouped = set(PARAMETERS) - {x, "rounds", *names}
+        # A grouped alias identifies its type. Legacy type grouping also works
+        # when each type has exactly one alias; repeated types require aliases.
+        for identity, dependent in (("decoder_alias", "decoder_type"),
+                                    ("decoder_type", "decoder_alias")):
+            if identity in names and table.groupby(identity)[dependent].nunique().max() <= 1:
+                ungrouped.discard(dependent)
         varying = sorted(name for name in ungrouped if table[name].nunique() > 1)
         if varying:
             raise ValueError(f"Filter or group_by the varying parameters: {varying}")
@@ -358,8 +367,8 @@ class ColorCorrelatedRun:
         """
         if yscale not in ("linear", "log"):
             raise ValueError("yscale must be 'linear' or 'log'")
-        if baseline_compare and "decoder_type" not in group_by:
-            raise ValueError("baseline_compare requires decoder_type in group_by")
+        if baseline_compare and not {"decoder_type", "decoder_alias"}.intersection(group_by):
+            raise ValueError("baseline_compare requires decoder_type or decoder_alias in group_by")
         table = self._ler_table(filter, baseline_compare)
         names = self._groups(table, group_by, "physical_error_rate")
         figure, ax = self._axes(ax, plot_width, plot_height)
@@ -397,10 +406,10 @@ class ColorCorrelatedRun:
                 raise ValueError("physical_error_rate conflicts with filter")
         selection["physical_error_rate"] = physical_error_rate
         table = self.summary(selection)
-        reference_filter = {k: v for k, v in selection.items() if k != "decoder_type"}
+        reference_filter = {k: v for k, v in selection.items() if k not in ("decoder_type", "decoder_alias")}
         references = self._ler_table(reference_filter, True)
         references = references[references.decoder_type == "baseline"]
-        condition = [name for name in PARAMETERS if name != "decoder_type"]
+        condition = [name for name in PARAMETERS if name not in ("decoder_type", "decoder_alias")]
         if table.default_failures.notna().any():
             selected_references = self._ler_table(selection, True)
             selected_references = selected_references[selected_references.decoder_type == "baseline"]

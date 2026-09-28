@@ -167,3 +167,48 @@ def test_native_noise_parameters():
     assert uniform["depol"] == uniform["bitflip"] == 0
     with pytest.raises(ValueError, match="Unknown"):
         make_noise_model("idle", p)
+
+
+def test_decoder_aliases_resolve_same_type_and_roundtrip(raw):
+    raw["decoders"] = [
+        {"decoder_alias": name, "type": "perturbation", "options": {
+            "enable_prior_perturbation": True, "use_original_prior_for_stage2": original}}
+        for name, original in (("Stage2_original_perturbation", True),
+                               ("Stage2_perturbed_perturbation", False))
+    ]
+    config = parse_workflow_config(raw)
+    points = plan_points(config)
+    assert len({p.point_id for p in points}) == 2
+    assert all(p.decoder_type == "perturbation" for p in points)
+    for point in points:
+        assert point_directory_name(point).startswith(f"decoder_alias={point.decoder_alias},decoder_type=perturbation,")
+    import json
+    assert parse_workflow_config(json.loads(json.dumps(config.semantic_dict()))) == config
+    changed = deepcopy(raw)
+    changed["decoders"][0]["decoder_alias"] = "another_alias"
+    assert parse_workflow_config(changed).hash8 != config.hash8
+    assert plan_points(parse_workflow_config(changed))[0].point_id != points[0].point_id
+    changed["decoders"][0]["decoder_alias"] = changed["decoders"][1]["decoder_alias"]
+    with pytest.raises(ValueError, match="unique"):
+        parse_workflow_config(changed)
+
+
+@pytest.mark.parametrize("alias", ["", "a/b", "a,b", "a=b", " a", None, 1])
+def test_decoder_alias_validation(raw, alias):
+    raw["decoders"][0]["decoder_alias"] = alias
+    with pytest.raises(ValueError, match="filesystem-safe"):
+        parse_workflow_config(raw)
+
+
+def test_stage2_prior_option_validation(raw):
+    raw["decoders"][0]["options"]["use_original_prior_for_stage2"] = "false"
+    with pytest.raises(ValueError, match="must be boolean"):
+        parse_workflow_config(raw)
+
+
+def test_legacy_alias_omission_keeps_config_hash_and_paths(raw):
+    config = parse_workflow_config(raw)
+    assert "decoder_alias" not in config.semantic_dict()["decoders"][0]
+    import json
+    assert parse_workflow_config(json.loads(json.dumps(config.semantic_dict()))).hash8 == config.hash8
+    assert point_directory_name(plan_points(config)[0]).startswith("decoder_type=")

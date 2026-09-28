@@ -1,0 +1,40 @@
+# Run with: python -m color_code_softoutput.simulation.cli --config configs/perturbation_stage2_comparison.yaml
+simulation:
+  output_root: results
+  shots: 1000
+  workers: 2
+  master_seed: 20260927
+  buffer_shots: 5000
+  verbose: true
+chunking:
+  calibration_shots: 8
+  target_chunk_seconds: 1.0
+  min_chunk_shots: 1
+  max_chunk_shots: 4096
+  throughput_ema_alpha: 0.25
+sweep:
+  distance: [3, 5]
+  physical_error_rate: [0.03, 0.05]
+  noise_model: bitflip
+  rounds: 1
+  circuit_type: tri
+  cnot_schedule: tri_optimal
+color_code_options:
+  temp_bdry_type: Z
+decoders:
+  - decoder_alias: Stage2_original_perturbation
+    type: perturbation
+    options: &perturbation_options
+      enable_prior_perturbation: true
+      # Includes the unperturbed baseline member (member 0).
+      perturbation_ensemble_size: 12
+      perturbation_alpha: 1.0
+      perturbation_seed: 20260927
+      color_correlated_weight_basis: original_dem
+      remove_non_edge_like_errors: true
+      use_original_prior_for_stage2: true
+  - decoder_alias: Stage2_perturbed_perturbation
+    type: perturbation
+    options:
+      <<: *perturbation_options
+      use_original_prior_for_stage2: false

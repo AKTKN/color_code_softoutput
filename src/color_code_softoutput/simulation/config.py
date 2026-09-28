@@ -136,7 +136,7 @@ _CONSTRUCTOR_KEYS = frozenset({"temp_bdry_type", "superdense_circuit", "perfect_
     "perfect_logical_measurement", "perfect_first_syndrome_extraction", "perfect_init_final",
     "remove_non_edge_like_errors", "comparative_decoding", "enable_colorcorrelated_decoding",
     "enable_cross_color_relifting", "enable_prior_perturbation", "perturbation_ensemble_size",
-    "perturbation_alpha", "perturbation_seed",
+    "perturbation_alpha", "perturbation_seed", "use_original_prior_for_stage2",
     "color_correlated_weight_basis", "color_correlated_b",
     "exclude_non_essential_pauli_detectors"})
 _DECODE_KEYS = frozenset({"colors", "compute_swim_distance", "full_output", "check_validity", "verbose"})
@@ -271,6 +271,7 @@ class DecoderSettings:
     type: str
     options: tuple[tuple[str, object], ...]
     decode_options: tuple[tuple[str, object], ...]
+    decoder_alias: str | None = None
 
 
 @dataclass(frozen=True)
@@ -294,7 +295,9 @@ class WorkflowConfig:
         return {"simulation": sim, "chunking": asdict(self.chunking), "sweep": asdict(self.sweep),
                 "color_code_options": dict(self.color_code_options),
                 "decoders": [{"type": d.type, "options": dict(d.options),
-                              "decode_options": dict(d.decode_options)} for d in self.decoders]}
+                              "decode_options": dict(d.decode_options),
+                              **({"decoder_alias": d.decoder_alias} if d.decoder_alias is not None else {})}
+                             for d in self.decoders]}
 
     @property
     def hash8(self) -> str:
@@ -343,8 +346,9 @@ def parse_workflow_config(data: dict) -> WorkflowConfig:
         raise ValueError("decoders must be a nonempty list")
     decoders = []
     for raw in raw_decoders:
-        raw = _mapping(raw, "decoder", allowed={"type", "options", "decode_options"}, required={"type"})
+        raw = _mapping(raw, "decoder", allowed={"decoder_alias", "type", "options", "decode_options"}, required={"type"})
         label = _string(raw["type"], "decoder.type")
+        alias = _string(raw["decoder_alias"], "decoder.decoder_alias") if "decoder_alias" in raw else None
         if label == "tesseract":
             from .tesseract import OPTIONS
             options = _options(raw.get("options", {}), "decoder.options", OPTIONS)
@@ -374,7 +378,10 @@ def parse_workflow_config(data: dict) -> WorkflowConfig:
             raise ValueError("advanced decoder modes are mutually exclusive")
         if merged.get("enable_cross_color_relifting", False) and merged.get("remove_non_edge_like_errors", False):
             raise ValueError("cross-color relifting requires remove_non_edge_like_errors=False")
-        decoders.append(DecoderSettings(label, options, decode_options))
+        decoders.append(DecoderSettings(label, options, decode_options, alias))
+    aliases = [decoder.decoder_alias or decoder.type for decoder in decoders]
+    if len(set(aliases)) != len(aliases):
+        raise ValueError("decoder_alias collision: aliases (defaulting to type) must be unique; assign aliases for repeated types")
     return WorkflowConfig(simulation, chunking, sweep_settings, common, tuple(decoders))
 
 
