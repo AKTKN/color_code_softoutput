@@ -1,5 +1,91 @@
 # STATUS.md
 
+## SWIM/logical-gap scatter comparison — 2026-09-28
+
+`analysis/workflow_soft_output.py` now provides scatter distributions,
+`plot_conditional_ler`, and scatter post-selection with default 99% Wilson
+shades. All three accept `metrics=["swim_distance", "logical_gap"]` alongside
+the existing single `metric` argument. Multi-metric views use available
+point/metric combinations; each selected point must supply at least one
+requested metric and each requested metric must occur in the selection.
+`available_metrics(filter)` exposes file availability. Schema, nonnegative
+score and shot-index checks remain enforced; every score uses its own
+decoder point's hard-failure labels. Overlaying separate YAML decoder
+points does not imply paired physical shots.
+
+Distributions use success circles and error crosses. Optional error-score
+negation is display-only, and normalized frequencies divide outcome counts
+by all shots in their series. Auto score grouping preserves discrete values;
+integer bins share edges across series. Conditional probability is empirical
+failures/shots by score, without a calibration fit. Post-selection retains
+the exact scores >= each threshold, with opt-in rounding/ties. Both rate
+views preserve zero estimates in tables and display only their Wilson bands.
+SWIM diamonds and gap squares use consistent series colors. Legends sit
+above the data to keep scatter points and shades visible.
+
+`notebooks/workflow_swim_soft_output.ipynb` now exposes both metrics and all
+three views, including signed/normalized distribution options and separate
+PNG/PDF exports. Its d=9, p=.03 saved-data example includes color-correlated
+SWIM, stage-2-base SWIM and ordinary comparative gap, with 1,000,000 shots
+per series. Conditional counts preserve all shots; post-selection tables
+have 21, 21 and 23 threshold rows respectively. Review artifacts are under
+`/tmp/workflow-soft-output-scatter-review`. No new sampling campaign ran.
+
+Validation: `PYTHONPATH=src conda run -n color_code_so pytest -q
+tests/test_workflow_soft_output_plots.py tests/test_workflow_soft_output.py`
+(15 passed). Independent saved-shot fixtures cover frequency/sign handling,
+normalization, common bins, decoder-specific failures, Wilson limits, exact
+retention counts, rounding, scatter/band artists and metric selection errors.
+The updated notebook's analysis cells also executed on the saved cluster run.
+
+## SWIM notebook run-path resolution — 2026-09-28
+
+`notebooks/workflow_swim_soft_output.ipynb` now constructs `run_directory`
+from `PROJECT_ROOT`, stepping up from `notebooks/` when that is the kernel's
+working directory. The initial cell loads all 150 planned points from the
+same cluster run when executed from either the repository root or
+`notebooks/`. Figure exports also use this resolved run directory.
+The notebook now demonstrates `groups=["decoder_type"]`, explains
+filtering versus pooling, and exposes a shared `metric` for both plots.
+Its d=9, p=.03 SWIM example selects `concat_mwpm_stage2_base` and
+`color_correlated`, each with 1,000,000 saved shots; both histogram and
+post-selection calls succeed (42 post-selection rows). The explanation
+distinguishes this stage-2-selection decoder from `concat_mwpm`, which
+has only the complementary-gap metric in this run. The latter has an
+explicit `metric="logical_gap"` example. Export names use the metric.
+
+## Independent plot legends and LER improvement ratios — 2026-09-28
+
+`analysis/color_correlated.py` now keeps the LER figure separate from
+`plot_legends(table, group_by=...)`, which returns one independent figure
+per field: colored lines for the first field and black markers for the
+second, with field titles and individual values. Run-wide value ordering
+keeps styles consistent across filters and improvement plots. Zero LER
+observations break the plotted line and show only their unchanged 99% Wilson
+band; log axes clip the band at the visible lower limit.
+
+`plot_improvement_ratio(physical_error_rate=..., filter=..., x="distance")`
+and `improvement_table` use baseline LER divided by decoder LER. Paired
+decoders use their own baseline. Unpaired decoders use the representative
+baseline at the same physical condition, preferring the selected LER
+baseline and falling back to other saved paired points. The table records
+`baseline_paired` and `baseline_point_directory`; independent samples are
+not represented as paired. Infinite/undefined ratios remain in the table
+and have no plotted estimate. No ratio confidence interval is inferred.
+Uniform-noise ratios use the existing per-round LER conversion.
+
+`notebooks/color_correlated_decoding.ipynb` exposes independent figure/axes
+objects, filters and physical-error-rate selection, and saves main/color/
+marker figures separately as PNG and PDF. Existing run-path and decoder
+selections were retained; stale saved outputs were cleared. All code cells
+executed against the saved cluster run with d=5,7 and p=.01,.015, saving
+review figures under `/tmp/color-correlated-plot-review`. Main plots and
+both legends were visually inspected. No simulation was run.
+
+Validation: `PYTHONPATH=src conda run -n color_code_so pytest -q
+tests/test_color_correlated_analysis.py tests/test_workflow_soft_output.py`
+(19 passed), plus `git diff --check`. Package README documents the API.
+
 ## Cluster environment and PBS setup — 2026-09-27
 
 `environment.yml` now records the direct Python, analysis and build-tool

@@ -28,6 +28,8 @@ configs/cluster.yaml
 cluster_results
 scripts/cluster_run_experiment.sh
 scripts/compress.sh
+scripts/fetch_cluster.sh
+scripts/extract.sh
 
 # Separate decoder repositories and generated experiments
 /external_libs/

@@ -82,7 +82,10 @@ original DEM's graph and probability checks.
 Set `decoders[].options.comparative_decoding: true` on ordinary concat MWPM
 to write `logical_gap.parquet` instead. See
 [the analysis notebook](notebooks/workflow_swim_soft_output.ipynb) for score
-distributions and abort-rate versus post-selection LER with filters and groups.
+frequency points, conditional logical error probability and post-selection
+scatter plots with Wilson shades, filters and groups. All three views accept
+`metrics=["swim_distance", "logical_gap"]` for comparison; distribution errors
+can optionally be displayed at negative scores.
 Correlated points produce
 that file plus `default_logical_error.parquet`,
 `better_weight_by_color_correlated_decoding.parquet`, and

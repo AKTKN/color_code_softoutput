@@ -66,12 +66,35 @@ the perturbed member. The distance is an exploratory proxy, not a posterior
 LLR or a full-decoder logical gap.
 
 `analysis.workflow_soft_output.WorkflowSoftOutputRun(run_path)` provides
-`plot_distribution(metric="swim_distance", filter=..., group_by=...)` and
-`plot_postselection(...)`. Set `metric="logical_gap"` for a comparative run.
-Both methods return a Matplotlib figure and a table. The second method retains
-scores at or above each threshold and plots abort rate versus the retained
-hard-decision logical error rate. The table retains exact zero-failure rates.
-See `notebooks/workflow_swim_soft_output.ipynb` for editable examples.
+`plot_distribution`, `plot_conditional_ler` and `plot_postselection`, each
+returning a Matplotlib figure and a count/rate table. Supply
+`metrics=["swim_distance", "logical_gap"]` to overlay the available metric/
+decoder combinations, or `metric="logical_gap"` for one score. With neither
+argument the existing single-SWIM default is retained. `available_metrics`
+shows saved metric files per selected point. Every selected point must have
+one requested metric, and every requested metric must be present somewhere
+in the selection. Each series uses its own decoder's failure labels; separate
+YAML decoder points do not imply paired physical shots.
+
+Distributions show success `o` and logical-error `x` frequency points.
+`signed_logical_errors=True` negates error scores for display only;
+`normalize_frequency=True` divides outcome counts by all shots in the series.
+The older `density` argument is now an alias for that normalization, without
+division by bin width. The returned table has `logical_error`, `raw_score`,
+display `score`, outcome `count`/`shots`, `frequency` and bin boundaries.
+`bins="auto"` preserves near-discrete score groups; integer bins share edges
+across plotted series. `round_digits` optionally rounds before grouping.
+
+Conditional logical error probability uses failures / shots at each score
+group. Conditional and post-selection figures use scatter points and 99%
+Wilson shades, with consistent series colors and diamond SWIM/square gap
+markers. Zero rates retain their bands but have no plotted point. Log axes
+are the default; use `yscale="linear"` to change the scale. Post-selection
+retains scores >= each exact threshold, keeps ties together and omits empty
+retention. `round_digits` changes threshold ties only when supplied; the
+distribution sign option never changes conditional rates or selection.
+`xlim=(0, 1)` controls the visible abort-rate range without changing the table.
+See `notebooks/workflow_swim_soft_output.ipynb` for all three comparison views.
 
 Run `./scripts/run_experiment.sh configs/example.yaml` in `color_code_so`, or
 `python -m color_code_softoutput.simulation.cli --config configs/example.yaml`.
@@ -100,11 +123,26 @@ failures; no new simulation sidecar is required.
 `plot_ler(filter=..., group_by=[...])`
 plots physical versus logical error rate with 99% Wilson bands. The first
 group key controls color and the optional second key controls marker. The
-legend is a boxed grid above a separately sized plot. Set `yscale="log"`
-or `"linear"`; zero-failure points use 0.5/shots only for log-axis display,
-while the returned table keeps their measured rate of zero. Other varying
-conditions must be fixed by `filter`. See
+main figure contains only the data axes. `plot_legends(table, group_by=...)`
+returns `{field: (figure, axes)}` for separate color and marker legends, each
+with a field title and individual values. Style, resize and save each figure
+independently. The assignments use run-wide ordering and stay consistent
+when filters change. Set `yscale="log"` or `"linear"`; zero-failure observations
+have Wilson shading only, with no marker or line point. On log axes the band
+is clipped at the visible lower limit. Other varying conditions must be fixed
+by `filter`. See
 `notebooks/color_correlated_decoding.ipynb` for an editable example.
+`plot_improvement_ratio(physical_error_rate=..., filter=..., x="distance")`
+returns a figure, axes and table of **baseline LER / decoder LER**. Values above
+1 mean improvement. Its default distance colors and decoder markers match LER
+plots; use `plot_legends` for independent legend figures. Each paired decoder
+uses its own saved baseline. Unpaired decoders use the representative baseline
+at the same physical conditions, preferring the selection used for the LER
+plot, then other available paired points if needed. `baseline_paired` and
+`baseline_point_directory` record the source. Infinite and undefined ratios
+remain in the table but are omitted from the plot. No ratio confidence interval
+is inferred from the marginal Wilson bands. Uniform rates use per-round values.
+
 With `baseline_compare=True` and `decoder_type` in `group_by`, the plot also
 adds `decoder_type=baseline` from a selected advanced point's paired
 `default_logical_error.parquet`. When multiple decoder types cover the same

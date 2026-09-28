@@ -400,6 +400,28 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-28 — Added SWIM/logical-gap overlays to scatter distributions,
+conditional error probability and shaded post-selection. Signed error scores
+affect distribution display only; every metric retains its own decoder's
+failure labels. Updated the workflow notebook and metric-availability API.
+Fifteen focused tests and the three-million-shot saved-data example pass.
+Next task: select metrics/conditions and rerun the notebook for final figures.
+
+2026-09-28 — Fixed SWIM analysis notebook data paths to use the repository
+root when the kernel starts in `notebooks/`. Its first cell loads the same
+150-point cluster-run catalog from both working directories. Single-field
+grouping and metric selection examples now explain saved-metric availability;
+the two-decoder d=9, p=.03 distribution/post-selection example executes.
+Next task:
+rerun the notebook's initial cell and continue saved-run analysis.
+
+2026-09-28 — Separated LER data/color/marker figures and added filtered
+baseline/decoder LER improvement-ratio plots at a fixed physical error rate.
+Zero LER observations now show only Wilson bands. Notebook styling and
+PNG/PDF exports are independent; 19 focused tests and a bounded saved-cluster
+notebook execution pass. Next task: rerun the notebook with the desired
+physical error rate and filters to produce the publication figures.
+
 2026-09-27 — Recorded the working environment's direct package versions in
 `environment.yml`, updated setup instructions to the merged decoder default
 branches with PyMatching's submodule, and added a single-node PBS job script.
@@ -701,6 +723,14 @@ The primary crossing is unresolved at the upper grid endpoint; numerical
 limitations and the missing dual certificate remain explicit in the review.
 
 ## Next task
+
+Use `metrics=["swim_distance", "logical_gap"]` in the workflow SWIM notebook
+to compare saved scores. Signed error-score display is optional and applies
+only to distributions; conditional/post-selection figures use raw scores.
+
+Rerun `notebooks/color_correlated_decoding.ipynb` with the desired filters
+and improvement physical error rate. Main figures and the color/marker
+legends can be styled and exported independently.
 
 Review the updated `effect_table` columns in the saved-run analysis notebook;
 positive `net_effect_count` means fewer logical failures than the paired

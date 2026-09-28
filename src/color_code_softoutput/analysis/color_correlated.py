@@ -7,7 +7,7 @@ from pathlib import Path
 from collections.abc import Mapping, Sequence
 
 import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle
+from matplotlib.lines import Line2D
 import numpy as np
 import pandas as pd
 import pyarrow as pa
@@ -212,41 +212,7 @@ class ColorCorrelatedRun:
         return self.summary(filter)[[*PARAMETERS, "shots", "effect_count",
                                      "worsened_count", "net_effect_count"]]
 
-    def plot_ler(
-        self,
-        *,
-        filter: Mapping[str, object] | None = None,
-        group_by: Sequence[str] = ("distance", "decoder_type"),
-        baseline_compare: bool = False,
-        yscale: str = "log",
-        plot_width: float = 7.4,
-        plot_height: float = 4.6,
-        legend_fontsize: float = 9,
-        legend_row_height: float = 0.48,
-        ax=None,
-    ):
-        """Plot LER below an independent boxed condition legend.
-
-        The main plot keeps its requested physical size as legend rows change.
-        Uniform circuit-noise LER is per round, using 1-(1-P_fail)**(1/r).
-        On a logarithmic axis, a zero-failure point is displayed at a
-        half-failure equivalent (per round for uniform noise);
-        the returned table always retains its exact measured rate of zero.
-        """
-        if yscale not in ("linear", "log"):
-            raise ValueError("yscale must be 'linear' or 'log'")
-        if any(not np.isfinite(value) or value <= 0 for value in
-               (plot_width, plot_height, legend_fontsize, legend_row_height)):
-            raise ValueError("Plot and legend sizes must be positive and finite")
-        if isinstance(group_by, str):
-            raise ValueError("group_by must be a list of up to two parameter names")
-        group_by = tuple(group_by)
-        if len(group_by) > 2 or len(set(group_by)) != len(group_by):
-            raise ValueError("group_by must contain at most two distinct parameters")
-        if any(name not in PARAMETERS or name in ("physical_error_rate", "rounds") for name in group_by):
-            raise ValueError("group_by must use config parameters other than physical_error_rate and rounds")
-        if baseline_compare and "decoder_type" not in group_by:
-            raise ValueError("baseline_compare requires decoder_type in group_by")
+    def _ler_table(self, filter, baseline_compare=False):
         table = self.summary(filter)
         if baseline_compare:
             if (table["decoder_type"] == "baseline").any():
@@ -278,122 +244,211 @@ class ColorCorrelatedRun:
             table = pd.concat([table, baseline], ignore_index=True).sort_values(
                 ["distance", "physical_error_rate", "decoder_type"]
             ).reset_index(drop=True)
-        ungrouped = set(PARAMETERS) - {"physical_error_rate", "rounds", *group_by}
+        return table
+
+    def _styles(self, table, group_by):
+        """Use run-wide value ordering so filters and plots share encodings."""
+        names = tuple(group_by)
+        value_lists = [sorted(set(self.catalog[name]) | set(table[name])
+                              | ({"baseline"} if name == "decoder_type" else set()))
+                       for name in names]
+        first = value_lists[0] if names else [None]
+        second = value_lists[1] if len(names) == 2 else [None]
+        if len(second) > len(_MARKERS):
+            raise ValueError(f"Second group has more than {len(_MARKERS)} marker values")
+        cmap = plt.colormaps["tab10"] if len(first) <= 10 else plt.colormaps["turbo"].resampled(len(first))
+        return ({value: cmap(i) for i, value in enumerate(first)},
+                {value: _MARKERS[i] for i, value in enumerate(second)})
+
+    @staticmethod
+    def _groups(table, group_by, x):
+        if isinstance(group_by, str):
+            raise ValueError("group_by must be a list of up to two parameter names")
+        names = tuple(group_by)
+        if len(names) > 2 or len(set(names)) != len(names):
+            raise ValueError("group_by must contain at most two distinct parameters")
+        if any(name not in PARAMETERS or name in ("physical_error_rate", "rounds") for name in names):
+            raise ValueError("group_by must use config parameters other than physical_error_rate and rounds")
+        ungrouped = set(PARAMETERS) - {x, "rounds", *names}
         varying = sorted(name for name in ungrouped if table[name].nunique() > 1)
         if varying:
             raise ValueError(f"Filter or group_by the varying parameters: {varying}")
-        if table.duplicated([*group_by, "physical_error_rate"]).any():
-            raise ValueError("Multiple points share a group and physical error rate")
+        if table.duplicated(list(dict.fromkeys([*names, x]))).any():
+            raise ValueError(f"Multiple points share a group and {x}")
+        return names
 
-        first_values = sorted(table[group_by[0]].unique()) if group_by else [None]
-        second_values = sorted(table[group_by[1]].unique()) if len(group_by) == 2 else [None]
-        if len(second_values) > len(_MARKERS):
-            raise ValueError(f"Second group has more than {len(_MARKERS)} marker values")
-        if len(first_values) <= 10:
-            color_for = {
-                value: plt.colormaps["tab10"](i) for i, value in enumerate(first_values)
-            }
-        else:
-            colors = plt.colormaps["turbo"].resampled(len(first_values))
-            color_for = {value: colors(i) for i, value in enumerate(first_values)}
-        marker_for = {value: _MARKERS[i] for i, value in enumerate(second_values)}
-        nrows, ncols = len(first_values), len(second_values)
-        labels = [
-            ", ".join(f"{name}={value}" for name, value in zip(group_by, pair)) or "selected"
-            for pair in ((first, second) for first in first_values for second in second_values)
-        ] if len(group_by) == 2 else [
-            f"{group_by[0]}={first}" if group_by else "selected" for first in first_values
-        ]
-        cell_width = max(2.4, max(map(len, labels)) * legend_fontsize / 88)
-        figure_width = max(plot_width + 1.35, ncols * cell_width + 1.25)
-        legend_height = nrows * legend_row_height
-        bottom, gap, top = 0.95, 0.38, 0.30
-        figure_height = bottom + plot_height + gap + legend_height + top
-        plot_bounds = [0.85 / figure_width, bottom / figure_height,
-                       plot_width / figure_width, plot_height / figure_height]
-        legend_bounds = [0.55 / figure_width,
-                         (bottom + plot_height + gap) / figure_height,
-                         (figure_width - 1.1) / figure_width,
-                         legend_height / figure_height]
-        if ax is None:
-            figure = plt.figure(figsize=(figure_width, figure_height))
-            ax = figure.add_axes(plot_bounds)
-        else:
-            figure = ax.figure
-            figure.set_size_inches(figure_width, figure_height)
-            ax.set_position(plot_bounds)
-        legend_ax = figure.add_axes(legend_bounds, label="condition_legend")
-        legend_ax.set(xlim=(0, ncols), ylim=(nrows, 0))
-        legend_ax.axis("off")
-        combinations = {
-            tuple(row[name] for name in group_by)
-            for _, row in table.iterrows()
-        }
-        for row_index, first in enumerate(first_values):
-            for col_index, second in enumerate(second_values):
-                pair = ((first, second) if len(group_by) == 2 else
-                        (first,) if group_by else ())
-                legend_ax.add_patch(Rectangle(
-                    (col_index, row_index), 1, 1,
-                    facecolor="white", edgecolor="0.5", linewidth=0.8,
-                ))
-                label = ", ".join(
-                    f"{name}={value}" for name, value in zip(group_by, pair)
-                ) or "selected"
-                if pair in combinations:
-                    legend_ax.plot(
-                        [col_index + 0.06, col_index + 0.19],
-                        [row_index + 0.5] * 2,
-                        color=color_for[first], marker=marker_for[second],
-                        markersize=5, linewidth=1.5,
-                    )
-                else:
-                    label += " (no point)"
-                legend_ax.text(
-                    col_index + 0.25, row_index + 0.5, label,
-                    va="center", fontsize=legend_fontsize,
-                )
+    @staticmethod
+    def _axes(ax, plot_width, plot_height):
+        if any(not np.isfinite(v) or v <= 0 for v in (plot_width, plot_height)):
+            raise ValueError("Plot sizes must be positive and finite")
+        if ax is not None:
+            return ax.figure, ax
+        # Sizes describe the main axes, in inches, independently of legends.
+        width, height = plot_width + 1.35, plot_height + 1.25
+        figure = plt.figure(figsize=(width, height))
+        return figure, figure.add_axes([.85 / width, .95 / height,
+                                        plot_width / width, plot_height / height])
+
+    def plot_legends(self, table, *, group_by=("distance", "decoder_type"),
+                     fontsize=10, row_height=.35, width=3.0, ncol=1):
+        """Return {field: (figure, axes)} with independent color/marker legends.
+
+        Each legend shows only values present in table, under its field name.
+        The first field uses colored lines, the second black markers. Figures
+        can be styled, resized and saved independently of the data plot.
+        """
+        if (isinstance(group_by, str) or len(group_by) > 2
+                or len(set(group_by)) != len(group_by)
+                or any(name not in PARAMETERS for name in group_by)):
+            raise ValueError("group_by must contain at most two distinct config parameters")
+        if (any(not np.isfinite(v) or v <= 0 for v in (fontsize, row_height, width))
+                or isinstance(ncol, bool) or not isinstance(ncol, int) or ncol < 1):
+            raise ValueError("Legend sizes and ncol must be positive")
+        color_for, marker_for = self._styles(table, group_by)
+        legends = {}
+        for index, name in enumerate(group_by):
+            values = sorted(table[name].unique())
+            handles = [Line2D([], [], color=color_for[v], linewidth=2)
+                       if index == 0 else
+                       Line2D([], [], color="black", marker=marker_for[v],
+                              linestyle="none", markersize=7) for v in values]
+            height = (int(np.ceil(len(values) / ncol)) + 1.8) * row_height
+            figure, ax = plt.subplots(figsize=(width, height))
+            ax.axis("off")
+            ax.legend(handles, [str(v) for v in values], title=name,
+                      loc="center", frameon=False, fontsize=fontsize,
+                      title_fontsize=fontsize, ncol=ncol)
+            legends[name] = (figure, ax)
+        return legends
+
+    def _draw(self, table, ax, group_by, x, y, *, intervals=False, yscale="linear"):
+        colors, markers = self._styles(table, group_by)
         grouped = (table.groupby(group_by[0] if len(group_by) == 1 else list(group_by),
                                  dropna=False, sort=True) if group_by else [((), table)])
-        zero_display = np.array([
-            _per_round(0.5 / row.shots, row.rounds)
-            if row.noise_model == "uniform" else 0.5 / row.shots
-            for row in table.itertuples()
-        ])
-        display_floor = float(zero_display.min())
         for key, rows in grouped:
             values = key if isinstance(key, tuple) else (key,)
-            rows = rows.sort_values("physical_error_rate")
-            color = color_for[values[0]] if group_by else color_for[None]
-            marker = marker_for[values[1]] if len(group_by) == 2 else marker_for[None]
-            x = rows["physical_error_rate"].to_numpy(dtype=float)
-            y = rows["logical_error_rate"].to_numpy(dtype=float)
-            low = rows["ler_low"].to_numpy(dtype=float)
-            if yscale == "log":
-                floor_by_row = np.array([
-                    _per_round(0.5 / row.shots, row.rounds)
-                    if row.noise_model == "uniform" else 0.5 / row.shots
-                    for row in rows.itertuples()
-                ])
-                y = np.where(y == 0, floor_by_row, y)
-                low = np.maximum(low, display_floor)
-            ax.plot(x, y, marker=marker, color=color)
-            ax.fill_between(x, low,
-                            rows["ler_high"].to_numpy(dtype=float), color=color, alpha=0.10)
-        upper = min(1.0, float(table["ler_high"].max()) * 1.15)
+            rows = rows.sort_values(x)
+            color = colors[values[0]] if group_by else colors[None]
+            marker = markers[values[1]] if len(group_by) == 2 else markers[None]
+            observed = rows[y].to_numpy(dtype=float)
+            # NaN breaks the line at zero/undefined observations, including on
+            # linear axes. No artificial positive failure rate is plotted.
+            visible = np.isfinite(observed)
+            if intervals or yscale == "log":
+                visible &= observed > 0
+            ax.plot(rows[x].to_numpy(dtype=float), np.where(visible, observed, np.nan),
+                    color=color, marker=marker)
+            if intervals:
+                ax.fill_between(rows[x].to_numpy(dtype=float),
+                                rows["ler_low"].to_numpy(dtype=float),
+                                rows["ler_high"].to_numpy(dtype=float),
+                                color=color, alpha=.10)
+        ax.set_yscale(yscale)
+        ax.grid(alpha=.25)
+
+    def plot_ler(self, *, filter=None, group_by=("distance", "decoder_type"),
+                 baseline_compare=False, yscale="log", plot_width=7.4,
+                 plot_height=4.6, ax=None):
+        """Return (figure, axes, table); use plot_legends for separate figures.
+
+        Zero LER observations have Wilson shading only, on both axis scales.
+        Uniform circuit-noise rates and Wilson limits are converted per round.
+        A log axis clips bands at its lower visible limit without changing the
+        returned interval endpoints or inserting a positive point estimate.
+        """
+        if yscale not in ("linear", "log"):
+            raise ValueError("yscale must be 'linear' or 'log'")
+        if baseline_compare and "decoder_type" not in group_by:
+            raise ValueError("baseline_compare requires decoder_type in group_by")
+        table = self._ler_table(filter, baseline_compare)
+        names = self._groups(table, group_by, "physical_error_rate")
+        figure, ax = self._axes(ax, plot_width, plot_height)
+        self._draw(table, ax, names, "physical_error_rate", "logical_error_rate",
+                   intervals=True, yscale=yscale)
+        upper = min(1.0, float(table.ler_high.max()) * 1.15)
         if yscale == "log":
-            ax.set_yscale("log")
-            ax.set_ylim(display_floor / 1.5, max(upper, display_floor * 10))
-            if (table["failures"] == 0).any():
-                figure.text(
-                    0.85 / figure_width, 0.12 / figure_height,
-                    "Zero-failure points use half-failure display values; table retains LER = 0.",
-                    fontsize=8, color="0.35",
-                )
+            positive = table.loc[table.ler_low > 0, "ler_low"]
+            floor = min(float(table.ler_high.min()) / 10,
+                        float(positive.min()) if len(positive) else np.inf)
+            ax.set_ylim(floor / 1.5, max(upper, floor * 10))
         else:
             ax.set_ylim(0, upper)
-        ylabel = ("Logical error rate per round" if (table["noise_model"] == "uniform").all()
-                  else "Logical error rate")
-        ax.set(xlabel="Physical error rate", ylabel=ylabel)
-        ax.grid(alpha=0.25)
+        ax.set(xlabel="Physical error rate",
+               ylabel="Logical error rate per round" if (table.noise_model == "uniform").all()
+               else "Logical error rate")
+        return figure, ax, table
+
+    def improvement_table(self, *, physical_error_rate, filter=None):
+        """Baseline LER / decoder LER at one physical error rate.
+
+        Paired decoders use their own default_logical_error metric. Others use
+        the same deterministic representative as plot_ler's baseline, matched
+        on every physical condition, including rounds. Independent samples
+        are labelled in baseline_paired. Positive/zero yields inf; 0/0 yields
+        NaN. These are empirical ratios, with no inferred confidence interval.
+        """
+        if not np.isfinite(physical_error_rate) or physical_error_rate <= 0:
+            raise ValueError("physical_error_rate must be positive and finite")
+        selection = dict(filter or {})
+        if "physical_error_rate" in selection:
+            wanted = selection["physical_error_rate"]
+            values = wanted if isinstance(wanted, (list, tuple, set)) else [wanted]
+            if physical_error_rate not in values:
+                raise ValueError("physical_error_rate conflicts with filter")
+        selection["physical_error_rate"] = physical_error_rate
+        table = self.summary(selection)
+        reference_filter = {k: v for k, v in selection.items() if k != "decoder_type"}
+        references = self._ler_table(reference_filter, True)
+        references = references[references.decoder_type == "baseline"]
+        condition = [name for name in PARAMETERS if name != "decoder_type"]
+        if table.default_failures.notna().any():
+            selected_references = self._ler_table(selection, True)
+            selected_references = selected_references[selected_references.decoder_type == "baseline"]
+            references = (pd.concat([selected_references, references], ignore_index=True)
+                          .drop_duplicates(condition))
+        reference = references.set_index(condition)
+        table = table.copy()
+        rates, sources, paired_flags = [], [], []
+        for row in table.itertuples():
+            paired = not pd.isna(row.default_failures)
+            if paired:
+                rates.append(row.default_logical_error_rate)
+                sources.append(row.point_directory)
+            else:
+                key = tuple(getattr(row, name) for name in condition)
+                if key not in reference.index:
+                    raise ValueError(f"No matching baseline for {row.point_directory}")
+                match = reference.loc[key]
+                rates.append(match.logical_error_rate)
+                sources.append(match.point_directory)
+            paired_flags.append(paired)
+        table["baseline_logical_error_rate"] = rates
+        table["baseline_point_directory"] = sources
+        table["baseline_paired"] = paired_flags
+        with np.errstate(divide="ignore", invalid="ignore"):
+            table["improvement_ratio"] = (table.baseline_logical_error_rate.to_numpy(dtype=float)
+                                          / table.logical_error_rate.to_numpy(dtype=float))
+        return table
+
+    def plot_improvement_ratio(self, *, physical_error_rate, filter=None,
+                               x="distance", group_by=("distance", "decoder_type"),
+                               yscale="linear", plot_width=7.4, plot_height=4.6, ax=None):
+        """Return (figure, axes, table) with shared LER color/marker encodings.
+
+        Infinite and undefined ratios are retained in the table and omitted
+        from the plot. The reference line at 1 denotes no improvement.
+        """
+        if x not in ("distance", "rounds", "physical_error_rate"):
+            raise ValueError("x must be distance, rounds or physical_error_rate")
+        if yscale not in ("linear", "log"):
+            raise ValueError("yscale must be 'linear' or 'log'")
+        table = self.improvement_table(physical_error_rate=physical_error_rate, filter=filter)
+        names = self._groups(table, group_by, x)
+        figure, ax = self._axes(ax, plot_width, plot_height)
+        self._draw(table, ax, names, x, "improvement_ratio", yscale=yscale)
+        ax.axhline(1, color="0.5", linestyle="--", linewidth=1)
+        ax.set(xlabel="Code distance" if x == "distance" else x.replace("_", " ").capitalize(),
+               ylabel="LER improvement ratio (baseline / decoder)")
+        if x == "distance":
+            ax.set_xticks(sorted(table.distance.unique()))
         return figure, ax, table
