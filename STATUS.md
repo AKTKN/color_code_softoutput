@@ -1,5 +1,17 @@
 # STATUS.md
 
+## Decoder main publication — 2026-09-28
+
+At the user's request, `external_libs/color-code-stim/` was switched to
+`main`, advanced to `origin/main` (`85f5b6e`), and merged with the
+original-stage-2 perturbation change (`04123e0`). Merge commit `072a87d`
+was pushed to `origin/main`. Its tree is identical to `04123e0`, and
+`PYTHONPATH="$PWD/src" python -m pytest tests/test_prior_perturbation.py -q`
+passes all 28 tests in `color_code_so`. The checkout remains on main;
+subsequent authorized decoder work uses main until the user changes that
+preference. README no longer requires switching to phase2a/swim-distance.
+
+
 ## Perturbation stage-2 prior switch and decoder aliases — 2026-09-28
 
 The user authorized changes to the current `color-code-stim` checkout and the

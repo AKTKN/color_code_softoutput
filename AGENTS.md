@@ -1,5 +1,14 @@
 # AGENTS.md
 
+## Current decoder working branch (2026-09-28)
+
+The user requested publishing the latest color-code-stim change to `main`
+and using `main` for decoder work for the time being. The current
+`external_libs/color-code-stim/` checkout is now on `main`, with the
+original-stage-2 perturbation option merged and pushed as `072a87d`.
+Use that branch for subsequent authorized decoder changes unless the user
+requests otherwise. Historical feature-worktree locations remain unchanged.
+
 ## Current power-guide color-correlated rule (2026-09-27)
 
 The latest user request supersedes the older hard-conditioning guide rule
@@ -399,6 +408,13 @@ Whenever work is completed:
 - Update the `Last update` and `Next task` fields below.
 
 ## Last update
+
+2026-09-28 — Merged decoder commit `04123e0` into current `main` and pushed
+merge commit `072a87d`. The decoder checkout now stays on `main` per the
+user's ongoing branch preference. Its tree equals the tested feature branch;
+28 focused perturbation tests pass on main. README setup guidance now uses
+main for the stage-2 prior option.
+Next task: continue authorized decoder work on main.
 
 2026-09-28 — Added `use_original_prior_for_stage2` to prior perturbation:
 False retains both perturbed matching stages; True uses original stage-2

@@ -125,10 +125,8 @@ records are in `notes/`, `STATUS.md`, and `REVIEW.md`.
 
 ## Comparing decoder parameters by alias
 
-The stage-2 prior option requires the updated `color-code-stim` checkout on
-`phase2a/swim-distance`. After cloning, select it with
-`git -C external_libs/color-code-stim checkout phase2a/swim-distance`
-before installing the editable package.
+The stage-2 prior option is available on `color-code-stim` main. Use its
+updated `main` checkout when installing the editable package.
 
 Give each decoder configuration a unique `decoder_alias`. `type` still selects
 its implementation; the alias identifies the parameter variant in saved paths,
