@@ -20,6 +20,11 @@ class CircuitCandidateSwim:
         if any(not backend.topology.class_exists for backend in self.backends.values()):
             raise ValueError("circuit stage-2 opposite logical class is absent")
 
+    def score_candidate(self, detectors, hypothesis, color):
+        """Return only per-shot scores; hypotheses/corrections stay in decoder."""
+        branch = self.backends[color].decode_hypotheses(detectors, hypothesis)
+        return np.asarray([result.phi for result in branch.results], dtype=np.float64)
+
     def score(self, detectors, prediction, extra):
         """Return the same-hard-logical-class minimum across generated candidates."""
         shots = np.asarray(detectors, dtype=bool)

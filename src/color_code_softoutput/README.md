@@ -162,6 +162,18 @@ same plotted condition still require a separate selection.
 
 ## YAML workflow point storage
 
+By default, the YAML worker requests only the metric names required by the
+point's saved schema from `ColorCode.decode(metrics=..., full_output=False)`.
+The decoder computes the scalar statistics and returns one `(shots,)` array
+per requested metric. It does not export all candidate corrections, stage-1
+hypotheses or generation weights. Circuit SWIM uses the existing geometry
+backend during candidate generation and returns the same parity-filtered
+minimum. Actual observables are used only for failure statistics.
+Explicit `decode_options: {full_output: true}` retains the diagnostic path
+and produces the same final metric columns. The on-disk schema is unchanged.
+Detailed paired candidate audits and historical per-color studies retain
+their explicitly requested diagnostics.
+
 `simulation.storage.PointStorage(point, point_dir, buffer_shots)` creates one
 new point directory whose name matches `point_directory_name(point)`.
 Call `accept(WorkerResult)` in the scheduler's main-process callback and

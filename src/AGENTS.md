@@ -1,5 +1,17 @@
 # AGENTS.md — Phase-2A Color-Code Swim-Distance Implementation
 
+## Current scalar simulation output (2026-09-29)
+
+The user authorized requested per-shot metrics in the decoder and YAML
+simulation. `simulation.task.metric_names` is the shared output contract.
+Default workers use metrics with full_output=False; all requested arrays are
+one scalar per shot. Actual outcomes affect only failure statistics. Preserve
+baseline semantics, candidate order/ties, RNG, SWIM parity filtering and file
+schemas. Explicit full output remains the diagnostic reference. Circuit SWIM
+can be prepared lazily when reusing a cached decoder. Root 361 / decoder 308
+plus two existing skips pass; see ../notes/support/compact_experiment_metrics_20260929/.
+Traced memory improves, but runtime is mixed; do not claim universal speedup.
+
 ## Current monotone-Y simulation integration (2026-09-19)
 
 The user's follow-up authorizes paired sampling and all existing analysis

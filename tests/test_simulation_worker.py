@@ -62,12 +62,16 @@ def test_chunk_same_shots_metrics_and_interval(monkeypatch):
             seen.append(("decode", self.correlated, detectors.copy(), options))
             if not self.correlated:
                 return np.array([0, 1, 0], dtype=bool)
-            weights = np.full((1, 12, 3), 5.)
-            weights[0, 3] = [4., 4., 4.]
+            assert options["full_output"] is False
+            assert set(options["metrics"]) == set(worker.metric_names(point(True)))
+            np.testing.assert_array_equal(options["baseline_predictions"], [0, 1, 0])
+            np.testing.assert_array_equal(options["actual_observables"], [0, 0, 1])
             return np.array([0, 0, 1], dtype=bool), {
-                "candidate_weights": weights, "weights": np.array([4., 4., 4.]),
-                "candidate_generation_weights": np.full_like(weights, -100.),
-                "color_correlated_run": np.array([0, 1, 2], dtype=np.int8),
+                "logical_error": np.zeros(3, dtype=bool),
+                "default_logical_error": np.array([0, 1, 1], dtype=bool),
+                "better_weight_by_color_correlated_decoding": np.ones(3, dtype=np.uint8),
+                "effect_by_color_correlated_decoding": np.array([0, 1, 1], dtype=np.uint8),
+                "color_correlated_run": np.array([0, 1, 2], dtype=np.uint8),
             }
 
     monkeypatch.setattr(worker, "_codes", lambda _: worker._CodePair(FakeCode(True), FakeCode(False)))

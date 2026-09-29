@@ -1,5 +1,27 @@
 # AGENTS.md
 
+## Current requested scalar output authorization (2026-09-29)
+
+The user authorized decoder/simulation output changes, exact full-output
+comparisons and bounded memory/runtime measurements. The YAML worker now
+requests its saved schema through `ColorCode.decode(metrics=...,
+full_output=False)`. Each returned metric is `(shots,)`; explicit True retains
+the diagnostic API. Preserve all priors, RNG/cursors, baseline selection,
+candidate order/ties, SWIM parity filtering and existing Parquet schemas.
+Actual observables enter statistics only. Keep native graph reuse; cached
+plain decoders lazily prepare circuit SWIM when requested. Work continues on
+`codex/native-stage1-perturbation-20260929`, without merging main.
+
+Final tests: root 361; decoder 308/two existing skips. Same-shot metric/table
+comparisons include superdense, comparative, both perturbation modes,
+relifting, spatial/circuit SWIM, M1/alpha0, empty/split batches and recovery.
+Report: `notes/support/compact_experiment_metrics_20260929/report.md`.
+Native M12/N10 traced allocation peaks fall ~79.5% (comparative ~83.1%), but
+timing is mixed: d9/d13 basic decode is 34.4%/15.7% slower, d17 2.8% faster.
+These allocation percentages are not whole-process RSS reductions. Do not
+claim universal acceleration or that copies dominate without separate evidence.
+Timing programs and temporary baseline inputs have been removed.
+
 ## Current native stage-1 perturbation authorization (2026-09-29)
 
 The user authorized the three-repository native implementation, tests, bounded
@@ -455,6 +477,13 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-29 — Added requested `(shots,)` experiment metrics with default
+full_output=False in the YAML worker. Root 361 and decoder 308/two existing
+skips pass; saved values/schema match explicit full output. Native M12/N10
+traced peaks decrease ~79.5%, with mixed runtime results, including slower
+d9/d13 basic decoding. Report/CSV/hashes:
+notes/support/compact_experiment_metrics_20260929/. Timing programs removed.
+
 2026-09-29 — Completed native stage-1 perturbation in PyMatching, decoder and
 YAML workflow. Tests: root 325, decoder 252/two existing skips, PyMatching
 Python 129 and C++ 99; ASan/UBSan/leak checks pass. Warm graph builds are zero
@@ -885,6 +914,11 @@ The primary crossing is unresolved at the upper grid endpoint; numerical
 limitations and the missing dual certificate remain explicit in the review.
 
 ## Next task
+
+Review `notes/support/compact_experiment_metrics_20260929/report.md` before
+choosing any further speed optimization. Default YAML output is compact;
+explicit full_output=True is available for diagnostics. Memory reduction
+does not imply a decode-time reduction in every condition.
 
 Review `notes/support/native_stage1_perturbation_20260929/report.md` and use
 `configs/native_stage1_perturbation_comparison.yaml` with its recorded backend

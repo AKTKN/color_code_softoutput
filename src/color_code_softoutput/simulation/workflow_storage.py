@@ -10,7 +10,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 from .planner import point_directory_name
-from .task import ResolvedPoint
+from .task import PAIRED_METRICS, ResolvedPoint, metric_names
 from .worker import WorkerResult
 
 
@@ -24,12 +24,6 @@ _METRIC_TYPES = {
     "swim_distance": pa.float64(),
     "logical_gap": pa.float64(),
 }
-_PAIRED = ("logical_error", "default_logical_error",
-           "better_weight_by_color_correlated_decoding",
-           "effect_by_color_correlated_decoding")
-_CORRELATED = (*_PAIRED, "color_correlated_run")
-_RELIFTING = (*_PAIRED, "relift_run")
-
 
 def _schema(names: tuple[str, ...]) -> pa.Schema:
     return pa.schema([pa.field("shot_index", pa.int64(), nullable=False)] +
@@ -42,7 +36,7 @@ def _check_table(table: pa.Table, schema: pa.Schema, start: int) -> None:
     index = table.column("shot_index").to_numpy()
     if not np.array_equal(index, np.arange(start, start + len(table), dtype=np.int64)):
         raise ValueError("temporary part has invalid shot indices")
-    if set(_PAIRED).issubset(schema.names):
+    if set(PAIRED_METRICS).issubset(schema.names):
         logical = table.column("logical_error").to_numpy()
         default = table.column("default_logical_error").to_numpy()
         effect = table.column("effect_by_color_correlated_decoding").to_numpy()
@@ -84,14 +78,7 @@ class PointStorage:
         if self.point_dir.name != point_directory_name(point):
             raise ValueError("point directory does not match planned name")
         self.buffer_shots = buffer_shots
-        options = dict(point.color_code_options) | dict(point.decoder_options)
-        base_names = (_CORRELATED if options.get("enable_colorcorrelated_decoding", False)
-                      else _RELIFTING if options.get("enable_cross_color_relifting", False)
-                      else _PAIRED if options.get("enable_prior_perturbation", False) or options.get("stage1_perturbation", False)
-                      else ("logical_error",))
-        self.names = base_names + (("swim_distance",) if dict(point.decode_options).get(
-            "compute_swim_distance", False) else ()) + (("logical_gap",) if options.get(
-            "comparative_decoding", False) else ())
+        self.names = metric_names(point)
         self.schema = _schema(self.names)
         self.point_dir.mkdir(parents=True, exist_ok=False)
         self.buffer_dir = self.point_dir / ".buffer"

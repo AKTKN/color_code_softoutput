@@ -1,0 +1,1602 @@
+[
+  {
+    "case": {
+      "d": 9,
+      "shots": 10,
+      "mode": "ordinary",
+      "M": 1,
+      "soft": "none"
+    },
+    "route": "legacy",
+    "setup_ms": 49.17167099938524,
+    "warmup_ms": 1030.0309360000028,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 5.611870999928215,
+        "decoder_ms": 5.580134000410908,
+        "baseline_ms": 0.0,
+        "checksum": "af9a31e3204027de32a39685f30d0d751f577ce783908d10f324cf5863461795",
+        "returned_bytes": 39630
+      },
+      {
+        "rep": 1,
+        "total_ms": 4.165989000284753,
+        "decoder_ms": 4.143877999922552,
+        "baseline_ms": 0.0,
+        "checksum": "af9a31e3204027de32a39685f30d0d751f577ce783908d10f324cf5863461795",
+        "returned_bytes": 39630
+      },
+      {
+        "rep": 2,
+        "total_ms": 4.4801579997511,
+        "decoder_ms": 4.458020000129181,
+        "baseline_ms": 0.0,
+        "checksum": "af9a31e3204027de32a39685f30d0d751f577ce783908d10f324cf5863461795",
+        "returned_bytes": 39630
+      }
+    ],
+    "input_hash": "1d86571b7a462631fd6d14e6475bd659548b860c776657da6f0160a181053c4f",
+    "memory": {
+      "traced_current_bytes": 43794,
+      "traced_peak_bytes": 605724,
+      "returned_bytes": 39630,
+      "metrics_bytes": 10,
+      "process_peak_rss_kib": 265700,
+      "checksum": "af9a31e3204027de32a39685f30d0d751f577ce783908d10f324cf5863461795"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/tmp/cc-scalar-metrics-baseline-_3qq4kda/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 9,
+      "shots": 10,
+      "mode": "ordinary",
+      "M": 1,
+      "soft": "none"
+    },
+    "route": "compact",
+    "setup_ms": 51.183753999794135,
+    "warmup_ms": 948.1674090002343,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 4.509477000283368,
+        "decoder_ms": 4.500067999288149,
+        "baseline_ms": 0.0,
+        "checksum": "af9a31e3204027de32a39685f30d0d751f577ce783908d10f324cf5863461795",
+        "returned_bytes": 20
+      },
+      {
+        "rep": 1,
+        "total_ms": 4.881318000116153,
+        "decoder_ms": 4.873292999945988,
+        "baseline_ms": 0.0,
+        "checksum": "af9a31e3204027de32a39685f30d0d751f577ce783908d10f324cf5863461795",
+        "returned_bytes": 20
+      },
+      {
+        "rep": 2,
+        "total_ms": 3.397180999854754,
+        "decoder_ms": 3.389835999769275,
+        "baseline_ms": 0.0,
+        "checksum": "af9a31e3204027de32a39685f30d0d751f577ce783908d10f324cf5863461795",
+        "returned_bytes": 20
+      }
+    ],
+    "input_hash": "1d86571b7a462631fd6d14e6475bd659548b860c776657da6f0160a181053c4f",
+    "memory": {
+      "traced_current_bytes": 4080,
+      "traced_peak_bytes": 528320,
+      "returned_bytes": 20,
+      "metrics_bytes": 10,
+      "process_peak_rss_kib": 266136,
+      "checksum": "af9a31e3204027de32a39685f30d0d751f577ce783908d10f324cf5863461795"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/color-code-stim/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 9,
+      "shots": 10,
+      "mode": "correlated",
+      "M": 1,
+      "soft": "none"
+    },
+    "route": "legacy",
+    "setup_ms": 99.87476800051809,
+    "warmup_ms": 2048.860211999454,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 13.346354999157484,
+        "decoder_ms": 8.172691000254417,
+        "baseline_ms": 4.770032000124047,
+        "checksum": "c24b76ecfd80951e98bfd1a2f0a5e017a3aea4409a732d0707c05c6e12471870",
+        "returned_bytes": 160080
+      },
+      {
+        "rep": 1,
+        "total_ms": 10.211337000328058,
+        "decoder_ms": 5.382176000239269,
+        "baseline_ms": 4.432055000506807,
+        "checksum": "c24b76ecfd80951e98bfd1a2f0a5e017a3aea4409a732d0707c05c6e12471870",
+        "returned_bytes": 160080
+      },
+      {
+        "rep": 2,
+        "total_ms": 8.732336999855761,
+        "decoder_ms": 4.81436100017163,
+        "baseline_ms": 3.6664240005848114,
+        "checksum": "c24b76ecfd80951e98bfd1a2f0a5e017a3aea4409a732d0707c05c6e12471870",
+        "returned_bytes": 160080
+      }
+    ],
+    "input_hash": "1d86571b7a462631fd6d14e6475bd659548b860c776657da6f0160a181053c4f",
+    "memory": {
+      "traced_current_bytes": 170816,
+      "traced_peak_bytes": 1045350,
+      "returned_bytes": 160080,
+      "metrics_bytes": 50,
+      "process_peak_rss_kib": 307856,
+      "checksum": "c24b76ecfd80951e98bfd1a2f0a5e017a3aea4409a732d0707c05c6e12471870"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/tmp/cc-scalar-metrics-baseline-_3qq4kda/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 9,
+      "shots": 10,
+      "mode": "correlated",
+      "M": 1,
+      "soft": "none"
+    },
+    "route": "compact",
+    "setup_ms": 105.41093200026808,
+    "warmup_ms": 2245.1847970005474,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 9.551791999911075,
+        "decoder_ms": 4.783572000633285,
+        "baseline_ms": 4.757413000334054,
+        "checksum": "c24b76ecfd80951e98bfd1a2f0a5e017a3aea4409a732d0707c05c6e12471870",
+        "returned_bytes": 60
+      },
+      {
+        "rep": 1,
+        "total_ms": 9.83745000030467,
+        "decoder_ms": 4.829310000786791,
+        "baseline_ms": 4.996900000151072,
+        "checksum": "c24b76ecfd80951e98bfd1a2f0a5e017a3aea4409a732d0707c05c6e12471870",
+        "returned_bytes": 60
+      },
+      {
+        "rep": 2,
+        "total_ms": 6.839344000582059,
+        "decoder_ms": 3.427927999837266,
+        "baseline_ms": 3.404363999834459,
+        "checksum": "c24b76ecfd80951e98bfd1a2f0a5e017a3aea4409a732d0707c05c6e12471870",
+        "returned_bytes": 60
+      }
+    ],
+    "input_hash": "1d86571b7a462631fd6d14e6475bd659548b860c776657da6f0160a181053c4f",
+    "memory": {
+      "traced_current_bytes": 7772,
+      "traced_peak_bytes": 691392,
+      "returned_bytes": 60,
+      "metrics_bytes": 50,
+      "process_peak_rss_kib": 306064,
+      "checksum": "c24b76ecfd80951e98bfd1a2f0a5e017a3aea4409a732d0707c05c6e12471870"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/color-code-stim/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 9,
+      "shots": 1,
+      "mode": "native",
+      "M": 12,
+      "soft": "none"
+    },
+    "route": "legacy",
+    "setup_ms": 52.41185600061726,
+    "warmup_ms": 1013.6028859997168,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 9.316801000750274,
+        "decoder_ms": 9.109159000217915,
+        "baseline_ms": 0.0,
+        "checksum": "05af738ec5bbe7d75dc54ff5185e23c80e8cb2f9c050e306bfc41b43b52cbab8",
+        "returned_bytes": 346316
+      },
+      {
+        "rep": 1,
+        "total_ms": 10.855212999558717,
+        "decoder_ms": 10.634927999490174,
+        "baseline_ms": 0.0,
+        "checksum": "05af738ec5bbe7d75dc54ff5185e23c80e8cb2f9c050e306bfc41b43b52cbab8",
+        "returned_bytes": 346316
+      },
+      {
+        "rep": 2,
+        "total_ms": 10.6450319999567,
+        "decoder_ms": 10.417645999950764,
+        "baseline_ms": 0.0,
+        "checksum": "05af738ec5bbe7d75dc54ff5185e23c80e8cb2f9c050e306bfc41b43b52cbab8",
+        "returned_bytes": 346316
+      }
+    ],
+    "input_hash": "063cd6ea07eea45b533eef869a6ce24ada93d13653a29143cf43a0ba00af1ede",
+    "memory": {
+      "traced_current_bytes": 369260,
+      "traced_peak_bytes": 473266,
+      "returned_bytes": 346316,
+      "metrics_bytes": 4,
+      "process_peak_rss_kib": 267800,
+      "checksum": "05af738ec5bbe7d75dc54ff5185e23c80e8cb2f9c050e306bfc41b43b52cbab8"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/tmp/cc-scalar-metrics-baseline-_3qq4kda/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 9,
+      "shots": 1,
+      "mode": "native",
+      "M": 12,
+      "soft": "none"
+    },
+    "route": "compact",
+    "setup_ms": 55.96534200049064,
+    "warmup_ms": 999.1841500004739,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 6.229755000276782,
+        "decoder_ms": 6.224197000847198,
+        "baseline_ms": 0.0,
+        "checksum": "05af738ec5bbe7d75dc54ff5185e23c80e8cb2f9c050e306bfc41b43b52cbab8",
+        "returned_bytes": 5
+      },
+      {
+        "rep": 1,
+        "total_ms": 6.529931999466498,
+        "decoder_ms": 6.524554999487009,
+        "baseline_ms": 0.0,
+        "checksum": "05af738ec5bbe7d75dc54ff5185e23c80e8cb2f9c050e306bfc41b43b52cbab8",
+        "returned_bytes": 5
+      },
+      {
+        "rep": 2,
+        "total_ms": 5.901550999624305,
+        "decoder_ms": 5.896290999771736,
+        "baseline_ms": 0.0,
+        "checksum": "05af738ec5bbe7d75dc54ff5185e23c80e8cb2f9c050e306bfc41b43b52cbab8",
+        "returned_bytes": 5
+      }
+    ],
+    "input_hash": "063cd6ea07eea45b533eef869a6ce24ada93d13653a29143cf43a0ba00af1ede",
+    "memory": {
+      "traced_current_bytes": 8171,
+      "traced_peak_bytes": 131807,
+      "returned_bytes": 5,
+      "metrics_bytes": 4,
+      "process_peak_rss_kib": 267152,
+      "checksum": "05af738ec5bbe7d75dc54ff5185e23c80e8cb2f9c050e306bfc41b43b52cbab8"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/color-code-stim/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 9,
+      "shots": 10,
+      "mode": "native",
+      "M": 12,
+      "soft": "none"
+    },
+    "route": "legacy",
+    "setup_ms": 49.38786999991862,
+    "warmup_ms": 1100.046186000327,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 41.09903500011569,
+        "decoder_ms": 40.94208799961052,
+        "baseline_ms": 0.0,
+        "checksum": "40f8132599c304741f7540921ef2d3296176a81ccca029e85595f4d1759e0f37",
+        "returned_bytes": 3463160
+      },
+      {
+        "rep": 1,
+        "total_ms": 40.954504999717756,
+        "decoder_ms": 40.77586700077518,
+        "baseline_ms": 0.0,
+        "checksum": "40f8132599c304741f7540921ef2d3296176a81ccca029e85595f4d1759e0f37",
+        "returned_bytes": 3463160
+      },
+      {
+        "rep": 2,
+        "total_ms": 34.404775999973936,
+        "decoder_ms": 34.24123300010251,
+        "baseline_ms": 0.0,
+        "checksum": "40f8132599c304741f7540921ef2d3296176a81ccca029e85595f4d1759e0f37",
+        "returned_bytes": 3463160
+      }
+    ],
+    "input_hash": "1d86571b7a462631fd6d14e6475bd659548b860c776657da6f0160a181053c4f",
+    "memory": {
+      "traced_current_bytes": 3490670,
+      "traced_peak_bytes": 4201936,
+      "returned_bytes": 3463160,
+      "metrics_bytes": 40,
+      "process_peak_rss_kib": 270152,
+      "checksum": "40f8132599c304741f7540921ef2d3296176a81ccca029e85595f4d1759e0f37"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/tmp/cc-scalar-metrics-baseline-_3qq4kda/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 9,
+      "shots": 10,
+      "mode": "native",
+      "M": 12,
+      "soft": "none"
+    },
+    "route": "compact",
+    "setup_ms": 49.04042999987723,
+    "warmup_ms": 991.5637710000738,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 55.05005499981053,
+        "decoder_ms": 55.03857499934384,
+        "baseline_ms": 0.0,
+        "checksum": "40f8132599c304741f7540921ef2d3296176a81ccca029e85595f4d1759e0f37",
+        "returned_bytes": 50
+      },
+      {
+        "rep": 1,
+        "total_ms": 40.43906300012168,
+        "decoder_ms": 40.43173599984584,
+        "baseline_ms": 0.0,
+        "checksum": "40f8132599c304741f7540921ef2d3296176a81ccca029e85595f4d1759e0f37",
+        "returned_bytes": 50
+      },
+      {
+        "rep": 2,
+        "total_ms": 61.02695599929575,
+        "decoder_ms": 61.017940000056115,
+        "baseline_ms": 0.0,
+        "checksum": "40f8132599c304741f7540921ef2d3296176a81ccca029e85595f4d1759e0f37",
+        "returned_bytes": 50
+      }
+    ],
+    "input_hash": "1d86571b7a462631fd6d14e6475bd659548b860c776657da6f0160a181053c4f",
+    "memory": {
+      "traced_current_bytes": 13082,
+      "traced_peak_bytes": 858108,
+      "returned_bytes": 50,
+      "metrics_bytes": 40,
+      "process_peak_rss_kib": 267424,
+      "checksum": "40f8132599c304741f7540921ef2d3296176a81ccca029e85595f4d1759e0f37"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/color-code-stim/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 9,
+      "shots": 10,
+      "mode": "native",
+      "M": 12,
+      "soft": "comparative"
+    },
+    "route": "legacy",
+    "setup_ms": 50.48109499966813,
+    "warmup_ms": 1150.2236280002762,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 134.60601499991753,
+        "decoder_ms": 134.40900000023248,
+        "baseline_ms": 0.0,
+        "checksum": "064db83392511f274f1fef48b0cfb5d889f6956cf4e830bc23e1689321eade58",
+        "returned_bytes": 6896562
+      },
+      {
+        "rep": 1,
+        "total_ms": 144.74448900000425,
+        "decoder_ms": 144.57368600051268,
+        "baseline_ms": 0.0,
+        "checksum": "2eb37129c025534a88beddc440dc6cea69530c11c298456049251a3140ac5af2",
+        "returned_bytes": 6896562
+      },
+      {
+        "rep": 2,
+        "total_ms": 148.4105979998276,
+        "decoder_ms": 148.24450199921557,
+        "baseline_ms": 0.0,
+        "checksum": "88dad498143e33a865111aed70919dd2907bee51c26c67b7059934b4a30f77e2",
+        "returned_bytes": 6896562
+      }
+    ],
+    "input_hash": "1d287b61c4c9ea17cdfb042ef79cdae28921d1924ec6189cbab9cc6cc26cd89e",
+    "memory": {
+      "traced_current_bytes": 6934740,
+      "traced_peak_bytes": 8118032,
+      "returned_bytes": 6896562,
+      "metrics_bytes": 120,
+      "process_peak_rss_kib": 274912,
+      "checksum": "2f60ed3bcc82329b7d77ee8b3d86a6b887950fce91dd830fe3262618ad9bbfa4"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/tmp/cc-scalar-metrics-baseline-_3qq4kda/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 9,
+      "shots": 10,
+      "mode": "native",
+      "M": 12,
+      "soft": "comparative"
+    },
+    "route": "compact",
+    "setup_ms": 53.449627999725635,
+    "warmup_ms": 1156.562961000418,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 130.7585240001572,
+        "decoder_ms": 130.75069500064274,
+        "baseline_ms": 0.0,
+        "checksum": "064db83392511f274f1fef48b0cfb5d889f6956cf4e830bc23e1689321eade58",
+        "returned_bytes": 130
+      },
+      {
+        "rep": 1,
+        "total_ms": 136.0783089994584,
+        "decoder_ms": 136.06881499981682,
+        "baseline_ms": 0.0,
+        "checksum": "2eb37129c025534a88beddc440dc6cea69530c11c298456049251a3140ac5af2",
+        "returned_bytes": 130
+      },
+      {
+        "rep": 2,
+        "total_ms": 137.4967759993524,
+        "decoder_ms": 137.48939900051482,
+        "baseline_ms": 0.0,
+        "checksum": "88dad498143e33a865111aed70919dd2907bee51c26c67b7059934b4a30f77e2",
+        "returned_bytes": 130
+      }
+    ],
+    "input_hash": "1d287b61c4c9ea17cdfb042ef79cdae28921d1924ec6189cbab9cc6cc26cd89e",
+    "memory": {
+      "traced_current_bytes": 13066,
+      "traced_peak_bytes": 1368698,
+      "returned_bytes": 130,
+      "metrics_bytes": 120,
+      "process_peak_rss_kib": 268640,
+      "checksum": "2f60ed3bcc82329b7d77ee8b3d86a6b887950fce91dd830fe3262618ad9bbfa4"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/color-code-stim/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 13,
+      "shots": 10,
+      "mode": "ordinary",
+      "M": 1,
+      "soft": "none"
+    },
+    "route": "legacy",
+    "setup_ms": 109.94460999972944,
+    "warmup_ms": 3286.516207999739,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 11.136369000269042,
+        "decoder_ms": 11.104958999567316,
+        "baseline_ms": 0.0,
+        "checksum": "ab6bd51d0644d38c10c8b9f3d6f263d2e6858b0910346dfc80203f61f6473268",
+        "returned_bytes": 127990
+      },
+      {
+        "rep": 1,
+        "total_ms": 12.559415000396257,
+        "decoder_ms": 12.532775000181573,
+        "baseline_ms": 0.0,
+        "checksum": "ab6bd51d0644d38c10c8b9f3d6f263d2e6858b0910346dfc80203f61f6473268",
+        "returned_bytes": 127990
+      },
+      {
+        "rep": 2,
+        "total_ms": 10.728250000283879,
+        "decoder_ms": 10.70558700030233,
+        "baseline_ms": 0.0,
+        "checksum": "ab6bd51d0644d38c10c8b9f3d6f263d2e6858b0910346dfc80203f61f6473268",
+        "returned_bytes": 127990
+      }
+    ],
+    "input_hash": "b3326ef1ce11064f402f04a49b72d517b9b0725c3f7ac8071b059afb67eb0c37",
+    "memory": {
+      "traced_current_bytes": 132154,
+      "traced_peak_bytes": 1951164,
+      "returned_bytes": 127990,
+      "metrics_bytes": 10,
+      "process_peak_rss_kib": 359636,
+      "checksum": "ab6bd51d0644d38c10c8b9f3d6f263d2e6858b0910346dfc80203f61f6473268"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/tmp/cc-scalar-metrics-baseline-_3qq4kda/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 13,
+      "shots": 10,
+      "mode": "ordinary",
+      "M": 1,
+      "soft": "none"
+    },
+    "route": "compact",
+    "setup_ms": 107.85269200005132,
+    "warmup_ms": 3341.6112289996818,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 12.783846999809612,
+        "decoder_ms": 12.771340000654163,
+        "baseline_ms": 0.0,
+        "checksum": "ab6bd51d0644d38c10c8b9f3d6f263d2e6858b0910346dfc80203f61f6473268",
+        "returned_bytes": 20
+      },
+      {
+        "rep": 1,
+        "total_ms": 11.35104799959663,
+        "decoder_ms": 11.342896999849472,
+        "baseline_ms": 0.0,
+        "checksum": "ab6bd51d0644d38c10c8b9f3d6f263d2e6858b0910346dfc80203f61f6473268",
+        "returned_bytes": 20
+      },
+      {
+        "rep": 2,
+        "total_ms": 11.240634999921895,
+        "decoder_ms": 11.232429000301636,
+        "baseline_ms": 0.0,
+        "checksum": "ab6bd51d0644d38c10c8b9f3d6f263d2e6858b0910346dfc80203f61f6473268",
+        "returned_bytes": 20
+      }
+    ],
+    "input_hash": "b3326ef1ce11064f402f04a49b72d517b9b0725c3f7ac8071b059afb67eb0c37",
+    "memory": {
+      "traced_current_bytes": 4080,
+      "traced_peak_bytes": 1697040,
+      "returned_bytes": 20,
+      "metrics_bytes": 10,
+      "process_peak_rss_kib": 358892,
+      "checksum": "ab6bd51d0644d38c10c8b9f3d6f263d2e6858b0910346dfc80203f61f6473268"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/color-code-stim/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 13,
+      "shots": 10,
+      "mode": "correlated",
+      "M": 1,
+      "soft": "none"
+    },
+    "route": "legacy",
+    "setup_ms": 215.59025300030044,
+    "warmup_ms": 6756.6972970007555,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 36.431134999475034,
+        "decoder_ms": 26.110472999789636,
+        "baseline_ms": 9.977757999877213,
+        "checksum": "8aec79ee66c4c4f09596f3681f24a9217bc42a42314e3eea478860583ea2d9db",
+        "returned_bytes": 1663810
+      },
+      {
+        "rep": 1,
+        "total_ms": 32.92560400041111,
+        "decoder_ms": 23.04017699952965,
+        "baseline_ms": 9.534153999993578,
+        "checksum": "8aec79ee66c4c4f09596f3681f24a9217bc42a42314e3eea478860583ea2d9db",
+        "returned_bytes": 1663810
+      },
+      {
+        "rep": 2,
+        "total_ms": 27.42436800053838,
+        "decoder_ms": 20.86955799950374,
+        "baseline_ms": 6.360069000038493,
+        "checksum": "8aec79ee66c4c4f09596f3681f24a9217bc42a42314e3eea478860583ea2d9db",
+        "returned_bytes": 1663810
+      }
+    ],
+    "input_hash": "b3326ef1ce11064f402f04a49b72d517b9b0725c3f7ac8071b059afb67eb0c37",
+    "memory": {
+      "traced_current_bytes": 1682502,
+      "traced_peak_bytes": 3868728,
+      "returned_bytes": 1663810,
+      "metrics_bytes": 50,
+      "process_peak_rss_kib": 549856,
+      "checksum": "8aec79ee66c4c4f09596f3681f24a9217bc42a42314e3eea478860583ea2d9db"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/tmp/cc-scalar-metrics-baseline-_3qq4kda/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 13,
+      "shots": 10,
+      "mode": "correlated",
+      "M": 1,
+      "soft": "none"
+    },
+    "route": "compact",
+    "setup_ms": 221.28631099985796,
+    "warmup_ms": 7107.053222999639,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 30.713333000676357,
+        "decoder_ms": 18.159773000661517,
+        "baseline_ms": 12.542247999590472,
+        "checksum": "8aec79ee66c4c4f09596f3681f24a9217bc42a42314e3eea478860583ea2d9db",
+        "returned_bytes": 60
+      },
+      {
+        "rep": 1,
+        "total_ms": 21.95776900043711,
+        "decoder_ms": 13.299080999786383,
+        "baseline_ms": 8.650228000078641,
+        "checksum": "8aec79ee66c4c4f09596f3681f24a9217bc42a42314e3eea478860583ea2d9db",
+        "returned_bytes": 60
+      },
+      {
+        "rep": 2,
+        "total_ms": 30.321489999550977,
+        "decoder_ms": 17.51330300066911,
+        "baseline_ms": 12.795376000212855,
+        "checksum": "8aec79ee66c4c4f09596f3681f24a9217bc42a42314e3eea478860583ea2d9db",
+        "returned_bytes": 60
+      }
+    ],
+    "input_hash": "b3326ef1ce11064f402f04a49b72d517b9b0725c3f7ac8071b059afb67eb0c37",
+    "memory": {
+      "traced_current_bytes": 14564,
+      "traced_peak_bytes": 2213552,
+      "returned_bytes": 60,
+      "metrics_bytes": 50,
+      "process_peak_rss_kib": 543800,
+      "checksum": "8aec79ee66c4c4f09596f3681f24a9217bc42a42314e3eea478860583ea2d9db"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/color-code-stim/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 13,
+      "shots": 1,
+      "mode": "native",
+      "M": 12,
+      "soft": "none"
+    },
+    "route": "legacy",
+    "setup_ms": 113.79743099951156,
+    "warmup_ms": 3247.8817230003187,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 28.66678900045372,
+        "decoder_ms": 28.447600000617967,
+        "baseline_ms": 0.0,
+        "checksum": "05af738ec5bbe7d75dc54ff5185e23c80e8cb2f9c050e306bfc41b43b52cbab8",
+        "returned_bytes": 1121424
+      },
+      {
+        "rep": 1,
+        "total_ms": 22.023245000127645,
+        "decoder_ms": 21.835815000486036,
+        "baseline_ms": 0.0,
+        "checksum": "05af738ec5bbe7d75dc54ff5185e23c80e8cb2f9c050e306bfc41b43b52cbab8",
+        "returned_bytes": 1121424
+      },
+      {
+        "rep": 2,
+        "total_ms": 15.542301999630581,
+        "decoder_ms": 15.137067000068782,
+        "baseline_ms": 0.0,
+        "checksum": "05af738ec5bbe7d75dc54ff5185e23c80e8cb2f9c050e306bfc41b43b52cbab8",
+        "returned_bytes": 1121424
+      }
+    ],
+    "input_hash": "f0d4c3b0455f4a3467851d5f3fada2490f05f1b86cee3d720ef954386b74ad3c",
+    "memory": {
+      "traced_current_bytes": 1144368,
+      "traced_peak_bytes": 1474652,
+      "returned_bytes": 1121424,
+      "metrics_bytes": 4,
+      "process_peak_rss_kib": 364560,
+      "checksum": "05af738ec5bbe7d75dc54ff5185e23c80e8cb2f9c050e306bfc41b43b52cbab8"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/tmp/cc-scalar-metrics-baseline-_3qq4kda/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 13,
+      "shots": 1,
+      "mode": "native",
+      "M": 12,
+      "soft": "none"
+    },
+    "route": "compact",
+    "setup_ms": 107.1596990004764,
+    "warmup_ms": 3027.5180779999573,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 26.210572000309185,
+        "decoder_ms": 26.200019000498287,
+        "baseline_ms": 0.0,
+        "checksum": "05af738ec5bbe7d75dc54ff5185e23c80e8cb2f9c050e306bfc41b43b52cbab8",
+        "returned_bytes": 5
+      },
+      {
+        "rep": 1,
+        "total_ms": 11.57212799989793,
+        "decoder_ms": 11.56626200008759,
+        "baseline_ms": 0.0,
+        "checksum": "05af738ec5bbe7d75dc54ff5185e23c80e8cb2f9c050e306bfc41b43b52cbab8",
+        "returned_bytes": 5
+      },
+      {
+        "rep": 2,
+        "total_ms": 11.933046000194736,
+        "decoder_ms": 11.927939000088372,
+        "baseline_ms": 0.0,
+        "checksum": "05af738ec5bbe7d75dc54ff5185e23c80e8cb2f9c050e306bfc41b43b52cbab8",
+        "returned_bytes": 5
+      }
+    ],
+    "input_hash": "f0d4c3b0455f4a3467851d5f3fada2490f05f1b86cee3d720ef954386b74ad3c",
+    "memory": {
+      "traced_current_bytes": 8120,
+      "traced_peak_bytes": 393429,
+      "returned_bytes": 5,
+      "metrics_bytes": 4,
+      "process_peak_rss_kib": 363312,
+      "checksum": "05af738ec5bbe7d75dc54ff5185e23c80e8cb2f9c050e306bfc41b43b52cbab8"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/color-code-stim/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 13,
+      "shots": 10,
+      "mode": "native",
+      "M": 12,
+      "soft": "none"
+    },
+    "route": "legacy",
+    "setup_ms": 107.0231479998256,
+    "warmup_ms": 3237.4820140003067,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 104.29910500079131,
+        "decoder_ms": 104.11690199998702,
+        "baseline_ms": 0.0,
+        "checksum": "28488f25bf86b06ef106a43b494f91c52a556facc3681c065fa582a63a05a9b3",
+        "returned_bytes": 11214240
+      },
+      {
+        "rep": 1,
+        "total_ms": 120.0772580004923,
+        "decoder_ms": 119.92514499979734,
+        "baseline_ms": 0.0,
+        "checksum": "28488f25bf86b06ef106a43b494f91c52a556facc3681c065fa582a63a05a9b3",
+        "returned_bytes": 11214240
+      },
+      {
+        "rep": 2,
+        "total_ms": 112.75349199968332,
+        "decoder_ms": 112.59911300021486,
+        "baseline_ms": 0.0,
+        "checksum": "28488f25bf86b06ef106a43b494f91c52a556facc3681c065fa582a63a05a9b3",
+        "returned_bytes": 11214240
+      }
+    ],
+    "input_hash": "b3326ef1ce11064f402f04a49b72d517b9b0725c3f7ac8071b059afb67eb0c37",
+    "memory": {
+      "traced_current_bytes": 11241750,
+      "traced_peak_bytes": 13546666,
+      "returned_bytes": 11214240,
+      "metrics_bytes": 40,
+      "process_peak_rss_kib": 376012,
+      "checksum": "28488f25bf86b06ef106a43b494f91c52a556facc3681c065fa582a63a05a9b3"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/tmp/cc-scalar-metrics-baseline-_3qq4kda/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 13,
+      "shots": 10,
+      "mode": "native",
+      "M": 12,
+      "soft": "none"
+    },
+    "route": "compact",
+    "setup_ms": 108.20238500036794,
+    "warmup_ms": 3754.8527649996686,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 122.99960800010012,
+        "decoder_ms": 122.92377999983728,
+        "baseline_ms": 0.0,
+        "checksum": "28488f25bf86b06ef106a43b494f91c52a556facc3681c065fa582a63a05a9b3",
+        "returned_bytes": 50
+      },
+      {
+        "rep": 1,
+        "total_ms": 151.5065740004502,
+        "decoder_ms": 151.49749100055487,
+        "baseline_ms": 0.0,
+        "checksum": "28488f25bf86b06ef106a43b494f91c52a556facc3681c065fa582a63a05a9b3",
+        "returned_bytes": 50
+      },
+      {
+        "rep": 2,
+        "total_ms": 115.40502699972421,
+        "decoder_ms": 115.39680399982899,
+        "baseline_ms": 0.0,
+        "checksum": "28488f25bf86b06ef106a43b494f91c52a556facc3681c065fa582a63a05a9b3",
+        "returned_bytes": 50
+      }
+    ],
+    "input_hash": "b3326ef1ce11064f402f04a49b72d517b9b0725c3f7ac8071b059afb67eb0c37",
+    "memory": {
+      "traced_current_bytes": 13082,
+      "traced_peak_bytes": 2777888,
+      "returned_bytes": 50,
+      "metrics_bytes": 40,
+      "process_peak_rss_kib": 366444,
+      "checksum": "28488f25bf86b06ef106a43b494f91c52a556facc3681c065fa582a63a05a9b3"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/color-code-stim/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 13,
+      "shots": 10,
+      "mode": "native",
+      "M": 12,
+      "soft": "comparative"
+    },
+    "route": "legacy",
+    "setup_ms": 115.93685200023174,
+    "warmup_ms": 3794.367059999786,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 487.6954270002898,
+        "decoder_ms": 487.52575799971964,
+        "baseline_ms": 0.0,
+        "checksum": "77fbaf876347a9200b77344cd9fefdeea47aa6759cc71bfa73dcc055ffa1bd1a",
+        "returned_bytes": 22314202
+      },
+      {
+        "rep": 1,
+        "total_ms": 443.0412450001313,
+        "decoder_ms": 442.8705919999629,
+        "baseline_ms": 0.0,
+        "checksum": "867123fc2b90bcb7afba4f55d377125e081e12e97ca46f62ca26606175bc0ed0",
+        "returned_bytes": 22314202
+      },
+      {
+        "rep": 2,
+        "total_ms": 458.4850430001097,
+        "decoder_ms": 458.3235310001328,
+        "baseline_ms": 0.0,
+        "checksum": "f91ce254a22cbaa9368b9f40775f604d340269f692de6700102550f8ff1cd790",
+        "returned_bytes": 22314202
+      }
+    ],
+    "input_hash": "d09cbb64ac4e3bd1d269d2b23b038b5697460b278d4f14dd86ad00bdd44c469f",
+    "memory": {
+      "traced_current_bytes": 22352380,
+      "traced_peak_bytes": 26168718,
+      "returned_bytes": 22314202,
+      "metrics_bytes": 120,
+      "process_peak_rss_kib": 389396,
+      "checksum": "f91ce254a22cbaa9368b9f40775f604d340269f692de6700102550f8ff1cd790"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/tmp/cc-scalar-metrics-baseline-_3qq4kda/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 13,
+      "shots": 10,
+      "mode": "native",
+      "M": 12,
+      "soft": "comparative"
+    },
+    "route": "compact",
+    "setup_ms": 115.87751600018237,
+    "warmup_ms": 3862.6558169999043,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 426.579808000497,
+        "decoder_ms": 426.56804800026293,
+        "baseline_ms": 0.0,
+        "checksum": "77fbaf876347a9200b77344cd9fefdeea47aa6759cc71bfa73dcc055ffa1bd1a",
+        "returned_bytes": 130
+      },
+      {
+        "rep": 1,
+        "total_ms": 441.7110770000363,
+        "decoder_ms": 441.7030469994643,
+        "baseline_ms": 0.0,
+        "checksum": "867123fc2b90bcb7afba4f55d377125e081e12e97ca46f62ca26606175bc0ed0",
+        "returned_bytes": 130
+      },
+      {
+        "rep": 2,
+        "total_ms": 444.5375850000346,
+        "decoder_ms": 444.53081199935696,
+        "baseline_ms": 0.0,
+        "checksum": "f91ce254a22cbaa9368b9f40775f604d340269f692de6700102550f8ff1cd790",
+        "returned_bytes": 130
+      }
+    ],
+    "input_hash": "d09cbb64ac4e3bd1d269d2b23b038b5697460b278d4f14dd86ad00bdd44c469f",
+    "memory": {
+      "traced_current_bytes": 13066,
+      "traced_peak_bytes": 4416878,
+      "returned_bytes": 130,
+      "metrics_bytes": 120,
+      "process_peak_rss_kib": 369304,
+      "checksum": "f91ce254a22cbaa9368b9f40775f604d340269f692de6700102550f8ff1cd790"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/color-code-stim/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 17,
+      "shots": 10,
+      "mode": "ordinary",
+      "M": 1,
+      "soft": "none"
+    },
+    "route": "legacy",
+    "setup_ms": 189.08193800052686,
+    "warmup_ms": 8144.257805000052,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 20.496742999966955,
+        "decoder_ms": 20.477084000049217,
+        "baseline_ms": 0.0,
+        "checksum": "a8eed4617539dcac7511a8a0c9e62bb9b3d530589252f9c6b5048119eb3906aa",
+        "returned_bytes": 296670
+      },
+      {
+        "rep": 1,
+        "total_ms": 22.80420100032643,
+        "decoder_ms": 22.783522000281664,
+        "baseline_ms": 0.0,
+        "checksum": "a8eed4617539dcac7511a8a0c9e62bb9b3d530589252f9c6b5048119eb3906aa",
+        "returned_bytes": 296670
+      },
+      {
+        "rep": 2,
+        "total_ms": 16.940421000072092,
+        "decoder_ms": 16.92146299956221,
+        "baseline_ms": 0.0,
+        "checksum": "a8eed4617539dcac7511a8a0c9e62bb9b3d530589252f9c6b5048119eb3906aa",
+        "returned_bytes": 296670
+      }
+    ],
+    "input_hash": "39895d2ec59e9ba1805a94b0bc3e16a5943456502cbe46ee0a19a35439503a2c",
+    "memory": {
+      "traced_current_bytes": 300834,
+      "traced_peak_bytes": 4519564,
+      "returned_bytes": 296670,
+      "metrics_bytes": 10,
+      "process_peak_rss_kib": 538092,
+      "checksum": "a8eed4617539dcac7511a8a0c9e62bb9b3d530589252f9c6b5048119eb3906aa"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/tmp/cc-scalar-metrics-baseline-_3qq4kda/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 17,
+      "shots": 10,
+      "mode": "ordinary",
+      "M": 1,
+      "soft": "none"
+    },
+    "route": "compact",
+    "setup_ms": 188.38746400069795,
+    "warmup_ms": 8069.27302799977,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 17.549473000144644,
+        "decoder_ms": 17.54090700069355,
+        "baseline_ms": 0.0,
+        "checksum": "a8eed4617539dcac7511a8a0c9e62bb9b3d530589252f9c6b5048119eb3906aa",
+        "returned_bytes": 20
+      },
+      {
+        "rep": 1,
+        "total_ms": 28.44186600032117,
+        "decoder_ms": 28.42287900057272,
+        "baseline_ms": 0.0,
+        "checksum": "a8eed4617539dcac7511a8a0c9e62bb9b3d530589252f9c6b5048119eb3906aa",
+        "returned_bytes": 20
+      },
+      {
+        "rep": 2,
+        "total_ms": 27.60092199969222,
+        "decoder_ms": 27.593247000368137,
+        "baseline_ms": 0.0,
+        "checksum": "a8eed4617539dcac7511a8a0c9e62bb9b3d530589252f9c6b5048119eb3906aa",
+        "returned_bytes": 20
+      }
+    ],
+    "input_hash": "39895d2ec59e9ba1805a94b0bc3e16a5943456502cbe46ee0a19a35439503a2c",
+    "memory": {
+      "traced_current_bytes": 4080,
+      "traced_peak_bytes": 3928080,
+      "returned_bytes": 20,
+      "metrics_bytes": 10,
+      "process_peak_rss_kib": 537380,
+      "checksum": "a8eed4617539dcac7511a8a0c9e62bb9b3d530589252f9c6b5048119eb3906aa"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/color-code-stim/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 17,
+      "shots": 10,
+      "mode": "correlated",
+      "M": 1,
+      "soft": "none"
+    },
+    "route": "legacy",
+    "setup_ms": 429.1385199994693,
+    "warmup_ms": 16433.914161000757,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 717.0036930001515,
+        "decoder_ms": 705.5773390002287,
+        "baseline_ms": 11.217021000447858,
+        "checksum": "8f5c59e3176973413e33943b809b915d3358d003a27b26a18962bbd129d310e1",
+        "returned_bytes": 3856650
+      },
+      {
+        "rep": 1,
+        "total_ms": 763.6748420000004,
+        "decoder_ms": 752.295229000083,
+        "baseline_ms": 11.196794999705162,
+        "checksum": "8f5c59e3176973413e33943b809b915d3358d003a27b26a18962bbd129d310e1",
+        "returned_bytes": 3856650
+      },
+      {
+        "rep": 2,
+        "total_ms": 820.7370609998179,
+        "decoder_ms": 809.4881619999796,
+        "baseline_ms": 11.06530700053554,
+        "checksum": "8f5c59e3176973413e33943b809b915d3358d003a27b26a18962bbd129d310e1",
+        "returned_bytes": 3856650
+      }
+    ],
+    "input_hash": "39895d2ec59e9ba1805a94b0bc3e16a5943456502cbe46ee0a19a35439503a2c",
+    "memory": {
+      "traced_current_bytes": 7004773,
+      "traced_peak_bytes": 12266179,
+      "returned_bytes": 3856650,
+      "metrics_bytes": 50,
+      "process_peak_rss_kib": 1051000,
+      "checksum": "8f5c59e3176973413e33943b809b915d3358d003a27b26a18962bbd129d310e1"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/tmp/cc-scalar-metrics-baseline-_3qq4kda/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 17,
+      "shots": 10,
+      "mode": "correlated",
+      "M": 1,
+      "soft": "none"
+    },
+    "route": "compact",
+    "setup_ms": 359.60264499954064,
+    "warmup_ms": 15811.889427000096,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 742.0620630000485,
+        "decoder_ms": 713.9173040004607,
+        "baseline_ms": 28.134608999607735,
+        "checksum": "8f5c59e3176973413e33943b809b915d3358d003a27b26a18962bbd129d310e1",
+        "returned_bytes": 60
+      },
+      {
+        "rep": 1,
+        "total_ms": 802.6139880003029,
+        "decoder_ms": 789.2975679997107,
+        "baseline_ms": 13.30976000008377,
+        "checksum": "8f5c59e3176973413e33943b809b915d3358d003a27b26a18962bbd129d310e1",
+        "returned_bytes": 60
+      },
+      {
+        "rep": 2,
+        "total_ms": 877.301301999978,
+        "decoder_ms": 855.6861629995183,
+        "baseline_ms": 21.606932000395318,
+        "checksum": "8f5c59e3176973413e33943b809b915d3358d003a27b26a18962bbd129d310e1",
+        "returned_bytes": 60
+      }
+    ],
+    "input_hash": "39895d2ec59e9ba1805a94b0bc3e16a5943456502cbe46ee0a19a35439503a2c",
+    "memory": {
+      "traced_current_bytes": 3148618,
+      "traced_peak_bytes": 6356935,
+      "returned_bytes": 60,
+      "metrics_bytes": 50,
+      "process_peak_rss_kib": 1040416,
+      "checksum": "8f5c59e3176973413e33943b809b915d3358d003a27b26a18962bbd129d310e1"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/color-code-stim/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 17,
+      "shots": 1,
+      "mode": "native",
+      "M": 12,
+      "soft": "none"
+    },
+    "route": "legacy",
+    "setup_ms": 184.60712900014187,
+    "warmup_ms": 7254.163583000263,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 24.422516000413452,
+        "decoder_ms": 24.28693099955126,
+        "baseline_ms": 0.0,
+        "checksum": "ef3e0d4c024b3b46f5ccf49782ec1bd6b8323392b9cf0fa4b5dc2f32a5e6c686",
+        "returned_bytes": 2601044
+      },
+      {
+        "rep": 1,
+        "total_ms": 24.411938000412192,
+        "decoder_ms": 24.256376000266755,
+        "baseline_ms": 0.0,
+        "checksum": "ef3e0d4c024b3b46f5ccf49782ec1bd6b8323392b9cf0fa4b5dc2f32a5e6c686",
+        "returned_bytes": 2601044
+      },
+      {
+        "rep": 2,
+        "total_ms": 24.605249000160256,
+        "decoder_ms": 24.46012200016412,
+        "baseline_ms": 0.0,
+        "checksum": "ef3e0d4c024b3b46f5ccf49782ec1bd6b8323392b9cf0fa4b5dc2f32a5e6c686",
+        "returned_bytes": 2601044
+      }
+    ],
+    "input_hash": "fc4db080f3650567a52d41f44d3e56ea3ca3058ba060dec7a3f72cb647cc3f31",
+    "memory": {
+      "traced_current_bytes": 2623988,
+      "traced_peak_bytes": 3390110,
+      "returned_bytes": 2601044,
+      "metrics_bytes": 4,
+      "process_peak_rss_kib": 549384,
+      "checksum": "ef3e0d4c024b3b46f5ccf49782ec1bd6b8323392b9cf0fa4b5dc2f32a5e6c686"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/tmp/cc-scalar-metrics-baseline-_3qq4kda/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 17,
+      "shots": 1,
+      "mode": "native",
+      "M": 12,
+      "soft": "none"
+    },
+    "route": "compact",
+    "setup_ms": 195.08196900005714,
+    "warmup_ms": 7469.758523000564,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 25.115496000580606,
+        "decoder_ms": 25.108798000474053,
+        "baseline_ms": 0.0,
+        "checksum": "ef3e0d4c024b3b46f5ccf49782ec1bd6b8323392b9cf0fa4b5dc2f32a5e6c686",
+        "returned_bytes": 5
+      },
+      {
+        "rep": 1,
+        "total_ms": 27.549249999538006,
+        "decoder_ms": 27.543999999579682,
+        "baseline_ms": 0.0,
+        "checksum": "ef3e0d4c024b3b46f5ccf49782ec1bd6b8323392b9cf0fa4b5dc2f32a5e6c686",
+        "returned_bytes": 5
+      },
+      {
+        "rep": 2,
+        "total_ms": 26.22570400035329,
+        "decoder_ms": 26.218568999865965,
+        "baseline_ms": 0.0,
+        "checksum": "ef3e0d4c024b3b46f5ccf49782ec1bd6b8323392b9cf0fa4b5dc2f32a5e6c686",
+        "returned_bytes": 5
+      }
+    ],
+    "input_hash": "fc4db080f3650567a52d41f44d3e56ea3ca3058ba060dec7a3f72cb647cc3f31",
+    "memory": {
+      "traced_current_bytes": 8171,
+      "traced_peak_bytes": 896739,
+      "returned_bytes": 5,
+      "metrics_bytes": 4,
+      "process_peak_rss_kib": 547472,
+      "checksum": "ef3e0d4c024b3b46f5ccf49782ec1bd6b8323392b9cf0fa4b5dc2f32a5e6c686"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/color-code-stim/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 17,
+      "shots": 10,
+      "mode": "native",
+      "M": 12,
+      "soft": "none"
+    },
+    "route": "legacy",
+    "setup_ms": 189.14037099966663,
+    "warmup_ms": 7723.192974000085,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 246.4738810003837,
+        "decoder_ms": 246.29969300076482,
+        "baseline_ms": 0.0,
+        "checksum": "e535bc96776f7bc72fcc8b94bd5cc48e6c58c150b41a0ee3c504f64ebc3b1082",
+        "returned_bytes": 26010440
+      },
+      {
+        "rep": 1,
+        "total_ms": 245.59321100059606,
+        "decoder_ms": 245.4602210000303,
+        "baseline_ms": 0.0,
+        "checksum": "81de663406c6df90e7f651511d5ee2d14228b6f91d90176936ffc47e35973cc4",
+        "returned_bytes": 26010440
+      },
+      {
+        "rep": 2,
+        "total_ms": 250.03378099972906,
+        "decoder_ms": 249.8800220000703,
+        "baseline_ms": 0.0,
+        "checksum": "e535bc96776f7bc72fcc8b94bd5cc48e6c58c150b41a0ee3c504f64ebc3b1082",
+        "returned_bytes": 26010440
+      }
+    ],
+    "input_hash": "39895d2ec59e9ba1805a94b0bc3e16a5943456502cbe46ee0a19a35439503a2c",
+    "memory": {
+      "traced_current_bytes": 26038002,
+      "traced_peak_bytes": 31384452,
+      "returned_bytes": 26010440,
+      "metrics_bytes": 40,
+      "process_peak_rss_kib": 577716,
+      "checksum": "e535bc96776f7bc72fcc8b94bd5cc48e6c58c150b41a0ee3c504f64ebc3b1082"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/tmp/cc-scalar-metrics-baseline-_3qq4kda/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 17,
+      "shots": 10,
+      "mode": "native",
+      "M": 12,
+      "soft": "none"
+    },
+    "route": "compact",
+    "setup_ms": 192.58619799984444,
+    "warmup_ms": 7573.843217000103,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 244.70999099958135,
+        "decoder_ms": 244.70129499968607,
+        "baseline_ms": 0.0,
+        "checksum": "e535bc96776f7bc72fcc8b94bd5cc48e6c58c150b41a0ee3c504f64ebc3b1082",
+        "returned_bytes": 50
+      },
+      {
+        "rep": 1,
+        "total_ms": 262.8562170002624,
+        "decoder_ms": 262.8485240002192,
+        "baseline_ms": 0.0,
+        "checksum": "81de663406c6df90e7f651511d5ee2d14228b6f91d90176936ffc47e35973cc4",
+        "returned_bytes": 50
+      },
+      {
+        "rep": 2,
+        "total_ms": 213.68278000045393,
+        "decoder_ms": 213.6776280003687,
+        "baseline_ms": 0.0,
+        "checksum": "e535bc96776f7bc72fcc8b94bd5cc48e6c58c150b41a0ee3c504f64ebc3b1082",
+        "returned_bytes": 50
+      }
+    ],
+    "input_hash": "39895d2ec59e9ba1805a94b0bc3e16a5943456502cbe46ee0a19a35439503a2c",
+    "memory": {
+      "traced_current_bytes": 13082,
+      "traced_peak_bytes": 6442068,
+      "returned_bytes": 50,
+      "metrics_bytes": 40,
+      "process_peak_rss_kib": 554888,
+      "checksum": "e535bc96776f7bc72fcc8b94bd5cc48e6c58c150b41a0ee3c504f64ebc3b1082"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/color-code-stim/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 17,
+      "shots": 10,
+      "mode": "native",
+      "M": 12,
+      "soft": "comparative"
+    },
+    "route": "legacy",
+    "setup_ms": 184.65628499961895,
+    "warmup_ms": 8389.849295999738,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 1142.7055559997825,
+        "decoder_ms": 1142.5476809999964,
+        "baseline_ms": 0.0,
+        "checksum": "f6dfaecf85e9094430d7d133dfd445b703b739923032c558423e1625df234fa7",
+        "returned_bytes": 51741762
+      },
+      {
+        "rep": 1,
+        "total_ms": 1159.452988999874,
+        "decoder_ms": 1159.3012869998347,
+        "baseline_ms": 0.0,
+        "checksum": "881b815083a447c928c072fd07a5e535ae00b1ab13130078843bed417d7c58ac",
+        "returned_bytes": 51741762
+      },
+      {
+        "rep": 2,
+        "total_ms": 1180.483338999693,
+        "decoder_ms": 1180.3128159999687,
+        "baseline_ms": 0.0,
+        "checksum": "c72638a2d91847f1f4672120b34789b468ac43f49a48203ca830a79d72ab438a",
+        "returned_bytes": 51741762
+      }
+    ],
+    "input_hash": "e56ad65ca97947241fcdc9fcc002bf814a07e9161dab1338461b7929c60214c9",
+    "memory": {
+      "traced_current_bytes": 51779940,
+      "traced_peak_bytes": 60617876,
+      "returned_bytes": 51741762,
+      "metrics_bytes": 120,
+      "process_peak_rss_kib": 607624,
+      "checksum": "48e7b441fcf3f0b9a1caccf55b5a65a4af7fd36f8c02376e3206540d50ba758a"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/tmp/cc-scalar-metrics-baseline-_3qq4kda/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 17,
+      "shots": 10,
+      "mode": "native",
+      "M": 12,
+      "soft": "comparative"
+    },
+    "route": "compact",
+    "setup_ms": 193.60055400011333,
+    "warmup_ms": 8943.027120999432,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 1167.7166110002872,
+        "decoder_ms": 1167.7100340002653,
+        "baseline_ms": 0.0,
+        "checksum": "f6dfaecf85e9094430d7d133dfd445b703b739923032c558423e1625df234fa7",
+        "returned_bytes": 130
+      },
+      {
+        "rep": 1,
+        "total_ms": 1146.9992259999344,
+        "decoder_ms": 1146.9920429999547,
+        "baseline_ms": 0.0,
+        "checksum": "881b815083a447c928c072fd07a5e535ae00b1ab13130078843bed417d7c58ac",
+        "returned_bytes": 130
+      },
+      {
+        "rep": 2,
+        "total_ms": 1144.30868799991,
+        "decoder_ms": 1144.3032289998882,
+        "baseline_ms": 0.0,
+        "checksum": "c72638a2d91847f1f4672120b34789b468ac43f49a48203ca830a79d72ab438a",
+        "returned_bytes": 130
+      }
+    ],
+    "input_hash": "e56ad65ca97947241fcdc9fcc002bf814a07e9161dab1338461b7929c60214c9",
+    "memory": {
+      "traced_current_bytes": 13066,
+      "traced_peak_bytes": 10230578,
+      "returned_bytes": 130,
+      "metrics_bytes": 120,
+      "process_peak_rss_kib": 560864,
+      "checksum": "48e7b441fcf3f0b9a1caccf55b5a65a4af7fd36f8c02376e3206540d50ba758a"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/color-code-stim/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 9,
+      "shots": 10,
+      "mode": "native",
+      "M": 12,
+      "soft": "swim"
+    },
+    "route": "legacy",
+    "setup_ms": 1293.7382729996898,
+    "warmup_ms": 3437.4209690004136,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 3446.7452620001495,
+        "decoder_ms": 32.04875799929141,
+        "baseline_ms": 0.0,
+        "checksum": "e154821421c2f15f28ccb6d1e06c803991cc0f69990167f35d7d0cb102e79f07",
+        "returned_bytes": 3463240
+      },
+      {
+        "rep": 1,
+        "total_ms": 3427.2777359992688,
+        "decoder_ms": 37.012331999903836,
+        "baseline_ms": 0.0,
+        "checksum": "797a51c19788b9b35b2114f4ce4ef9a32d4103987716598f2c5db4d61a3f6018",
+        "returned_bytes": 3463240
+      },
+      {
+        "rep": 2,
+        "total_ms": 3619.435018999866,
+        "decoder_ms": 39.22226299982867,
+        "baseline_ms": 0.0,
+        "checksum": "2f38eec1508b32a5cecdad68131565c4c6f984dd2c06e05496ac31dc03acbd24",
+        "returned_bytes": 3463240
+      }
+    ],
+    "input_hash": "1d86571b7a462631fd6d14e6475bd659548b860c776657da6f0160a181053c4f",
+    "memory": {
+      "traced_current_bytes": 3607776,
+      "traced_peak_bytes": 6990573,
+      "returned_bytes": 3463240,
+      "metrics_bytes": 120,
+      "process_peak_rss_kib": 298040,
+      "checksum": "cfafdb740559a74061fd10e0e2e0fdfaeedfa1e75ba3df48b771714d58d86248"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/tmp/cc-scalar-metrics-baseline-_3qq4kda/src/color_code_stim/__init__.py"
+  },
+  {
+    "case": {
+      "d": 9,
+      "shots": 10,
+      "mode": "native",
+      "M": 12,
+      "soft": "swim"
+    },
+    "route": "compact",
+    "setup_ms": 1325.797135999892,
+    "warmup_ms": 3906.7775869998513,
+    "rows": [
+      {
+        "rep": 0,
+        "total_ms": 4376.5360749994215,
+        "decoder_ms": 4376.527700999759,
+        "baseline_ms": 0.0,
+        "checksum": "e154821421c2f15f28ccb6d1e06c803991cc0f69990167f35d7d0cb102e79f07",
+        "returned_bytes": 130
+      },
+      {
+        "rep": 1,
+        "total_ms": 3503.900316999534,
+        "decoder_ms": 3503.895464999914,
+        "baseline_ms": 0.0,
+        "checksum": "797a51c19788b9b35b2114f4ce4ef9a32d4103987716598f2c5db4d61a3f6018",
+        "returned_bytes": 130
+      },
+      {
+        "rep": 2,
+        "total_ms": 3587.4723440001617,
+        "decoder_ms": 3587.467475000267,
+        "baseline_ms": 0.0,
+        "checksum": "2f38eec1508b32a5cecdad68131565c4c6f984dd2c06e05496ac31dc03acbd24",
+        "returned_bytes": 130
+      }
+    ],
+    "input_hash": "1d86571b7a462631fd6d14e6475bd659548b860c776657da6f0160a181053c4f",
+    "memory": {
+      "traced_current_bytes": 140165,
+      "traced_peak_bytes": 2073527,
+      "returned_bytes": 130,
+      "metrics_bytes": 120,
+      "process_peak_rss_kib": 292868,
+      "checksum": "cfafdb740559a74061fd10e0e2e0fdfaeedfa1e75ba3df48b771714d58d86248"
+    },
+    "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+    "numpy": "1.26.4",
+    "source": "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/color-code-stim/src/color_code_stim/__init__.py"
+  }
+]

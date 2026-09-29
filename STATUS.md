@@ -1,3 +1,30 @@
+# Requested scalar experiment output (2026-09-29)
+
+Implemented the authorized decoder metrics API and switched the YAML worker
+to full_output=False by default. It derives requested fields from the saved
+schema and receives only `(shots,)` arrays. Matching, priors, member 0,
+RNG/cursors, original scoring, baseline/ties and final stored fields retain
+their semantics. SWIM is reduced inside candidate processing using the
+existing geometry backend; native batch views and relift aliases are reused.
+A cached plain decoder can prepare circuit SWIM when it is first requested.
+Explicit full_output=True retains the diagnostic path.
+
+Validation: **root 361 passed; decoder 308 passed / two existing skips**.
+Exact same-shot comparisons cover every saved column and dtype, Parquet
+tables, superdense, comparative, spatial/circuit SWIM, both perturbation
+methods, relifting, M1/alpha0, zero ties, split/empty batches and recovery.
+Requested output does not allocate all-candidate correction exports; warm
+native matching factories are not called. PyMatching is unchanged.
+
+Report/CSV/checksums/environment and tested source hashes:
+`notes/support/compact_experiment_metrics_20260929/`. Against pre-change
+6a6bd8b full-output sources, native M12/N10 traced allocation peaks decrease
+~79.5% (~83.1% comparative). Runtime is **mixed**: basic d9/d13 increases
+34.4%/15.7%; d17 decreases 2.8%. Comparative decreases 0.7–5.5%.
+These allocation reductions are not process-wide RSS reductions, and copy
+costs were not isolated. On-disk data were already compact; their size/schema
+is unchanged. Timing programs, temporary old sources and probe files removed.
+
 # Native stage-1 perturbation implementation (2026-09-29)
 
 Completed the user-approved three-package plan. PyMatching supplies shot-major

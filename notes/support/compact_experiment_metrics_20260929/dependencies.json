@@ -1,0 +1,8 @@
+{
+  "branch": "codex/native-stage1-perturbation-20260929",
+  "color_code_stim": "3955196a9d2280fab555f0cf97510e37b6dd9d23",
+  "pymatching": "40ef9296f1d73aa4d629460bdc80bcf57bb1f7b5",
+  "root_base": "ad0d1c93da074f10305d553157a788b0931b6388",
+  "root_release": "The commit containing this report and dependencies.json.",
+  "tested_source_manifest": "environment.json:source_sha256"
+}

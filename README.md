@@ -1,5 +1,15 @@
 # color-code-softoutput
 
+The YAML simulation now defaults to requested scalar metrics with
+`full_output=False`. The decoder returns only the `(shots,)` arrays required
+by the saved point schema; candidate diagnostics are available through an
+explicit `decode_options: {full_output: true}`. Predictions, metric meanings,
+Parquet columns and perturbation sampling are preserved. See
+[`simulation output contract`](src/color_code_softoutput/README.md#yaml-workflow-point-storage).
+The [validation and measurement report](notes/support/compact_experiment_metrics_20260929/report.md)
+records identical saved values and reduced allocation peaks, with mixed decode
+time results.
+
 Native stage-1 perturbation is available through
 [`configs/native_stage1_perturbation_comparison.yaml`](configs/native_stage1_perturbation_comparison.yaml).
 Set `stage1_perturbation: true` under a `type: perturbation` decoder; M includes

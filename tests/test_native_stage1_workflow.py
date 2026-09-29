@@ -80,8 +80,13 @@ def test_presampled_chunks_use_absolute_offsets_after_cache_eviction(tmp_path, m
             offset, actual = seen[-1]
             assert offset == s.start
             np.testing.assert_array_equal(actual[0], prediction[s])
-            for key in ('candidate_weights', 'candidate_original_corrections'):
-                np.testing.assert_array_equal(actual[1][key], expected[key][:, :, s])
+            assert set(actual[1]) == set(worker.metric_names(point))
+            np.testing.assert_array_equal(
+                actual[1]['better_weight_by_color_correlated_decoding'],
+                worker.better_common_prior_weight(expected, len(shots))[s],
+            )
+            np.testing.assert_array_equal(actual[1]['default_logical_error'],
+                                         expected['baseline_predictions'][s] != observations[s])
             np.testing.assert_array_equal(output.metrics['logical_error'], prediction[s] != observations[s])
     finally:
         worker._CODE_CACHE.clear()
