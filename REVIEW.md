@@ -1,5 +1,26 @@
 # REVIEW.md
 
+## BP publication integration — 2026-09-30
+
+Reconciled the later user-requested all-shot LER denominator with the earlier
+BP workflow tests and documentation. Baseline choice remains the original
+physical-configuration rule. Nullable failure outcomes remain missing; the
+saved-count statistic does not reconstruct full pipeline failures. Publication
+contains implementation, tests and audit summaries, not notebook run outputs
+or generated datasets. See notes/support/BP_PREDECODING_RELEASE.md.
+
+## BP negative-log X/Z weights — 2026-09-29
+
+Same-agent review and independent numerical oracles verify that uncapped BP
+posteriors are first XOR-aggregated into X/Z mechanisms, then weighted with
+-log(p) via effective priors p/(1+p). Tests distinguish the noncommuting
+global-first alternative and retain detector/observable target labels.
+Reference decoding covers all six strategy families; state rejects previous
+weighting semantics. This changes the fallback heuristic, not the global BP
+model. XOR retains its independent-surrogate limitation; it is not official
+belief matching's addition rule. No LER improvement is established. See
+[validation](notes/support/bp_xz_negative_log_20260929.md).
+
 ## Native stage-1 perturbation audit — 2026-09-29
 
 Same-agent source review and independent oracles (not external peer review)

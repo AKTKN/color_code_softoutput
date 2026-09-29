@@ -1,0 +1,11 @@
+{
+  "failures": 23,
+  "all_candidates_wrong": 19,
+  "has_correct_candidate": 4,
+  "rescored_prior_correct": 2,
+  "uncapped_correct": 0,
+  "projection_group_audit": "passed",
+  "direct_fallback_equality": "passed",
+  "candidate_syndrome_and_selection_audit": "passed",
+  "failures_with_global_cap_active": 20
+}

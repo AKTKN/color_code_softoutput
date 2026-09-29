@@ -1,0 +1,14 @@
+{
+  "saved_mask_and_shot_order_points": 36,
+  "source_hashes_unchanged": true,
+  "distinguishing_point": "decoder_alias=BP_MWPM,decoder_type=concat_mwpm,circuit_type=tri,d=5,r=2,p=0.05,noisemodel=depol,cnot_schedule=tri_optimal",
+  "distinguishing_shots": [
+    {
+      "shot_index": 1,
+      "saved": true,
+      "new_rule": true,
+      "old_rule": false
+    }
+  ],
+  "replay_scope": "first calibration chunk only; adaptive later chunk sizes are not saved"
+}

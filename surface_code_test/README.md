@@ -148,3 +148,15 @@ See [PyMatching API](../external_libs/PyMatching/docs/path_gap.md). Native
 backend sources are now included in each new run's source ZIP, together with
 repository identity and diff hash. This is an empirical proxy; no new bound,
 posterior interpretation, or comparative ranking is asserted.
+
+## Official BeliefMatching code-capacity smoke
+
+The separate [smoke report](results/beliefmatching_smoke_20260929/report.md)
+compares ordinary upstream PyMatching with the unmodified official
+BeliefMatching library on shared depolarizing code-capacity shots. It uses
+two perfect Stim-generated extraction rounds with one intervening data-noise
+layer and both X/Z detector sectors. Both product_sum and min_sum improve
+on ordinary MWPM at the tested d=5/7, p=.05 points. All failures, including
+BP-converged failures, are counted. Reproduction, pinned dependency setup
+and limitations are in the report; the executable is
+[scripts/beliefmatching_smoke.py](scripts/beliefmatching_smoke.py).

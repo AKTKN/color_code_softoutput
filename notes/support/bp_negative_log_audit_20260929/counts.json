@@ -1,0 +1,722 @@
+[
+  {
+    "decoder_alias": "BP_MWPM",
+    "decoder_type": "concat_mwpm",
+    "circuit_type": "tri",
+    "d": "5",
+    "r": "2",
+    "p": "0.03",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 37,
+      "nulls": 7852
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 30,
+      "nulls": 7865
+    }
+  },
+  {
+    "decoder_alias": "BP_MWPM",
+    "decoder_type": "concat_mwpm",
+    "circuit_type": "tri",
+    "d": "5",
+    "r": "2",
+    "p": "0.04",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 76,
+      "nulls": 7209
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 87,
+      "nulls": 7192
+    }
+  },
+  {
+    "decoder_alias": "BP_MWPM",
+    "decoder_type": "concat_mwpm",
+    "circuit_type": "tri",
+    "d": "5",
+    "r": "2",
+    "p": "0.05",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 146,
+      "nulls": 6570
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 136,
+      "nulls": 6504
+    }
+  },
+  {
+    "decoder_alias": "BP_MWPM",
+    "decoder_type": "concat_mwpm",
+    "circuit_type": "tri",
+    "d": "7",
+    "r": "2",
+    "p": "0.03",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 26,
+      "nulls": 6807
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 18,
+      "nulls": 6699
+    }
+  },
+  {
+    "decoder_alias": "BP_MWPM",
+    "decoder_type": "concat_mwpm",
+    "circuit_type": "tri",
+    "d": "7",
+    "r": "2",
+    "p": "0.04",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 47,
+      "nulls": 5809
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 55,
+      "nulls": 5840
+    }
+  },
+  {
+    "decoder_alias": "BP_MWPM",
+    "decoder_type": "concat_mwpm",
+    "circuit_type": "tri",
+    "d": "7",
+    "r": "2",
+    "p": "0.05",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 78,
+      "nulls": 4988
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 92,
+      "nulls": 5004
+    }
+  },
+  {
+    "decoder_alias": "BP_MWPM",
+    "decoder_type": "concat_mwpm",
+    "circuit_type": "tri",
+    "d": "9",
+    "r": "2",
+    "p": "0.03",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 6,
+      "nulls": 5723
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 9,
+      "nulls": 5676
+    }
+  },
+  {
+    "decoder_alias": "BP_MWPM",
+    "decoder_type": "concat_mwpm",
+    "circuit_type": "tri",
+    "d": "9",
+    "r": "2",
+    "p": "0.04",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 21,
+      "nulls": 4632
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 21,
+      "nulls": 4665
+    }
+  },
+  {
+    "decoder_alias": "BP_MWPM",
+    "decoder_type": "concat_mwpm",
+    "circuit_type": "tri",
+    "d": "9",
+    "r": "2",
+    "p": "0.05",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 49,
+      "nulls": 3638
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 65,
+      "nulls": 3687
+    }
+  },
+  {
+    "decoder_alias": "BP_MWPM_perturbation",
+    "decoder_type": "perturbation",
+    "circuit_type": "tri",
+    "d": "5",
+    "r": "2",
+    "p": "0.03",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 38,
+      "nulls": 7797
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 35,
+      "nulls": 7837
+    }
+  },
+  {
+    "decoder_alias": "BP_MWPM_perturbation",
+    "decoder_type": "perturbation",
+    "circuit_type": "tri",
+    "d": "5",
+    "r": "2",
+    "p": "0.04",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 70,
+      "nulls": 7259
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 86,
+      "nulls": 7099
+    }
+  },
+  {
+    "decoder_alias": "BP_MWPM_perturbation",
+    "decoder_type": "perturbation",
+    "circuit_type": "tri",
+    "d": "5",
+    "r": "2",
+    "p": "0.05",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 125,
+      "nulls": 6561
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 124,
+      "nulls": 6592
+    }
+  },
+  {
+    "decoder_alias": "BP_MWPM_perturbation",
+    "decoder_type": "perturbation",
+    "circuit_type": "tri",
+    "d": "7",
+    "r": "2",
+    "p": "0.03",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 12,
+      "nulls": 6741
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 18,
+      "nulls": 6733
+    }
+  },
+  {
+    "decoder_alias": "BP_MWPM_perturbation",
+    "decoder_type": "perturbation",
+    "circuit_type": "tri",
+    "d": "7",
+    "r": "2",
+    "p": "0.04",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 30,
+      "nulls": 5816
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 48,
+      "nulls": 5872
+    }
+  },
+  {
+    "decoder_alias": "BP_MWPM_perturbation",
+    "decoder_type": "perturbation",
+    "circuit_type": "tri",
+    "d": "7",
+    "r": "2",
+    "p": "0.05",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 93,
+      "nulls": 4967
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 108,
+      "nulls": 4983
+    }
+  },
+  {
+    "decoder_alias": "BP_MWPM_perturbation",
+    "decoder_type": "perturbation",
+    "circuit_type": "tri",
+    "d": "9",
+    "r": "2",
+    "p": "0.03",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 8,
+      "nulls": 5693
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 5,
+      "nulls": 5688
+    }
+  },
+  {
+    "decoder_alias": "BP_MWPM_perturbation",
+    "decoder_type": "perturbation",
+    "circuit_type": "tri",
+    "d": "9",
+    "r": "2",
+    "p": "0.04",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 20,
+      "nulls": 4693
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 27,
+      "nulls": 4580
+    }
+  },
+  {
+    "decoder_alias": "BP_MWPM_perturbation",
+    "decoder_type": "perturbation",
+    "circuit_type": "tri",
+    "d": "9",
+    "r": "2",
+    "p": "0.05",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 68,
+      "nulls": 3692
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 52,
+      "nulls": 3698
+    }
+  },
+  {
+    "decoder_alias": "MWPM",
+    "decoder_type": "concat_mwpm",
+    "circuit_type": "tri",
+    "d": "5",
+    "r": "2",
+    "p": "0.03",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 20,
+      "nulls": 0
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 26,
+      "nulls": 0
+    }
+  },
+  {
+    "decoder_alias": "MWPM",
+    "decoder_type": "concat_mwpm",
+    "circuit_type": "tri",
+    "d": "5",
+    "r": "2",
+    "p": "0.04",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 43,
+      "nulls": 0
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 44,
+      "nulls": 0
+    }
+  },
+  {
+    "decoder_alias": "MWPM",
+    "decoder_type": "concat_mwpm",
+    "circuit_type": "tri",
+    "d": "5",
+    "r": "2",
+    "p": "0.05",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 81,
+      "nulls": 0
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 71,
+      "nulls": 0
+    }
+  },
+  {
+    "decoder_alias": "MWPM",
+    "decoder_type": "concat_mwpm",
+    "circuit_type": "tri",
+    "d": "7",
+    "r": "2",
+    "p": "0.03",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 5,
+      "nulls": 0
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 8,
+      "nulls": 0
+    }
+  },
+  {
+    "decoder_alias": "MWPM",
+    "decoder_type": "concat_mwpm",
+    "circuit_type": "tri",
+    "d": "7",
+    "r": "2",
+    "p": "0.04",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 11,
+      "nulls": 0
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 22,
+      "nulls": 0
+    }
+  },
+  {
+    "decoder_alias": "MWPM",
+    "decoder_type": "concat_mwpm",
+    "circuit_type": "tri",
+    "d": "7",
+    "r": "2",
+    "p": "0.05",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 39,
+      "nulls": 0
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 30,
+      "nulls": 0
+    }
+  },
+  {
+    "decoder_alias": "MWPM",
+    "decoder_type": "concat_mwpm",
+    "circuit_type": "tri",
+    "d": "9",
+    "r": "2",
+    "p": "0.03",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 1,
+      "nulls": 0
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 2,
+      "nulls": 0
+    }
+  },
+  {
+    "decoder_alias": "MWPM",
+    "decoder_type": "concat_mwpm",
+    "circuit_type": "tri",
+    "d": "9",
+    "r": "2",
+    "p": "0.04",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 5,
+      "nulls": 0
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 8,
+      "nulls": 0
+    }
+  },
+  {
+    "decoder_alias": "MWPM",
+    "decoder_type": "concat_mwpm",
+    "circuit_type": "tri",
+    "d": "9",
+    "r": "2",
+    "p": "0.05",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 16,
+      "nulls": 0
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 24,
+      "nulls": 0
+    }
+  },
+  {
+    "decoder_alias": "MWPM_perturbation",
+    "decoder_type": "perturbation",
+    "circuit_type": "tri",
+    "d": "5",
+    "r": "2",
+    "p": "0.03",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 23,
+      "nulls": 0
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 25,
+      "nulls": 0
+    }
+  },
+  {
+    "decoder_alias": "MWPM_perturbation",
+    "decoder_type": "perturbation",
+    "circuit_type": "tri",
+    "d": "5",
+    "r": "2",
+    "p": "0.04",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 48,
+      "nulls": 0
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 41,
+      "nulls": 0
+    }
+  },
+  {
+    "decoder_alias": "MWPM_perturbation",
+    "decoder_type": "perturbation",
+    "circuit_type": "tri",
+    "d": "5",
+    "r": "2",
+    "p": "0.05",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 81,
+      "nulls": 0
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 96,
+      "nulls": 0
+    }
+  },
+  {
+    "decoder_alias": "MWPM_perturbation",
+    "decoder_type": "perturbation",
+    "circuit_type": "tri",
+    "d": "7",
+    "r": "2",
+    "p": "0.03",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 4,
+      "nulls": 0
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 5,
+      "nulls": 0
+    }
+  },
+  {
+    "decoder_alias": "MWPM_perturbation",
+    "decoder_type": "perturbation",
+    "circuit_type": "tri",
+    "d": "7",
+    "r": "2",
+    "p": "0.04",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 17,
+      "nulls": 0
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 14,
+      "nulls": 0
+    }
+  },
+  {
+    "decoder_alias": "MWPM_perturbation",
+    "decoder_type": "perturbation",
+    "circuit_type": "tri",
+    "d": "7",
+    "r": "2",
+    "p": "0.05",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 33,
+      "nulls": 0
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 36,
+      "nulls": 0
+    }
+  },
+  {
+    "decoder_alias": "MWPM_perturbation",
+    "decoder_type": "perturbation",
+    "circuit_type": "tri",
+    "d": "9",
+    "r": "2",
+    "p": "0.03",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 3,
+      "nulls": 0
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 0,
+      "nulls": 0
+    }
+  },
+  {
+    "decoder_alias": "MWPM_perturbation",
+    "decoder_type": "perturbation",
+    "circuit_type": "tri",
+    "d": "9",
+    "r": "2",
+    "p": "0.04",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 10,
+      "nulls": 0
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 4,
+      "nulls": 0
+    }
+  },
+  {
+    "decoder_alias": "MWPM_perturbation",
+    "decoder_type": "perturbation",
+    "circuit_type": "tri",
+    "d": "9",
+    "r": "2",
+    "p": "0.05",
+    "noisemodel": "depol",
+    "cnot_schedule": "tri_optimal",
+    "new": {
+      "shots": 10000,
+      "failures": 15,
+      "nulls": 0
+    },
+    "old": {
+      "shots": 10000,
+      "failures": 19,
+      "nulls": 0
+    }
+  }
+]

@@ -1,5 +1,26 @@
 # AGENTS.md
 
+## BP branch publication (2026-09-30)
+
+The user authorized committing and pushing the simulator, color-code-stim
+and PyMatching implementation series to `bp_predecoding` in each repository.
+The simulator includes the later saved-analysis correction: LER denominator
+is all physical shots, nulls contribute no saved True counts, original
+baseline selection is retained. Soft-output statistics exclude unscored
+shots. This supersedes the conditional-LER description in historical notes.
+Keep generated runs and notebook execution changes out of this publication.
+
+## Current BP X/Z negative-log weighting (2026-09-29)
+
+The user requested -log(p) after aggregation into X/Z DEM mechanisms. Global
+posterior q is no longer capped. Retain independent-XOR aggregation, then
+encode the X/Z weight as effective probability p/(1+p) before color/stage
+decomposition. Do not transform global q first or reapply the transform to
+stage edges. Global-BP state/log version 3 identifies this rule; native
+perturbation scheme 2, seeds/cursors, BP convergence and no-BP behavior remain
+unchanged. Reject old version-2 decoder state instead of silently replaying
+with new weights. Prior version-2 implementation notes below are historical.
+
 ## Current global BP predecoding authorization (2026-09-29)
 
 The user authorized implementing/testing global-DEM BP predecoding and YAML
@@ -504,6 +525,17 @@ Whenever work is completed:
 - Update the `Last update` and `Next task` fields below.
 
 ## Last update
+
+2026-09-30 — Consolidated the BP implementation, version-3 weighting,
+all-shot saved-analysis correction and audits on `bp_predecoding` in all
+three repositories for the user's requested publication. See STATUS.md and
+notes/support/BP_PREDECODING_RELEASE.md for validation and scope. Next task:
+user-directed experiments; preserve the versioned prior and analysis rules.
+
+2026-09-29 — Changed BP fallback weighting after X/Z aggregation to -log(p),
+encoded as p/(1+p) for existing decomposition. See
+notes/support/bp_xz_negative_log_20260929.md for validation. Next task:
+user-launched comparison with the new, versioned weighting rule.
 
 2026-09-29 — Implemented global DEM BP predecoding, exact CSS contraction,
 memory-dependent observable assignment, native probability clipping and

@@ -79,9 +79,9 @@ def test_bp_yaml_roundtrip_spawn_storage_and_nullable_analysis(tmp_path,workers)
     logical=pq.read_table(point_dir/'logical_error.parquet')['logical_error']
     run=ColorCorrelatedRun(root)
     summary=run.summary()
-    assert summary.shots.iloc[0]==int(np.count_nonzero(~skipped))
+    assert summary.shots.iloc[0]==len(skipped)
     assert summary.failures.iloc[0]==sum(logical.drop_null().to_pylist())
-    assert summary.statistics_scope.iloc[0]=='BP-nonconverged shots'
+    assert summary.statistics_scope.iloc[0]=='all shots'
     soft=WorkflowSoftOutputRun(root)
     scores,failures=soft._point(soft.run.catalog.iloc[0],'swim_distance')
     assert len(scores)==len(failures)==np.count_nonzero(~skipped)
@@ -127,7 +127,7 @@ def test_bp_original_dem_entropy_seed_resolved_before_spawn(tmp_path):
     assert resolve_native_seeds(resolved)==resolved
 
 
-def test_all_converged_nullable_summary_remains_undefined(tmp_path,monkeypatch):
+def test_all_converged_nullable_summary_keeps_physical_denominator(tmp_path,monkeypatch):
     import matplotlib.pyplot as plt
     from color_code_softoutput.simulation.planner import plan_points
     raw=workflow_data(tmp_path)
@@ -144,12 +144,14 @@ def test_all_converged_nullable_summary_remains_undefined(tmp_path,monkeypatch):
                                               'simulation_end_time':'2026-09-29T00:00:00+00:00'}))
     run=ColorCorrelatedRun(root)
     summary=run.summary().iloc[0]
-    assert summary.shots==0 and summary.bp_converged_shots==20 and summary.physical_shots==20
-    assert np.isnan(summary.logical_error_rate) and np.isnan(summary.ler_high)
+    assert summary.shots==20 and summary.bp_converged_shots==20 and summary.physical_shots==20
+    assert summary.logical_error_rate==0 and np.isfinite(summary.ler_high)
     scores,failures=WorkflowSoftOutputRun(root)._point(run.catalog.iloc[0],'swim_distance')
     assert len(scores)==len(failures)==0
-    figure,axes,_=run.plot_ler()
-    assert all(not np.isfinite(line.get_ydata()).any() for line in axes.lines)
+    figure,axes,plotted=run.plot_ler()
+    # Zero rates are hidden on the log axis, but retained in its source table.
+    assert (plotted.logical_error_rate==0).all()
+    assert np.isfinite(plotted.ler_high).all()
     plt.close(figure)
     worker._CODE_CACHE.clear()
 
@@ -166,7 +168,13 @@ def test_native_bp_run_log_records_actual_probability_law_version(tmp_path,mixed
                                'options':options,'decode_options':{}})
     config=parse_workflow_config(raw)
     root=run_experiment(config)
-    log=json.loads((root/'run_log.json').read_text())['native_stage1_perturbation']
+    record=json.loads((root/'run_log.json').read_text())
+    bp=record['global_bp_predecoding']
+    assert bp['version']==3
+    assert bp['weight_rule']=='negative_log_xz_probability'
+    assert bp['aggregation']=='independent_xor'
+    assert bp['effective_probability']=='p/(1+p)'
+    log=record['native_stage1_perturbation']
     assert log['scheme_version']==('mixed' if mixed else 2)
     from color_code_softoutput.simulation.planner import plan_points
     assert log['scheme_version_by_point']=={

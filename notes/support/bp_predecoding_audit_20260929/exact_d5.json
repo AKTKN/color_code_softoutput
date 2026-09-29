@@ -1,0 +1,68 @@
+[
+  {
+    "d": 5,
+    "p": 0.03,
+    "method": "ordinary",
+    "syndromes": 512,
+    "exact_ler": 0.001990410535905377,
+    "converged_failure_mass": 0.0,
+    "saved_failure_mass": 0.001990410535905377,
+    "convergence_probability": 0.0,
+    "ml_ler": 0.001985392129503721
+  },
+  {
+    "d": 5,
+    "p": 0.03,
+    "method": "min_sum",
+    "syndromes": 512,
+    "exact_ler": 0.006212369548900542,
+    "converged_failure_mass": 0.00034793773100521533,
+    "saved_failure_mass": 0.005864431817895328,
+    "convergence_probability": 0.9128746879852163,
+    "ml_ler": 0.001985392129503721
+  },
+  {
+    "d": 5,
+    "p": 0.03,
+    "method": "product_sum",
+    "syndromes": 512,
+    "exact_ler": 0.0022396056482087475,
+    "converged_failure_mass": 0.0011502363575208578,
+    "saved_failure_mass": 0.00108936929068789,
+    "convergence_probability": 0.9762932479815052,
+    "ml_ler": 0.001985392129503721
+  },
+  {
+    "d": 5,
+    "p": 0.05,
+    "method": "ordinary",
+    "syndromes": 512,
+    "exact_ler": 0.008352788590120792,
+    "converged_failure_mass": 0.0,
+    "saved_failure_mass": 0.008352788590120792,
+    "convergence_probability": 0.0,
+    "ml_ler": 0.008335886802202819
+  },
+  {
+    "d": 5,
+    "p": 0.05,
+    "method": "min_sum",
+    "syndromes": 512,
+    "exact_ler": 0.01837147555338406,
+    "converged_failure_mass": 0.0013933002661710818,
+    "saved_failure_mass": 0.016978175287212974,
+    "convergence_probability": 0.836302105954757,
+    "ml_ler": 0.008335886802202819
+  },
+  {
+    "d": 5,
+    "p": 0.05,
+    "method": "product_sum",
+    "syndromes": 512,
+    "exact_ler": 0.008951937267125395,
+    "converged_failure_mass": 0.004306162976269874,
+    "saved_failure_mass": 0.00464577429085552,
+    "convergence_probability": 0.9381029391460595,
+    "ml_ler": 0.008335886802202819
+  }
+]

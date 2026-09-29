@@ -1,0 +1,47 @@
+[
+  {
+    "d": 5,
+    "H_shape": [
+      18,
+      19
+    ],
+    "mechanisms": 19,
+    "converged": 16,
+    "ordinary_fail": 0,
+    "bp_fail": 0,
+    "bp_converged_fail": 0,
+    "bad_ids": [],
+    "nonconv_above_half": 0,
+    "nonconv": 3
+  },
+  {
+    "d": 7,
+    "H_shape": [
+      36,
+      37
+    ],
+    "mechanisms": 37,
+    "converged": 34,
+    "ordinary_fail": 0,
+    "bp_fail": 0,
+    "bp_converged_fail": 0,
+    "bad_ids": [],
+    "nonconv_above_half": 0,
+    "nonconv": 3
+  },
+  {
+    "d": 9,
+    "H_shape": [
+      60,
+      61
+    ],
+    "mechanisms": 61,
+    "converged": 58,
+    "ordinary_fail": 0,
+    "bp_fail": 0,
+    "bp_converged_fail": 0,
+    "bad_ids": [],
+    "nonconv_above_half": 0,
+    "nonconv": 3
+  }
+]

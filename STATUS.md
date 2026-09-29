@@ -1,3 +1,46 @@
+# BP publication integration (2026-09-30)
+
+Prepared `bp_predecoding` in the simulator, decoder and PyMatching repos.
+Integrated the original workspace's later BP analysis correction and tests:
+saved True count / all physical shots, unchanged baseline selection, validated
+BP null masks and scored-only soft-output statistics. Included circuit-round
+documentation, example config, official surface smoke scripts and numerical
+audit reports. Original notebook outputs and generated datasets remain local.
+See [release notes](notes/support/BP_PREDECODING_RELEASE.md).
+
+Publication validation: decoder **345 passed / 2 existing skips**. Simulator
+full suite **398 passed** with one outdated plot assertion: zero LER is
+intentionally hidden on a log axis. Updated that assertion to check the
+retained zero rate and finite interval in the plotted source table; both BP
+workflow/analysis test modules then pass **38 tests**. No production change
+followed the full-suite run. Decoder correction commit: `bd2ed2a`; PyMatching
+BP implementation commit: `0f143d6f9`.
+
+# BP negative-log X/Z weighting (2026-09-29)
+
+Follow-up audit of the user's 23:27 run confirms application through exact
+first-chunk replay at all 36 points. On archived d5 double faults, failures
+change 23 -> 21, while ordinary decoding has 0. All 126 stages of the 21
+failures pass independent exhaustive minimum-weight checks; the derived CSS
+objective strictly favors the wrong logical class in all 21. No production
+change was made by that audit. See the
+[report](notes/support/bp_negative_log_audit_20260929/report.md).
+
+Implemented the user's requested order: uncapped global BP posteriors ->
+independent-XOR X/Z mechanism aggregation -> -log(p) -> effective prior
+p/(1+p) -> existing color/stage decomposition. Global BP state/log version
+is 3 (`negative_log_xz_probability`); native perturbation remains scheme 2.
+Old BP state is rejected explicitly. No-BP behavior, BP convergence,
+RNG/cursors, metrics/schema and historical runs are unchanged.
+
+Validation: **62 focused tests passed; full decoder 345 passed / 2 existing
+skips; root 386 passed**. Independent references check the transformation
+order, >0.5 and boundary probabilities, corrections and scores across all
+six strategy families, full/compact metrics, persistence and spawn workers.
+See [report](notes/support/bp_xz_negative_log_20260929.md). No LER campaign,
+backend rebuild, commit or publication was performed. Next task: user-run
+comparison under the new weighting rule; no improvement claim is established.
+
 # Requested scalar experiment output (2026-09-29)
 
 Implemented the authorized decoder metrics API and switched the YAML worker

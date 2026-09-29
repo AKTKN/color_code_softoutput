@@ -1,5 +1,17 @@
 # REFERENCES.md
 
+## Belief-matching implementation audit — 2026-09-29
+
+Higgott, Bohdanowicz, Kubica, Flammia and Campbell, *Improved decoding of
+circuit noise and fragile boundaries of tailored surface codes*,
+Phys. Rev. X **13**, 031007 (2023), arXiv:2203.04948.
+Inspected [Appendix C and its footnotes](https://arxiv.org/html/2203.04948#A3)
+and the [official implementation](https://github.com/oscarhiggott/BeliefMatching/blob/main/src/beliefmatching/belief_matching.py)
+on 2026-09-29. Sources establish sum aggregation / negative-log weights and
+the official product_sum default; they do not validate the local capped
+log-odds concatenated adaptation. Finite local evidence and limitations:
+`../notes/support/bp_predecoding_audit_20260929/report.md`.
+
 ## Circuit DEM-Y source audit — 2026-09-19
 
 Reopened the primary [Lee v2](https://arxiv.org/html/2404.07482v2),

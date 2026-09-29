@@ -9,7 +9,7 @@ import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from .color_correlated import ColorCorrelatedRun, PARAMETERS
+from .color_correlated import ColorCorrelatedRun, PARAMETERS, _bp_convergence, _sampling_scope
 from .postselection import postselection_curve
 from .statistics import CONFIDENCE_LEVEL, grouped_rates, rounded_scores
 
@@ -38,6 +38,10 @@ class WorkflowSoftOutputRun:
         if metric not in METRICS:
             raise ValueError(f"metric must be one of {METRICS}")
         directory = self.run.run_directory / row.point_directory
+        point = self.run._point_dirs[row.point_directory]
+        bp = dict(point.decode_options).get("bp_predecoding", False)
+        convergence = (_bp_convergence(directory, row.expected_shots).to_numpy(zero_copy_only=False)
+                       if bp else None)
         arrays = []
         masks = []
         for name, dtype in ((metric, pa.float64()), ("logical_error", pa.bool_())):
@@ -53,7 +57,7 @@ class WorkflowSoftOutputRun:
                 nulls = []
                 values = []
                 for batch in source.iter_batches(batch_size=65_536):
-                    if batch.column(0).null_count or (batch.column(1).null_count and not (directory / "bp_converged.parquet").is_file()):
+                    if batch.column(0).null_count or (batch.column(1).null_count and not bp):
                         raise ValueError(f"Null values in {path}")
                     nulls.append(batch.column(1).is_null().to_numpy(zero_copy_only=False))
                     index.append(batch.column(0).to_numpy(zero_copy_only=False))
@@ -65,8 +69,7 @@ class WorkflowSoftOutputRun:
                 masks.append(np.concatenate(nulls))
         if not np.array_equal(masks[0],masks[1]):
             raise ValueError("Soft-output and failure null masks disagree")
-        if (directory / "bp_converged.parquet").is_file():
-            convergence = pq.read_table(directory / "bp_converged.parquet")["bp_converged"].to_numpy()
+        if convergence is not None:
             if not np.array_equal(masks[0],convergence):
                 raise ValueError("Soft-output null masks disagree with BP convergence")
         scores, failures = arrays[0][~masks[0]].astype(float), arrays[1][~masks[1]].astype(bool)
@@ -117,11 +120,19 @@ class WorkflowSoftOutputRun:
                 raise FileNotFoundError(f"No selected points have {current}.parquet")
             groups = available.groupby(list(names), sort=True, dropna=False) if names else [((), available)]
             for key, frame in groups:
+                scopes = {_sampling_scope(self.run._point_dirs[name]) for name in frame.point_directory}
+                if len(scopes) > 1:
+                    raise ValueError("Soft-output groups must separate BP sampling scopes; group by decoder_alias")
                 key = key if isinstance(key, tuple) else (key,)
                 data = [self._point(row, current) for row in frame.itertuples()]
+                if not any(len(item[0]) for item in data):
+                    raise ValueError("No scored shots: BP converged on all selected shots")
+                scope = next(iter(scopes))[0]
                 series.append((dict(zip(names, key)) | {"metric": current},
                                np.concatenate([item[0] for item in data]),
                                np.concatenate([item[1] for item in data])))
+                if scope != "all shots":
+                    series[-1][0]["statistics_scope"] = scope
         return series
 
     @staticmethod

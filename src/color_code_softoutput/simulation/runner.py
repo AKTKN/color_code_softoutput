@@ -95,8 +95,11 @@ def run_experiment(config: WorkflowConfig | str | Path, *, reporter=print) -> Pa
             record['native_stage1_perturbation']['scheme_version_by_point'] = schemes
     if any(dict(p.decode_options).get("bp_predecoding", False) for p in points):
         from importlib.metadata import version
+        from color_code_stim.dem_utils.global_dem import GLOBAL_BP_VERSION, GLOBAL_BP_WEIGHT_RULE
         record["global_bp_predecoding"] = {
-            "version": 2, "ldpc_version": version("ldpc"), "probability_cap": .5,
+            "version": GLOBAL_BP_VERSION, "ldpc_version": version("ldpc"), "probability_cap": .5,
+            "weight_rule": GLOBAL_BP_WEIGHT_RULE,
+            "aggregation": "independent_xor", "effective_probability": "p/(1+p)",
             "native_perturbation_scheme_version": 2,
             "null_metrics": "concat metrics are null on BP-converged shots"}
     record["config"]["simulation"]["output_root"] = str(config.simulation.output_root.expanduser().resolve())

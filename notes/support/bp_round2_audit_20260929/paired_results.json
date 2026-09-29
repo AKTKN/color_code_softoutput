@@ -1,0 +1,37 @@
+[
+  {
+    "method": "ordinary",
+    "shots": 2048,
+    "failures": 15
+  },
+  {
+    "method": "min_sum",
+    "shots": 2048,
+    "failures": 25,
+    "converged": 1330,
+    "converged_failures": 1,
+    "saved_failures": 24,
+    "rescued": 5,
+    "worsened": 15
+  },
+  {
+    "method": "product_sum",
+    "shots": 2048,
+    "failures": 19,
+    "converged": 1737,
+    "converged_failures": 5,
+    "saved_failures": 14,
+    "rescued": 6,
+    "worsened": 10
+  },
+  {
+    "method": "min_sum_scale_0.625",
+    "shots": 2048,
+    "failures": 17,
+    "converged": 1761,
+    "converged_failures": 1,
+    "saved_failures": 16,
+    "rescued": 3,
+    "worsened": 5
+  }
+]

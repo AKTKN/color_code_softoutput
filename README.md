@@ -1,14 +1,27 @@
 # color-code-softoutput
 
 Global DEM BP predecoding is available on
-`codex/global-bp-predecoding-20260929` in this repository and both external
+`bp_predecoding` in this repository and both external
 decoder/backend repositories. Set `decode_options.bp_predecoding: true` and
 optionally `bp_prms: {max_iter: 10}`. See
 [`configs/global_bp_example.yaml`](configs/global_bp_example.yaml) and the
 [implementation report](notes/support/global_bp_predecoding_20260929/report.md).
+BP fallback weighting version 3 aggregates the uncapped global posteriors
+into X/Z DEM mechanisms with the existing independent-XOR rule, then assigns
+`w=-log(p)`. Color decomposition receives effective priors `p/(1+p)` so the
+existing log-odds API reproduces those X/Z weights. See the
+[weighting specification](external_libs/color-code-stim/docs/global_bp_predecoding.md).
+New run logs record `weight_rule="negative_log_xz_probability"`; old version-2
+decoder states require their original implementation for replay.
 The workflow adds boolean `bp_converged.parquet`; all concatenated metrics
-are null on converged shots. Analysis explicitly reports statistics over BP
-nonconverged shots and the physical/converged shot counts.
+are null on converged shots. As requested, LER is the saved True count divided
+by all physical shots; nulls do not reduce the denominator. This does not
+reconstruct missing converged-shot failures. Soft-output statistics use only
+scored shots. Physical/converged shot counts are reported explicitly.
+
+Use branch `bp_predecoding` in all three repositories, including the two
+external checkouts. The [release notes](notes/support/BP_PREDECODING_RELEASE.md)
+summarize the implementation, subsequent corrections and audit artifacts.
 
 For this isolated checkout, activate `color_code_so`, install `ldpc>=2,<3`,
 and select its sources without changing the installed original checkouts:
@@ -127,6 +140,46 @@ bitflip -> NoiseModel(bitflip=p)
 depol   -> NoiseModel(depol=p)
 uniform -> NoiseModel.uniform_circuit_noise(p)
 ```
+
+### Round count and X/Z detectors for depolarizing experiments
+
+`rounds` counts **all syndrome extraction rounds**, including the first one.
+With `perfect_first_syndrome_extraction: true`, the first extraction is
+noiseless and the remaining `rounds - 1` extractions receive the configured
+round noise. Initialization and final measurement noise have separate controls
+(`perfect_logical_initialization` and `perfect_logical_measurement`); they are
+already absent in the `depol`-only noise model above.
+
+For triangular Z-memory circuits, the first round measures both X and Z
+stabilizers, but defines only Z detectors. X detectors compare consecutive
+X-stabilizer measurements and appear from the second round onward when
+`exclude_non_essential_pauli_detectors: false` (the default). Consequently,
+`rounds: 1` has no X detectors, and a global DEM from that circuit cannot
+provide the X/Z syndrome correlation information needed by global BP.
+
+For a noiseless reference extraction followed by **one application of data
+depolarization** and another extraction, use these settings in the YAML:
+
+```yaml
+sweep:
+  noise_model: depol
+  rounds: 2
+  circuit_type: tri
+
+color_code_options:
+  temp_bdry_type: Z
+  perfect_first_syndrome_extraction: true
+  exclude_non_essential_pauli_detectors: false
+```
+
+Keep the other sweep, simulation and decoder settings from your configuration.
+This produces both X and Z detectors. The global-BP worktree's DEM generator
+retains mechanisms affecting both detector types before CSS separation. For
+example, at `d=5`, `p=0.03`, this configuration has 9 X and 27 Z detectors,
+one depolarizing layer, and 19 global mechanisms affecting both X and Z
+detectors. Global-BP decoding uses the separate
+`color_code_softoutput_bp_global` worktree; these circuit settings themselves
+are also supported by the original decoder checkout.
 
 The run root is `YY_MM_DD_HH_MM_SS_{hash8}` under `output_root`, where the
 hash covers the validated semantic configuration. Each point directory is:
@@ -322,6 +375,35 @@ each plotted physical condition. Comparability checks use the settings
 recorded in the saved logs; the canonical logs do not certify historical
 cluster source versions. `notebooks/color_correlated_decoding.ipynb` now
 uses the two-run example above; set `additional_sources = []` for one run.
+
+The original workspace's readers also support saved global-BP runs with
+`decode_options.bp_predecoding` and `bp_prms`. Rerun the analysis notebook's
+first cell to reload them. `bp_converged.parquet` must contain a non-null
+boolean for every physical shot; concatenated metrics must be null exactly
+where BP converged. LER uses the original aggregation: the saved True count
+divided by the total physical shot count, also when BP is enabled. Nulls do
+not contribute to the numerator; they do not reduce the denominator.
+Summaries expose `physical_shots`, `bp_converged_shots`, and
+`statistics_scope="all shots"`. An all-converged file with all-null failure
+labels has a saved True count of zero and the original nonzero shot count.
+This does not reconstruct the missing logical-error outcomes on null shots.
+
+Baseline overlays and improvement ratios retain the original representative
+selection by physical configuration; BP settings introduce no additional
+restriction or virtual baseline alias. Paired methods keep their own baseline.
+Soft-output plots exclude skipped shots lacking scores and reject mixed BP sampling scopes
+within one group. With no scored shots they report that no scores are available.
+This compatibility update concerns analysis; running global-BP decoding still
+uses the separate `color_code_softoutput_bp_global` worktree described in
+`configs/example_bpmatching.yaml`.
+
+That BP worktree now uses weighting version 3: aggregate uncapped global
+posteriors into X/Z DEM mechanisms with independent XOR, assign `w=-log(p)`,
+then pass `p/(1+p)` to the existing color decomposition. The conversion is
+after X/Z aggregation and before stage-1/stage-2 decomposition. New run logs
+identify `weight_rule="negative_log_xz_probability"`; existing saved runs
+retain their old weighting. See the
+[implementation details](../color_code_softoutput_bp_global/external_libs/color-code-stim/docs/global_bp_predecoding.md).
 
 ## Setup
 

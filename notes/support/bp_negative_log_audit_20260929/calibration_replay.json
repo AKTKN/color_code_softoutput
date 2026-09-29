@@ -1,0 +1,722 @@
+[
+  {
+    "alias": "MWPM",
+    "d": 5,
+    "p": 0.03,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "BP_MWPM",
+    "d": 5,
+    "p": 0.03,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "bp_converged": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "MWPM_perturbation",
+    "d": 5,
+    "p": 0.03,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "default_logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "better_weight_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "effect_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "BP_MWPM_perturbation",
+    "d": 5,
+    "p": 0.03,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "default_logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "better_weight_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "effect_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "bp_converged": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "MWPM",
+    "d": 5,
+    "p": 0.04,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "BP_MWPM",
+    "d": 5,
+    "p": 0.04,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "bp_converged": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "MWPM_perturbation",
+    "d": 5,
+    "p": 0.04,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "default_logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "better_weight_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "effect_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "BP_MWPM_perturbation",
+    "d": 5,
+    "p": 0.04,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "default_logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "better_weight_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "effect_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "bp_converged": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "MWPM",
+    "d": 5,
+    "p": 0.05,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "BP_MWPM",
+    "d": 5,
+    "p": 0.05,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 1
+      },
+      "bp_converged": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "MWPM_perturbation",
+    "d": 5,
+    "p": 0.05,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "default_logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "better_weight_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "effect_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "BP_MWPM_perturbation",
+    "d": 5,
+    "p": 0.05,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "default_logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "better_weight_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "effect_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "bp_converged": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "MWPM",
+    "d": 7,
+    "p": 0.03,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "BP_MWPM",
+    "d": 7,
+    "p": 0.03,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "bp_converged": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "MWPM_perturbation",
+    "d": 7,
+    "p": 0.03,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "default_logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "better_weight_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "effect_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "BP_MWPM_perturbation",
+    "d": 7,
+    "p": 0.03,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "default_logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "better_weight_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "effect_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "bp_converged": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "MWPM",
+    "d": 7,
+    "p": 0.04,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "BP_MWPM",
+    "d": 7,
+    "p": 0.04,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "bp_converged": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "MWPM_perturbation",
+    "d": 7,
+    "p": 0.04,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "default_logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "better_weight_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "effect_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "BP_MWPM_perturbation",
+    "d": 7,
+    "p": 0.04,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "default_logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "better_weight_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "effect_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "bp_converged": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "MWPM",
+    "d": 7,
+    "p": 0.05,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "BP_MWPM",
+    "d": 7,
+    "p": 0.05,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "bp_converged": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "MWPM_perturbation",
+    "d": 7,
+    "p": 0.05,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "default_logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "better_weight_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "effect_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "BP_MWPM_perturbation",
+    "d": 7,
+    "p": 0.05,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "default_logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "better_weight_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "effect_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "bp_converged": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "MWPM",
+    "d": 9,
+    "p": 0.03,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "BP_MWPM",
+    "d": 9,
+    "p": 0.03,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "bp_converged": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "MWPM_perturbation",
+    "d": 9,
+    "p": 0.03,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "default_logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "better_weight_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "effect_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "BP_MWPM_perturbation",
+    "d": 9,
+    "p": 0.03,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "default_logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "better_weight_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "effect_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "bp_converged": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "MWPM",
+    "d": 9,
+    "p": 0.04,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "BP_MWPM",
+    "d": 9,
+    "p": 0.04,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "bp_converged": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "MWPM_perturbation",
+    "d": 9,
+    "p": 0.04,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "default_logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "better_weight_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "effect_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "BP_MWPM_perturbation",
+    "d": 9,
+    "p": 0.04,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "default_logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "better_weight_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "effect_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "bp_converged": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "MWPM",
+    "d": 9,
+    "p": 0.05,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "BP_MWPM",
+    "d": 9,
+    "p": 0.05,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "bp_converged": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "MWPM_perturbation",
+    "d": 9,
+    "p": 0.05,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "default_logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "better_weight_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "effect_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  },
+  {
+    "alias": "BP_MWPM_perturbation",
+    "d": 9,
+    "p": 0.05,
+    "shots": 10,
+    "metrics": {
+      "logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "default_logical_error": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "better_weight_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "effect_by_color_correlated_decoding": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      },
+      "bp_converged": {
+        "new_matches_saved": true,
+        "old_differences": 0
+      }
+    }
+  }
+]

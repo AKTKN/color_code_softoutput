@@ -1,0 +1,20 @@
+[
+  {
+    "sample": "physical",
+    "shots": 1596,
+    "xor_failures": 21,
+    "sum_failures": 23,
+    "ordinary_fallback_failures": 0,
+    "rescued_by_sum": 0,
+    "worsened_by_sum": 2
+  },
+  {
+    "sample": "paired",
+    "shots": 2048,
+    "xor_failures": 24,
+    "sum_failures": 22,
+    "ordinary_fallback_failures": 15,
+    "rescued_by_sum": 3,
+    "worsened_by_sum": 1
+  }
+]

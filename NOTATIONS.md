@@ -4,6 +4,16 @@ Last audit: 2026-09-19. Source keys and edition-specific locations are in [refs/
 
 ## 1. Conventions and physical code
 
+### BP fallback X/Z mechanism weights (2026-09-29)
+
+For BP fallback only, `q[e]` is the unclipped global mechanism posterior,
+`p[j]` its independent-XOR aggregation into X/Z DEM mechanism `j`, and
+`w[j] = -log(p[j])`. The effective probability `p_eff[j] = p[j]/(1+p[j])`
+encodes this weight for the existing log-odds API. It is a surrogate prior,
+not the projected posterior itself. This conversion precedes color/stage
+decomposition and follows global-to-X/Z aggregation. Numerical regularization
+floors the effective probability at `1e-14`. Global BP weighting version is 3.
+
 ### Canonical YAML ensemble SWIM score (2026-09-27)
 
 For each generated concatenated-matching candidate `a`, `phi_a` is the

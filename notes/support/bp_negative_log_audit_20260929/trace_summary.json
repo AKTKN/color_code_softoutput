@@ -1,0 +1,9 @@
+{
+  "failures": 21,
+  "direct_bp_checks": 21,
+  "physical_single_maps_checked": 57,
+  "exhaustive_stage_minima_checked": 126,
+  "all_three_candidates_wrong": 15,
+  "exact_wrong_class_strictly_cheaper": 21,
+  "exact_prefers_correct": 0
+}
