@@ -41,3 +41,12 @@ Before this change the native decoder commit `3955196a` and backend commit
 was `cbe2af2`, containing documentation, timing records and a notebook, with no
 Python implementation changes. Integrate its history after publishing this
 BP fix. Preserve original workspaces' uncommitted changes and do not merge main.
+
+Integration completed: the root native commit was merged, retaining both sets
+of AGENTS/STATUS history after resolving text-only insertion conflicts. The
+committed native notebook parses as JSON; root src/tests have no merge changes.
+Decoder/backend native histories were already included. No fatal or executable
+code conflict occurred. The original dirty workspaces were not modified.
+All three remote branch names (bp_predecoding, global BP, native stage 1) are
+synchronized by fast-forward publication; main is untouched. Local native
+branches checked out in the original workspaces are intentionally not moved.
