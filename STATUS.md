@@ -40,6 +40,21 @@ PyMatching `7a26e6a8e`. Exact dependency SHAs:
 `notes/support/native_stage1_perturbation_20260929/dependencies.json`.
 No main merge, larger campaign or new soft-output theorem was performed.
 
+## Follow-up: comparison with pre-resampling fixed ensemble — 2026-09-29
+
+The prior 24.58–41.83x figures compared native stage 1 with the checkpoint's
+per-shot original-DEM resampling implementation. For the user's requested
+pre-resampling baseline, the existing `legacy_fixed_072a87d` measurements
+give 31.476 ms/shot (d9, batch 10), 89.028 ms/shot (d13, batch 10), and
+1621.377 ms/shot (d17, batch 1), all M12/full-output. Corresponding native
+means are 3.499, 10.171, and 28.127 ms/shot: 9.00x, 8.75x, and 57.64x shorter
+decode time in those records. The old values are one repeat from 2026-09-28;
+native values are three repeats from 2026-09-29 on separate Stim inputs.
+The old fixed ensemble perturbed stage 2 too; native mode fixes original stage
+2. This is an integrated workflow comparison, not an isolated estimate of
+resampling overhead. Data and ratios:
+`notes/support/native_stage1_perturbation_20260929/pre_resampling_fixed_ensemble_comparison.csv`.
+
 # Direct stage-1 perturbation probe (2026-09-28)
 
 Answered the user's performance question with a temporary in-memory sampler

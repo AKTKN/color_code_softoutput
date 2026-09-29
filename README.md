@@ -25,7 +25,9 @@ same-prior-specification acceleration from comparisons against the old mode.
 The [implementation and timing report](notes/support/native_stage1_perturbation_20260929/report.md)
 records regression tests, cold/warm timings, graph counts, memory and exact
 dependency commits. YAML aliases use independent physical samples; the
-report's decoder timings use identical presampled physical shots.
+report includes the pre-resampling fixed-ensemble measurements as a separate
+baseline. Native decoder timings use identical presampled shots within each
+measured condition.
 
 ## Canonical YAML simulation
 

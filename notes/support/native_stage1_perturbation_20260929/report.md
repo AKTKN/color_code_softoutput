@@ -2,6 +2,22 @@
 
 `stage1_perturbation=True`で、PyMatchingが各shotのstage 1候補をまとめて生成します。color-code-stimは固定original priorのstage 2と既存の候補選択を担当します。M=12、full output、10-shot batchの総decode時間は、**同じ摂動仕様の再構築参照に対して11.61〜11.77倍**、**保存したoriginal DEM摂動方式に対して24.58〜41.83倍**速くなりました。後者には方式変更が含まれます。
 
+## per-shot再サンプル導入前の固定ensembleとの比較
+
+ご指摘の比較対象は、2026-09-28の固定ensemble版 `072a87d` です。この版は同じM=12 ensembleを全shotで使い回し、対応する3条件すべてで旧測定のgraph_countは72でした。前節の「original_dem」行は既にper-shot再サンプルする版の値であり、ここでの旧固定ensembleとは別の比較です。
+
+両レポートのfull output測定を、距離・batch sizeが一致する行で比べます。旧版は各条件1回の測定、native版は同じ入力shotによる3回測定の平均です。測定日とStim shot seedは異なるためpaired比較ではありません。
+
+| d | batch | 旧固定ensemble `072a87d` (ms/shot) | 今回native (ms/shot) | 旧版/native | decode時間短縮 |
+|---:|---:|---:|---:|---:|---:|
+| 9 | 10 | 31.476 | 3.499 | 9.00倍 | 88.9% |
+| 13 | 10 | 89.028 | 10.171 | 8.75倍 | 88.6% |
+| 17 | 1 | 1621.377 | 28.127 | 57.64倍 | 98.3% |
+
+したがって、今回のnative版は**shotごとに再サンプルしなかった旧固定ensembleの計測値よりも**、この記録上は約9.0倍（d=9）、8.75倍（d=13）、57.64倍（d=17、1-shot）速いです。
+
+この比較は全decoderの実測差であり、速度差をsampling lifecycleだけに帰属させることはできません。旧 `072a87d` の測定はstage 2にもperturbed priorを使い、今回のnative版は計画どおりoriginal stage 2を固定しています。また、stage 1候補の摂動対象も異なります。測定は別日・別shotで、旧版は1回、nativeは3回です。固定ensembleとの候補・LER同一性を示す比較ではありません。元の数値は[旧legacy CSV](../decoder_runtime_optimization_20260928/legacy_comparison.csv)、対応する今回のnative値はこのレポートの`measurements.csv`、集約は[`pre_resampling_fixed_ensemble_comparison.csv`](pre_resampling_fixed_ensemble_comparison.csv)です。
+
 ## 実装した仕様
 
 - `stage1_perturbation=False`は、各shot/memberのoriginal X/Z DEM摂動を維持します。固定stage 2のcacheも保存用commitに含めています。
@@ -136,7 +152,8 @@ process全体のOS報告resident memoryです。Python/import/circuit/DEMを含�
 - `measurements.csv`: 裸の216測定、repeat、時間、digest、RSS。
 - `profiles.csv`: 72個のstage/factory/PM API内訳とPython/C++構築回数。
 - `initialization.csv`: 36個のconstructor、初回decode、構築回数、RSS。
-- `summary.csv` / `comparisons.csv`: 全条件の平均・標準偏差・範囲、および二種類の比較比率。
+- `summary.csv` / `comparisons.csv`: 全条件の平均・標準偏差・範囲、および今回実装前のper-shot版に対する二種類の比較比率。
+- `pre_resampling_fixed_ensemble_comparison.csv`: 前回レポートの旧固定ensemble `072a87d` とnative版の距離/batch対応比較。
 - `timing_verification.json`: 全reference/native digest一致、M1一致、全候補syndrome、warm構築回数の検査結果。
 - `validation.json` / `baseline_cpp.log` / `native_cpp.log` / `root_tests.log`: 回帰・新規・sanitizer検査の結果。
 - `environment.json` / `source_manifest.json` / `dependencies.json`: 環境、hashと依存commit。

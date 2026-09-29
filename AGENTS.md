@@ -22,9 +22,14 @@ log odds and no possible negative perturbations.
 All-package tests and sanitizer checks pass. Report, source/environment hashes
 and dependency commits: `notes/support/native_stage1_perturbation_20260929/`.
 M12/full-output/10-shot is 11.61–11.77x faster than same-law fresh builds.
-Original-DEM comparisons also change candidate generation; no LER conclusion
-or new metric theorem follows. Timing programs and temporary inputs were
-deleted. Use the README's backend setup for native mode.
+The separately requested comparison against the pre-resampling fixed M12
+ensemble is also in that report: 31.476/89.028 ms per shot at d9/d13 (10-shot)
+and 1621.377 ms at d17 (1-shot), compared with native 3.499/10.171/28.127 ms.
+The former 24.58–41.83x figures used a per-shot original-DEM baseline and were
+not the fixed-ensemble comparison. These whole-decoder comparisons span a
+stage-2 policy change as well as the new candidate generation; no LER claim
+follows. Timing programs and temporary inputs were deleted. Use the README's
+backend setup for native mode.
 
 ## Current per-shot perturbation and runtime rule (2026-09-28)
 
