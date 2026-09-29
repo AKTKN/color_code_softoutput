@@ -1,3 +1,45 @@
+# Expanded overall native stage-1 / Tesseract timing (2026-09-29)
+
+Completed the requested 30-shot overall API latency comparison with M=4/8/16/
+24/32 and Tesseract, uniform circuit p=.003, alpha=1, rounds=d. Groups ran
+sequentially: d=5,9,13,17 then d=7,11,15; one fresh process per distance
+released its graphs and search memory before the next point. Each distance
+shares the same 30 physical syndromes across all six decoders, with balanced
+rotating order. Timing covers syndrome input through final prediction;
+construction/sampling/warmup/statistics/diagnostics are separate.
+
+All 1,260 positive finite per-shot rows, 42 mean/min/max/median/std summaries,
+input/circuit/DEM hashes, process intervals and matching source hashes pass
+independent checks. All 1,050 native predictions match same-seed/shot-ID
+full-output diagnostics. Mean native latency is lower at d>=7 for all tested
+M; at d5 M4 is approximately tied, larger M favors Tesseract. At d7 M32,
+median order differs from mean order. Tesseract d17 mean/median/max are
+5578.305/2493.455/46760.684 ms. These finite samples do not establish matched
+accuracy or universal speed ratios.
+
+Report, group/point raw data, models, provenance, CSVs and report figures
+(PNG/PDF, overview also SVG) are entirely under
+`results/decoder_timing_native_stage1_tesseract_20260929_143813/`.
+Measurement and report-generation programs were deleted; implementation,
+YAML and existing data were unchanged. Results remain local and Git-ignored.
+
+# Native stage-1 / Tesseract paired timing (2026-09-29)
+
+Completed the requested current-environment comparison at d=9,13, rounds=d,
+uniform circuit noise p=.003, alpha=1, native M=8/16, 20 shared shots per
+distance. Warm prediction-only compact single-shot decode means (ms) are
+d9: 4.177 / 7.387 / Tesseract 17.948; d13: 12.642 / 23.932 / Tesseract
+559.282. The report includes observed min/max and medians, Tesseract's
+existing beam20/pqlimit1M/21-order settings, initialization, inputs and exact
+source/binary provenance. Tesseract's d13 maximum is 2771.277 ms; 20-shot
+mean ratios do not establish universal speed or LER superiority.
+
+All 80 measured native predictions match same-seed/shot-ID full-output batch
+diagnostics. All 120 timing rows and six summary rows pass independent CSV
+statistics/pairing/order checks. Measurement programs were deleted; decoder
+sources and YAML were unchanged. Report and artifacts:
+`notes/support/native_stage1_tesseract_timing_20260929/`.
+
 # Requested scalar experiment output (2026-09-29)
 
 Implemented the authorized decoder metrics API and switched the YAML worker

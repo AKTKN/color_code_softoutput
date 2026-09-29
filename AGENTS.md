@@ -477,6 +477,23 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-29 — Completed expanded 30-shot overall native M=4/8/16/24/32 versus
+Tesseract timings at p=.003/alpha1/rounds=d. Groups d=5,9,13,17 and d=7,11,15
+ran sequentially with fresh per-distance processes. Report and all data/figures:
+`results/decoder_timing_native_stage1_tesseract_20260929_143813/`. All 1260
+timing rows / 42 summaries and 1050 full-output prediction checks pass.
+Mean native time is lower for tested d>=7; d5 M4 is near tied and larger M
+favors Tesseract. Median rankings can differ. Timing/report programs deleted;
+decoder sources unchanged. Next task: review the report for presentation.
+
+2026-09-29 — Completed user-requested native stage-1 M=8/16 versus Tesseract
+timings at d=9,13, uniform circuit p=.003, alpha=1, rounds=d, 20 shared shots.
+Report: `notes/support/native_stage1_tesseract_timing_20260929/report.md`.
+Warm compact prediction-only API, observed mean/min/max, initialization and
+input/binary provenance are recorded. Native/full diagnostic predictions and
+CSV statistics pass; measurement programs were deleted. Next task: review
+the bounded timing report; no broader study was launched.
+
 2026-09-29 — Added requested `(shots,)` experiment metrics with default
 full_output=False in the YAML worker. Root 361 and decoder 308/two existing
 skips pass; saved values/schema match explicit full output. Native M12/N10
@@ -914,6 +931,12 @@ The primary crossing is unresolved at the upper grid endpoint; numerical
 limitations and the missing dual certificate remain explicit in the review.
 
 ## Next task
+
+Review the 30-shot overall timing report and export figures at
+`results/decoder_timing_native_stage1_tesseract_20260929_143813/report.md`.
+These are warm single-shot API latencies with original stage-2 priors and
+Tesseract beam20/pqlimit1M/21 orders, not matched-accuracy or universal speed
+claims. Preserve raw per-shot timing/seed/hash provenance when citing them.
 
 Review `notes/support/compact_experiment_metrics_20260929/report.md` before
 choosing any further speed optimization. Default YAML output is compact;
