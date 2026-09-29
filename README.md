@@ -6,12 +6,15 @@ decoder/backend repositories. Set `decode_options.bp_predecoding: true` and
 optionally `bp_prms: {max_iter: 10}`. See
 [`configs/global_bp_example.yaml`](configs/global_bp_example.yaml) and the
 [implementation report](notes/support/global_bp_predecoding_20260929/report.md).
-BP fallback weighting version 3 aggregates the uncapped global posteriors
+BP fallback version 4 aggregates the uncapped global posteriors
 into X/Z DEM mechanisms with the existing independent-XOR rule, then assigns
 `w=-log(p)`. Color decomposition receives effective priors `p/(1+p)` so the
-existing log-odds API reproduces those X/Z weights. See the
+existing log-odds API reproduces those X/Z weights for **stage 1 only**.
+**Stage 2 and final candidate selection always use the original pre-BP
+physical prior**, including with native stage-1 perturbation. See the
 [weighting specification](external_libs/color-code-stim/docs/global_bp_predecoding.md).
-New run logs record `weight_rule="negative_log_xz_probability"`; old version-2
+New run logs record `weight_rule="negative_log_xz_probability"` and physical
+stage-2/selection priors; old version-2/3
 decoder states require their original implementation for replay.
 The workflow adds boolean `bp_converged.parquet`; all concatenated metrics
 are null on converged shots. As requested, LER is the saved True count divided
@@ -397,10 +400,11 @@ This compatibility update concerns analysis; running global-BP decoding still
 uses the separate `color_code_softoutput_bp_global` worktree described in
 `configs/example_bpmatching.yaml`.
 
-That BP worktree now uses weighting version 3: aggregate uncapped global
+That BP worktree now uses version 4: aggregate uncapped global
 posteriors into X/Z DEM mechanisms with independent XOR, assign `w=-log(p)`,
-then pass `p/(1+p)` to the existing color decomposition. The conversion is
-after X/Z aggregation and before stage-1/stage-2 decomposition. New run logs
+then pass `p/(1+p)` to stage-1 color decomposition. Stage 2 and final selection
+use the original physical prior. The conversion is
+after X/Z aggregation and before stage-1 decomposition. New run logs
 identify `weight_rule="negative_log_xz_probability"`; existing saved runs
 retain their old weighting. See the
 [implementation details](../color_code_softoutput_bp_global/external_libs/color-code-stim/docs/global_bp_predecoding.md).

@@ -1,0 +1,22 @@
+{
+  "datasets": [
+    {
+      "name": "physical_d5",
+      "shots": 1596,
+      "all_counts_and_converged_predictions_match": true
+    },
+    {
+      "name": "paired_d5",
+      "shots": 2048,
+      "all_counts_and_converged_predictions_match": true
+    },
+    {
+      "name": "paired_d7",
+      "shots": 4096,
+      "all_counts_and_converged_predictions_match": true
+    }
+  ],
+  "exhaustive_restored_prior_stage2_checks": 63,
+  "previous_physical_failures_all_corrected": 21,
+  "production_source_hashes_unchanged": true
+}

@@ -1,3 +1,25 @@
+# BP version-4 update — 2026-09-30
+
+## BP stage-1-only priors and native integration (2026-09-30)
+
+The user requested BP posterior generation in stage 1 only, with original
+physical X/Z priors for stage 2 and final candidate selection. BP fallback
+now enforces original stage 2 and `original_dem` selection, independently of
+ordinary decoder options. Perturbation/guide generation retains posterior
+priors and existing RNG scheme/cursors. Converged BP handling and ordinary
+no-BP decoding remain unchanged. Global BP state/log version is 4; reject
+version-2/3 saved states. Native perturbation scheme stays 2.
+
+All-package acceptance: simulator 399 passed; decoder 358 passed, two existing
+skips. Production predictions match the independent hybrid-policy reference
+on all 7,740 archived shots. See
+`notes/support/bp_original_prior_implementation_20260930/report.md`.
+The user authorized publication on `bp_predecoding` and integration with
+`codex/native-stage1-perturbation-20260929`; do not merge main or overwrite
+uncommitted changes in the original workspace.
+
+The publication record below describes the earlier version-3 checkpoint.
+
 # bp_predecoding publication — 2026-09-30
 
 The user requested commit/push of the implementation and correction series

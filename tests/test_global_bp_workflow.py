@@ -170,10 +170,13 @@ def test_native_bp_run_log_records_actual_probability_law_version(tmp_path,mixed
     root=run_experiment(config)
     record=json.loads((root/'run_log.json').read_text())
     bp=record['global_bp_predecoding']
-    assert bp['version']==3
+    assert bp['version']==4
     assert bp['weight_rule']=='negative_log_xz_probability'
     assert bp['aggregation']=='independent_xor'
     assert bp['effective_probability']=='p/(1+p)'
+    assert bp['stage1_prior']=='bp_posterior'
+    assert bp['stage2_prior']==bp['selection_prior']=='original_physical'
+    assert bp['selection_weight_basis']=='original_dem'
     log=record['native_stage1_perturbation']
     assert log['scheme_version']==('mixed' if mixed else 2)
     from color_code_softoutput.simulation.planner import plan_points

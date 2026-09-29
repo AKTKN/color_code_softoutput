@@ -1,0 +1,7 @@
+{
+  "reference_root": "/home/quantum_teresheys/workspace/color_code_softoutput/notes/support/bp_stage2_original_prior_20260930",
+  "bp_version": 4,
+  "sha256": {
+    "/home/quantum_teresheys/workspace/color_code_softoutput_bp_global/external_libs/color-code-stim/src/color_code_stim/decoders/belief_concat_matching_decoder.py": "41b326d59736a5aeb06a5ad85347c7092fd13069c3b74a466cbf6c25da2ba81e"
+  }
+}

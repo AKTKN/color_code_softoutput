@@ -1,5 +1,24 @@
 # AGENTS.md
 
+## BP stage-1-only priors and native integration (2026-09-30)
+
+The user requested BP posterior generation in stage 1 only, with original
+physical X/Z priors for stage 2 and final candidate selection. BP fallback
+now enforces original stage 2 and `original_dem` selection, independently of
+ordinary decoder options. Perturbation/guide generation retains posterior
+priors and existing RNG scheme/cursors. Converged BP handling and ordinary
+no-BP decoding remain unchanged. Global BP state/log version is 4; reject
+version-2/3 saved states. Native perturbation scheme stays 2.
+
+All-package acceptance: simulator 399 passed; decoder 358 passed, two existing
+skips. Production predictions match the independent hybrid-policy reference
+on all 7,740 archived shots. See
+`notes/support/bp_original_prior_implementation_20260930/report.md`.
+The user authorized publication on `bp_predecoding` and integration with
+`codex/native-stage1-perturbation-20260929`; do not merge main or overwrite
+uncommitted changes in the original workspace.
+
+
 ## BP branch publication (2026-09-30)
 
 The user authorized committing and pushing the simulator, color-code-stim
@@ -526,6 +545,9 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-30 — Implemented BP version 4 physical stage-2/selection priors; full
+suites and independent replay pass. Native/BP branch integration authorized.
+
 2026-09-30 — Consolidated the BP implementation, version-3 weighting,
 all-shot saved-analysis correction and audits on `bp_predecoding` in all
 three repositories for the user's requested publication. See STATUS.md and
@@ -980,6 +1002,9 @@ The primary crossing is unresolved at the upper grid endpoint; numerical
 limitations and the missing dual certificate remain explicit in the review.
 
 ## Next task
+
+Use version-4 BP runs to evaluate the physical-stage-2 hypothesis; previous
+version-3 data retain their old decoding policy. No broad LER claim follows.
 
 Review `notes/support/compact_experiment_metrics_20260929/report.md` before
 choosing any further speed optimization. Default YAML output is compact;

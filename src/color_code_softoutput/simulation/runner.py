@@ -100,6 +100,8 @@ def run_experiment(config: WorkflowConfig | str | Path, *, reporter=print) -> Pa
             "version": GLOBAL_BP_VERSION, "ldpc_version": version("ldpc"), "probability_cap": .5,
             "weight_rule": GLOBAL_BP_WEIGHT_RULE,
             "aggregation": "independent_xor", "effective_probability": "p/(1+p)",
+            "stage1_prior": "bp_posterior", "stage2_prior": "original_physical",
+            "selection_prior": "original_physical", "selection_weight_basis": "original_dem",
             "native_perturbation_scheme_version": 2,
             "null_metrics": "concat metrics are null on BP-converged shots"}
     record["config"]["simulation"]["output_root"] = str(config.simulation.output_root.expanduser().resolve())
