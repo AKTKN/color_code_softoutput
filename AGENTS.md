@@ -1,5 +1,33 @@
 # AGENTS.md
 
+## Current global BP predecoding authorization (2026-09-29)
+
+The user authorized implementing/testing global-DEM BP predecoding and YAML
+integration on a separate branch, and installing ldpc into color_code_so.
+This worktree and both external repositories use
+`codex/global-bp-predecoding-20260929`. Original workspace checkouts and their
+uncommitted changes are preserved. BP runs before CSS noise separation;
+converged shots return global observable predictions and skip CSS preparation.
+Failed shots use capped global posterior priors, exact XOR contraction and
+fresh aligned CSS/color decomposition. X/Z memory logical labels follow
+temp_bdry_type; Y/cultivation BP fail explicitly. Native BP perturbations cap
+probabilities at 0.5 through an opt-in scheme-version-2 backend. No-BP laws
+and schemas retain their existing behavior.
+
+BP outputs add boolean bp_converged and nullable concatenated metrics,
+including logical_error. Analysis uses only BP-nonconverged shots, explicitly
+reporting physical/converged counts and leaving all-converged LER undefined.
+BP original-DEM ensembles use absolute-shot SeedSequence draws (global-BP
+version 2), shared across colors/classes; preserve the saved seed/cursor.
+Use this worktree's root, decoder and PyMatching src on PYTHONPATH. ldpc 2.4.1
+is installed in color_code_so; the new backend was built only in this worktree.
+See notes/support/global_bp_predecoding_20260929/report.md. No campaign,
+main merge, publication or performance/LER improvement claim is implied.
+
+Final acceptance: root 386; decoder 336/two existing skips; PyMatching
+Python 131 and C++ 100. All suites pass; d5/T5 physical syndrome/observable
+checks pass. Native BP/ordinary mixed runs save per-point scheme versions.
+
 ## Current requested scalar output authorization (2026-09-29)
 
 The user authorized decoder/simulation output changes, exact full-output
@@ -476,6 +504,12 @@ Whenever work is completed:
 - Update the `Last update` and `Next task` fields below.
 
 ## Last update
+
+2026-09-29 — Implemented global DEM BP predecoding, exact CSS contraction,
+memory-dependent observable assignment, native probability clipping and
+nullable YAML output/analysis in the isolated global-BP branch. See the
+global-BP report for final acceptance results. Next task: use/review the BP
+option; any new campaign remains user-launched.
 
 2026-09-29 — Added requested `(shots,)` experiment metrics with default
 full_output=False in the YAML worker. Root 361 and decoder 308/two existing

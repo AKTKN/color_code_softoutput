@@ -15,6 +15,7 @@ from .worker import WorkerResult
 
 
 _METRIC_TYPES = {
+    "bp_converged": pa.bool_(),
     "logical_error": pa.bool_(),
     "default_logical_error": pa.bool_(),
     "better_weight_by_color_correlated_decoding": pa.uint8(),
@@ -25,33 +26,45 @@ _METRIC_TYPES = {
     "logical_gap": pa.float64(),
 }
 
-def _schema(names: tuple[str, ...]) -> pa.Schema:
+def _schema(names: tuple[str, ...], *, bp=False) -> pa.Schema:
+    bp = bp or "bp_converged" in names
     return pa.schema([pa.field("shot_index", pa.int64(), nullable=False)] +
-                     [pa.field(name, _METRIC_TYPES[name], nullable=False) for name in names])
+                     [pa.field(name, _METRIC_TYPES[name], nullable=bp and name != "bp_converged") for name in names])
 
 
 def _check_table(table: pa.Table, schema: pa.Schema, start: int) -> None:
-    if not table.schema.equals(schema, check_metadata=False) or any(column.null_count for column in table.columns):
+    if not table.schema.equals(schema, check_metadata=False):
         raise ValueError("temporary part has incorrect schema or nulls")
+    for field in schema:
+        if not field.nullable and table.column(field.name).null_count:
+            raise ValueError("temporary part has incorrect schema or nulls")
     index = table.column("shot_index").to_numpy()
     if not np.array_equal(index, np.arange(start, start + len(table), dtype=np.int64)):
         raise ValueError("temporary part has invalid shot indices")
+    active = np.ones(len(table), dtype=bool)
+    if "bp_converged" in schema.names:
+        skipped = table.column("bp_converged").to_numpy(zero_copy_only=False)
+        active = ~skipped
+        for name in schema.names:
+            if name not in ("shot_index", "bp_converged") and not np.array_equal(
+                    table.column(name).is_null().to_numpy(zero_copy_only=False), skipped):
+                raise ValueError("BP metric nulls must exactly match converged shots")
+    def values(name):
+        return np.asarray(table.column(name).filter(pa.array(active)).drop_null().to_pylist())
     if set(PAIRED_METRICS).issubset(schema.names):
-        logical = table.column("logical_error").to_numpy()
-        default = table.column("default_logical_error").to_numpy()
-        effect = table.column("effect_by_color_correlated_decoding").to_numpy()
-        better = table.column("better_weight_by_color_correlated_decoding").to_numpy()
-        if (not np.array_equal(effect, (default & ~logical).astype(np.uint8))
-                or np.any(better > 1)):
+        logical = values("logical_error").astype(bool)
+        default = values("default_logical_error").astype(bool)
+        effect = values("effect_by_color_correlated_decoding")
+        better = values("better_weight_by_color_correlated_decoding")
+        if (not np.array_equal(effect, (default & ~logical).astype(np.uint8)) or np.any(better > 1)):
             raise ValueError("paired decoder metrics are inconsistent")
-    if "color_correlated_run" in schema.names and np.any(table.column("color_correlated_run").to_numpy() > 2):
-        raise ValueError("correlated run class is inconsistent")
-    if "relift_run" in schema.names and np.any(table.column("relift_run").to_numpy() > 2):
-        raise ValueError("relift run class is inconsistent")
+    for name in ("color_correlated_run", "relift_run"):
+        if name in schema.names and np.any(values(name) > 2):
+            raise ValueError(f"{name} class is inconsistent")
     for name in ("swim_distance", "logical_gap"):
         if name in schema.names:
-            values = table.column(name).to_numpy()
-            if not np.isfinite(values).all() or np.any(values < 0):
+            finite = values(name).astype(float)
+            if not np.isfinite(finite).all() or np.any(finite < 0):
                 raise ValueError(f"invalid {name} values")
 
 
@@ -190,7 +203,7 @@ class PointStorage:
             for name, path in zip(self.names, temporary):
                 if path.exists():
                     raise FileExistsError(path)
-                writers[name] = pq.ParquetWriter(path, _schema((name,)))
+                writers[name] = pq.ParquetWriter(path, _schema((name,), bp="bp_converged" in self.names))
             expected = 0
             for part in self.parts:
                 if part.shot_start != expected:
@@ -230,12 +243,19 @@ class PointStorage:
 
     def _validate_final(self, path: Path, name: str) -> None:
         with pq.ParquetFile(path) as source:
-            if source.schema_arrow != _schema((name,)) or source.metadata.num_rows != self.point.shots:
+            if source.schema_arrow != _schema((name,), bp="bp_converged" in self.names) or source.metadata.num_rows != self.point.shots:
                 raise ValueError(f"invalid final schema or count: {name}")
             expected = 0
+            bp_batches = None
+            if "bp_converged" in self.names and name != "bp_converged":
+                bp_batches = iter(pq.ParquetFile(self.buffer_dir / "final_bp_converged.parquet").iter_batches(batch_size=self.buffer_shots))
             for batch in source.iter_batches(batch_size=self.buffer_shots):
                 table = pa.Table.from_batches([batch])
-                _check_table(table, _schema((name,)), expected)
+                _check_table(table, _schema((name,), bp="bp_converged" in self.names), expected)
+                if bp_batches is not None:
+                    convergence = next(bp_batches).column(1).to_numpy(zero_copy_only=False)
+                    if not np.array_equal(table[name].is_null().to_numpy(zero_copy_only=False), convergence):
+                        raise ValueError("Final BP metric nulls disagree with convergence flags")
                 expected += len(table)
             if expected != self.point.shots:
                 raise ValueError(f"invalid final shot indices: {name}")

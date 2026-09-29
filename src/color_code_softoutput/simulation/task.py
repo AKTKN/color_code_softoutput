@@ -41,4 +41,6 @@ def metric_names(point: ResolvedPoint) -> tuple[str, ...]:
         names += ("swim_distance",)
     if options.get("comparative_decoding", False):
         names += ("logical_gap",)
+    if dict(point.decode_options).get("bp_predecoding", False):
+        names += ("bp_converged",)
     return names

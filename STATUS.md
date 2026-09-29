@@ -1601,3 +1601,29 @@ three focused suites (37 passed). The bounded test run covers both score
 bases and a two-shot reduced grid. No commit, push or campaign was performed.
 The full root suite passed (260 tests) and the full decoder suite passed
 (156 tests, two existing skips). Both repositories passed `git diff --check`.
+# Global DEM BP predecoding (2026-09-29)
+
+Implemented the authorized global-BP flow and root package integration in
+the isolated `color_code_softoutput_bp_global` worktree; all three repositories
+use `codex/global-bp-predecoding-20260929`. BP runs on the unsplit global DEM
+before CSS preparation. Converged shots use global observable corrections;
+other shots use capped posterior priors, exact XOR contraction, aligned
+X/Z/color decomposition and the configured ordinary/advanced strategy.
+Logical labels follow X/Z memory; Y and cultivation BP are explicitly unsupported.
+Native BP perturbation uses explicit post-perturbation probability clipping
+to 0.5 (scheme version 2), preserving baseline and RNG draws.
+
+YAML adds bp_predecoding/bp_prms and bp_converged.parquet. Concatenated fields
+are null exactly on BP-converged shots. Analysis states its nonconverged-shot
+scope and retains physical/converged counts. Global BP seed/cursor survive
+save/load and skipped/split/spawn processing. ldpc 2.4.1 was installed in
+color_code_so, with no broken pip requirements. Original workspace user
+changes are preserved. Toy distribution enumeration, original CSS marginal
+consistency, posterior column reordering, physical correction validity,
+native clipping, same-shot full/compact output, storage and real spawn tests
+pass. Final acceptance: root **386**, decoder **336 / two existing skips**,
+PyMatching Python **131**, C++ **100**. The d5/T5 bounded correction checks
+pass for X/Z memory, superdense, comparative and native ensembles. Both BP
+scheme-2 and ordinary scheme-1 native runs retain per-point version metadata.
+Source commits and acceptance hashes are recorded in
+`notes/support/global_bp_predecoding_20260929/report.md`.

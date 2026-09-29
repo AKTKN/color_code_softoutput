@@ -139,9 +139,9 @@ _CONSTRUCTOR_KEYS = frozenset({"temp_bdry_type", "superdense_circuit", "perfect_
     "perturbation_alpha", "perturbation_seed", "use_original_prior_for_stage2", "stage1_perturbation",
     "color_correlated_weight_basis", "color_correlated_b",
     "exclude_non_essential_pauli_detectors"})
-_DECODE_KEYS = frozenset({"colors", "compute_swim_distance", "full_output", "check_validity", "verbose"})
+_DECODE_KEYS = frozenset({"colors", "compute_swim_distance", "full_output", "check_validity", "verbose", "bp_predecoding", "bp_prms"})
 _BOOLEAN_OPTIONS = (_CONSTRUCTOR_KEYS - {"temp_bdry_type", "color_correlated_weight_basis", "color_correlated_b",
-    "perturbation_ensemble_size", "perturbation_alpha", "perturbation_seed"}) | (_DECODE_KEYS - {"colors"})
+    "perturbation_ensemble_size", "perturbation_alpha", "perturbation_seed"}) | (_DECODE_KEYS - {"colors", "bp_prms"})
 _SWEEP_ALIASES = frozenset({"d", "rounds", "circuit_type", "cnot_schedule", "noise_model",
     "p_bitflip", "p_depol", "p_reset", "p_meas", "p_cnot", "p_idle", "p_circuit"})
 
@@ -200,6 +200,8 @@ def _freeze(value, name):
         return value
     if type(value) is float and math.isfinite(value):
         return value
+    if isinstance(value, dict):
+        return tuple((k, _freeze(v,name)) for k,v in sorted(value.items()))
     if isinstance(value, list):
         return tuple(_freeze(v, name) for v in value)
     raise ValueError(f"{name} must contain only finite JSON scalar/list values")
@@ -234,7 +236,18 @@ def _options(value, name, allowed):
             and len(set(colors)) == len(colors)
         ):
             raise ValueError(f"{name}.colors must be 'all', a color, or a unique color list")
+    if "bp_prms" in value:
+        bp = _mapping(value["bp_prms"], "bp_prms", allowed={"max_iter", "bp_method", "schedule", "ms_scaling_factor", "bp_method_type"})
+        if "max_iter" in bp:
+            _positive_int(bp["max_iter"], "bp_prms.max_iter")
     return tuple((k, _freeze(v, name)) for k, v in sorted(value.items()))
+
+
+def decode_option_dict(options):
+    result = dict(options)
+    if "bp_prms" in result:
+        result["bp_prms"] = dict(result["bp_prms"])
+    return result
 
 
 @dataclass(frozen=True)
@@ -295,7 +308,7 @@ class WorkflowConfig:
         return {"simulation": sim, "chunking": asdict(self.chunking), "sweep": asdict(self.sweep),
                 "color_code_options": dict(self.color_code_options),
                 "decoders": [{"type": d.type, "options": dict(d.options),
-                              "decode_options": dict(d.decode_options),
+                              "decode_options": decode_option_dict(d.decode_options),
                               **({"decoder_alias": d.decoder_alias} if d.decoder_alias is not None else {})}
                              for d in self.decoders]}
 
@@ -328,11 +341,21 @@ def canonical_native_options(common, decoders):
 
 
 def resolve_native_seeds(config):
-    """Resolve entropy once before planning/spawn; retain the effective seed in the run log."""
+    """Resolve native/BP ensemble entropy once before planning/spawn."""
     common, decoders = canonical_native_options(config.color_code_options, config.decoders)
     common = dict(common)
-    needs_seed = any((common | dict(d.options)).get("stage1_perturbation", False)
-                     and (common | dict(d.options)).get("perturbation_seed") is None for d in decoders)
+
+    def needs_counter_seed(decoder):
+        options = common | dict(decoder.options)
+        bp_ensemble = (dict(decoder.decode_options).get('bp_predecoding', False)
+                       and options.get('enable_prior_perturbation', False))
+        required = options.get('stage1_perturbation', False) or bp_ensemble
+        seed = options.get('perturbation_seed')
+        if required and seed is not None and seed >= 2**64:
+            raise ValueError('Native/global BP perturbation_seed must fit uint64')
+        return required and seed is None
+
+    needs_seed = any(needs_counter_seed(d) for d in decoders)
     if not needs_seed:
         return replace(config, color_code_options=tuple(sorted(common.items())), decoders=decoders)
     import secrets
@@ -346,7 +369,7 @@ def resolve_native_seeds(config):
         if decoder.type != "tesseract":
             if inherited_none:
                 options.setdefault("perturbation_seed", None)
-            if (common | options).get("stage1_perturbation", False) and (common | options).get("perturbation_seed") is None:
+            if needs_counter_seed(decoder):
                 options["perturbation_seed"] = seed
         resolved.append(replace(decoder, options=tuple(sorted(options.items()))))
     return replace(config, color_code_options=tuple(sorted(common.items())), decoders=tuple(resolved))

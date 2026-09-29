@@ -40,11 +40,15 @@ def _preflight_point(point: ResolvedPoint) -> None:
         if correlated.get("comparative_decoding", False):
             raise ValueError("swim distance and comparative decoding cannot be combined")
     pair = _construct(point)
+    if dict(point.decode_options).get("bp_predecoding", False):
+        import ldpc
+        pair.configured.dem_manager.global_projection
     if correlated.get("stage1_perturbation", False):
         import numpy as np
         # Validate native topology/prior support before creating a run directory.
-        pair.configured.decode(np.zeros((0, pair.configured.dem_manager.H.shape[0]), dtype=bool))
-    if dict(point.decode_options).get("compute_swim_distance", False):
+        if not dict(point.decode_options).get('bp_predecoding', False):
+            pair.configured.decode(np.zeros((0, pair.configured.circuit.num_detectors), dtype=bool))
+    if dict(point.decode_options).get("compute_swim_distance", False) and not dict(point.decode_options).get('bp_predecoding', False):
         if pair.circuit_swim is None:
             from color_code_stim.soft_output.pymatching_backend import Stage2Backend
             for color in "rgb":
@@ -78,9 +82,23 @@ def run_experiment(config: WorkflowConfig | str | Path, *, reporter=print) -> Pa
     stores: dict[str, PointStorage] = {}
     record = {"config": config.semantic_dict(), "simulation_start_time": started.isoformat(),
               "simulation_end_time": None}
-    if any((dict(p.color_code_options) | dict(p.decoder_options)).get("stage1_perturbation", False) for p in points):
+    native_points = [p for p in points if
+        (dict(p.color_code_options) | dict(p.decoder_options)).get('stage1_perturbation', False)]
+    if native_points:
+        schemes = {p.point_id: 2 if dict(p.decode_options).get('bp_predecoding', False) else 1
+                   for p in native_points}
+        versions = set(schemes.values())
         record["native_stage1_perturbation"] = {
-            "scheme_version": 1, "shot_index": "absolute_per_point", "color_stream_ids": {"r": 0, "g": 1, "b": 2}}
+            "scheme_version": next(iter(versions)) if len(versions) == 1 else 'mixed',
+            "shot_index": "absolute_per_point", "color_stream_ids": {"r": 0, "g": 1, "b": 2}}
+        if 2 in versions:
+            record['native_stage1_perturbation']['scheme_version_by_point'] = schemes
+    if any(dict(p.decode_options).get("bp_predecoding", False) for p in points):
+        from importlib.metadata import version
+        record["global_bp_predecoding"] = {
+            "version": 2, "ldpc_version": version("ldpc"), "probability_cap": .5,
+            "native_perturbation_scheme_version": 2,
+            "null_metrics": "concat metrics are null on BP-converged shots"}
     record["config"]["simulation"]["output_root"] = str(config.simulation.output_root.expanduser().resolve())
     log_path = root / "run_log.json"
     try:

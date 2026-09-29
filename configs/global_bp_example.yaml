@@ -1,0 +1,33 @@
+simulation:
+  output_root: results/global_bp
+  shots: 100
+  workers: 2
+  master_seed: 20260929
+  buffer_shots: 100
+  verbose: true
+
+chunking:
+  calibration_shots: 4
+  target_chunk_seconds: 1.0
+  min_chunk_shots: 1
+  max_chunk_shots: 100
+  throughput_ema_alpha: 0.25
+
+sweep:
+  distance: 3
+  physical_error_rate: 0.003
+  noise_model: uniform
+  rounds: distance
+  circuit_type: tri
+  cnot_schedule: tri_optimal
+
+color_code_options:
+  temp_bdry_type: Z
+
+decoders:
+  - type: concat_mwpm
+    decode_options:
+      bp_predecoding: true
+      bp_prms:
+        max_iter: 10
+      compute_swim_distance: true

@@ -39,6 +39,7 @@ class WorkflowSoftOutputRun:
             raise ValueError(f"metric must be one of {METRICS}")
         directory = self.run.run_directory / row.point_directory
         arrays = []
+        masks = []
         for name, dtype in ((metric, pa.float64()), ("logical_error", pa.bool_())):
             path = directory / f"{name}.parquet"
             with pq.ParquetFile(path) as source:
@@ -49,17 +50,26 @@ class WorkflowSoftOutputRun:
                         or source.metadata.num_rows != row.expected_shots):
                     raise ValueError(f"Invalid soft-output file: {path}")
                 index = []
+                nulls = []
                 values = []
                 for batch in source.iter_batches(batch_size=65_536):
-                    if any(column.null_count for column in batch.columns):
+                    if batch.column(0).null_count or (batch.column(1).null_count and not (directory / "bp_converged.parquet").is_file()):
                         raise ValueError(f"Null values in {path}")
+                    nulls.append(batch.column(1).is_null().to_numpy(zero_copy_only=False))
                     index.append(batch.column(0).to_numpy(zero_copy_only=False))
                     values.append(batch.column(1).to_numpy(zero_copy_only=False))
                 shot_index = np.concatenate(index)
                 if not np.array_equal(shot_index, np.arange(row.expected_shots)):
                     raise ValueError(f"Invalid shot indices in {path}")
                 arrays.append(np.concatenate(values))
-        scores, failures = arrays
+                masks.append(np.concatenate(nulls))
+        if not np.array_equal(masks[0],masks[1]):
+            raise ValueError("Soft-output and failure null masks disagree")
+        if (directory / "bp_converged.parquet").is_file():
+            convergence = pq.read_table(directory / "bp_converged.parquet")["bp_converged"].to_numpy()
+            if not np.array_equal(masks[0],convergence):
+                raise ValueError("Soft-output null masks disagree with BP convergence")
+        scores, failures = arrays[0][~masks[0]].astype(float), arrays[1][~masks[1]].astype(bool)
         if not np.isfinite(scores).all() or np.any(scores < 0):
             raise ValueError(f"Invalid {metric} values in {directory}")
         return scores, failures

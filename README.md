@@ -1,5 +1,28 @@
 # color-code-softoutput
 
+Global DEM BP predecoding is available on
+`codex/global-bp-predecoding-20260929` in this repository and both external
+decoder/backend repositories. Set `decode_options.bp_predecoding: true` and
+optionally `bp_prms: {max_iter: 10}`. See
+[`configs/global_bp_example.yaml`](configs/global_bp_example.yaml) and the
+[implementation report](notes/support/global_bp_predecoding_20260929/report.md).
+The workflow adds boolean `bp_converged.parquet`; all concatenated metrics
+are null on converged shots. Analysis explicitly reports statistics over BP
+nonconverged shots and the physical/converged shot counts.
+
+For this isolated checkout, activate `color_code_so`, install `ldpc>=2,<3`,
+and select its sources without changing the installed original checkouts:
+
+```bash
+export PYTHONPATH="$PWD/src:$PWD/external_libs/color-code-stim/src:$PWD/external_libs/PyMatching/src"
+./scripts/run_experiment.sh configs/global_bp_example.yaml
+```
+
+Native BP perturbation requires the compiled backend from this branch. Build
+it from `external_libs/PyMatching` with `env -u DEBUG
+CMAKE_BUILD_PARALLEL_LEVEL=4 python setup.py build_ext --inplace`; its submodules
+must be initialized. The local `color_code_so` environment has ldpc 2.4.1.
+
 The YAML simulation now defaults to requested scalar metrics with
 `full_output=False`. The decoder returns only the `(shots,)` arrays required
 by the saved point schema; candidate diagnostics are available through an
