@@ -287,12 +287,18 @@ submitted chunks to the configured worker count.
 
 `type: tesseract` selects the optional Tesseract Python decoder. Install a
 compatible `tesseract_decoder` build in the simulation environment first.
-Its `options` map directly to `TesseractConfig` arguments except `dem`, which
-the worker supplies as the unchanged `ColorCode.dem_xz`. For example:
+Its `options` map directly to `TesseractConfig` arguments except `dem` and the
+workflow-only `xyz_decoding` switch. By default, the worker supplies the
+unchanged, X/Z-separated `ColorCode.dem_xz`. With `xyz_decoding: true`, it
+instead generates the global DEM directly from the physical circuit using
+`circuit.detector_error_model(flatten_loops=True)`. This bypasses
+`ColorCode.dem_xz`, depolarizing-error separation, color decomposition, BP,
+and posterior/reweighted priors. For example:
 
 ```yaml
 - type: tesseract
   options:
+    xyz_decoding: true
     det_beam: 5
     beam_climbing: false
     det_order_method: Index
@@ -300,10 +306,12 @@ the worker supplies as the unchanged `ColorCode.dem_xz`. For example:
 
 The worker compiles Tesseract once per cached point and decodes each sampled
 syndrome with its single-shot API. It saves only the resulting
-`logical_error.parquet`. An explicit X or Z `temp_bdry_type` is required for
-noise configurations where `ColorCode` would otherwise choose Y. Tesseract
-points do not accept `decode_options` or color-correlated modes. Sweep points
-use distinct shot seeds, so LER comparisons across decoder types are unpaired.
+`logical_error.parquet`. Without XYZ decoding, an explicit X or Z
+`temp_bdry_type` is required for noise configurations where `ColorCode` would
+otherwise choose Y. Y temporal boundaries are accepted when
+`xyz_decoding: true`. Tesseract points do not accept `decode_options`, BP, or
+color-correlated modes. Sweep points use distinct shot seeds, so LER
+comparisons across decoder types are unpaired.
 
 ## YAML workflow planning API
 

@@ -93,6 +93,8 @@ decoders:
   # Requires the optional tesseract_decoder Python package.
   # - type: tesseract
   #   options:
+  #     # True uses the unseparated global circuit DEM; false uses ColorCode.dem_xz.
+  #     xyz_decoding: true
   #     det_beam: 5
   #     beam_climbing: false
   #     num_det_orders: 20

@@ -41,7 +41,13 @@ def test_config_routes_native_options_and_rejects_other_decoder_controls():
         parse_workflow_config(raw)
     raw["decoders"][0].pop("decode_options")
     raw["color_code_options"]["temp_bdry_type"] = "Y"
-    with pytest.raises(ValueError, match="XYZ"):
+    with pytest.raises(ValueError, match="xyz_decoding"):
+        parse_workflow_config(raw)
+    raw["decoders"][0]["options"] = {"xyz_decoding": True}
+    point = plan_points(parse_workflow_config(raw))[0]
+    assert dict(point.decoder_options) == {"xyz_decoding": True}
+    raw["decoders"][0]["options"] = {"xyz_decoding": "yes"}
+    with pytest.raises(ValueError, match="must be boolean"):
         parse_workflow_config(raw)
 
 
@@ -55,7 +61,7 @@ def test_worker_uses_original_dem_and_single_shot_predictions(monkeypatch):
             assert "det_beam" not in options
             self.dem_xz = dem
             self.temp_bdry_type = "Z"
-            self.circuit = SimpleNamespace(num_detectors=2)
+            self.circuit = SimpleNamespace(num_detectors=2, num_observables=1)
 
         def sample(self, shots, seed):
             assert shots == 3
@@ -87,9 +93,78 @@ def test_worker_uses_original_dem_and_single_shot_predictions(monkeypatch):
         worker._CODE_CACHE.clear()
 
 
-def test_tesseract_end_to_end_when_installed(tmp_path):
+def test_worker_uses_unseparated_global_dem_for_xyz(monkeypatch):
+    raw = _config()
+    raw["color_code_options"]["temp_bdry_type"] = "Y"
+    raw["decoders"][0]["options"] = {"det_beam": 7, "xyz_decoding": True}
+    point = plan_points(parse_workflow_config(raw))[0]
+    global_dem = SimpleNamespace(num_observables=1, num_detectors=2)
+    seen = []
+
+    class FakeCircuit:
+        num_detectors = 2
+        num_observables = 1
+
+        def detector_error_model(self, **options):
+            seen.append(("global_dem", options))
+            return global_dem
+
+    class FakeCode:
+        def __init__(self, **options):
+            assert "xyz_decoding" not in options
+            assert "det_beam" not in options
+            self.temp_bdry_type = "Y"
+            self.circuit = FakeCircuit()
+
+        @property
+        def dem_xz(self):
+            raise AssertionError("xyz_decoding must not generate the X/Z-separated DEM")
+
+        def sample(self, shots, seed):
+            return np.zeros((shots, 2), dtype=bool), np.zeros(shots, dtype=bool)
+
+    class FakeDecoder:
+        def decode(self, syndrome):
+            return np.zeros(1, dtype=bool)
+
+    def compile_fake(actual_dem, options):
+        assert actual_dem is global_dem
+        assert dict(options) == {"det_beam": 7, "xyz_decoding": True}
+        seen.append(("compile", actual_dem))
+        return FakeDecoder()
+
+    monkeypatch.setattr(worker, "ColorCode", FakeCode)
+    monkeypatch.setattr(adapter, "compile_tesseract", compile_fake)
+    worker._CODE_CACHE.clear()
+    try:
+        result = worker.run_chunk(worker.WorkerInput(point.point_id, 0, 0, 3, 5, point))
+        assert result.metrics["logical_error"].tolist() == [False, False, False]
+        assert seen == [("global_dem", {"flatten_loops": True}), ("compile", global_dem)]
+    finally:
+        worker._CODE_CACHE.clear()
+
+
+def test_xyz_dem_keeps_color_code_xz_dem_lazy():
+    from color_code_stim import ColorCode, NoiseModel
+
+    code = ColorCode(d=3, rounds=1, circuit_type="tri", cnot_schedule="tri_optimal",
+                     noise_model=NoiseModel(depol=.01), temp_bdry_type="Y")
+    assert code._dem_manager is None
+    dem = adapter.detector_error_model(code, {"xyz_decoding": True})
+    assert code._dem_manager is None
+    assert dem == code.circuit.detector_error_model(flatten_loops=True)
+    assert dem.num_detectors == code.circuit.num_detectors
+    assert dem.num_observables == code.circuit.num_observables
+
+
+@pytest.mark.parametrize("xyz_decoding", [False, True])
+def test_tesseract_end_to_end_when_installed(tmp_path, xyz_decoding):
     pytest.importorskip("tesseract_decoder")
     raw = _config()
+    if xyz_decoding:
+        raw["sweep"]["noise_model"] = "depol"
+        raw["color_code_options"]["temp_bdry_type"] = "Y"
+        raw["decoders"][0]["options"]["xyz_decoding"] = True
     raw["simulation"]["output_root"] = str(tmp_path)
     root = run_experiment(parse_workflow_config(raw), reporter=lambda _message: None)
     points = list(root.glob("decoder_type=tesseract,*"))

@@ -587,6 +587,25 @@ decoder commit `ea851ab` and PyMatching commit `7a26e6a8e` were pushed to
 their `phase2a/swim-distance` branches. No sampling campaign was launched.
 See package README and tests.
 
+## Tesseract XYZ global-DEM decoding — 2026-09-30
+
+The Tesseract YAML decoder now accepts the boolean workflow option
+`decoders[].options.xyz_decoding`. Its default `false` preserves the existing
+unchanged `ColorCode.dem_xz` input. When true, the worker instead constructs
+`ColorCode.circuit.detector_error_model(flatten_loops=True)` and passes that
+unseparated global DEM to `TesseractConfig`; the local option itself is removed
+before native configuration. This path does not access `ColorCode.dem_xz`, so
+the lazy `DemManager`, `separate_depolarizing_errors`, color decomposition and
+BP/posterior machinery are not invoked. It accepts Y temporal boundaries and
+checks both detector and observable counts against the sampled circuit.
+
+Focused Tesseract and native-workflow tests pass 13/13 after rebuilding the
+existing PyMatching extension to match its checked-out source. The complete
+root suite passes 402 tests. A real native-extension smoke covers a d=3,
+one-round Y-memory depolarizing case. The implementation and validation record
+is `notes/support/TESSERACT_XYZ_DECODING.md`. No LER campaign or decoder-quality
+claim was made; external source repositories were not edited.
+
 ## Tesseract YAML decoder integration — 2026-09-27
 
 The canonical simulation workflow accepts `decoders[].type: tesseract` with

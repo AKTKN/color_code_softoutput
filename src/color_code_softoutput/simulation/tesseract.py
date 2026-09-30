@@ -1,4 +1,4 @@
-"""Direct original X/Z DEM adapter for the optional Tesseract decoder."""
+"""Global DEM adapters for the optional Tesseract decoder."""
 
 import numpy as np
 
@@ -8,7 +8,20 @@ OPTIONS = frozenset({
     "pqlimit", "det_orders", "det_penalty", "create_visualization",
     "sparsify_errors", "sparsify_base_degree", "sparsify_max_degree",
     "sparsify_reactivate_limit", "num_det_orders", "det_order_method", "seed",
+    "xyz_decoding",
 })
+
+
+def detector_error_model(code, options):
+    """Select the requested global DEM without triggering unrelated decoders.
+
+    ``xyz_decoding`` is local workflow control, not a ``TesseractConfig``
+    argument.  Its true path deliberately reads the physical circuit directly,
+    so ``ColorCode.dem_xz`` and its depolarizing-error separation remain lazy.
+    """
+    if dict(options).get("xyz_decoding", False):
+        return code.circuit.detector_error_model(flatten_loops=True)
+    return code.dem_xz
 
 
 def compile_tesseract(dem, options):
@@ -16,6 +29,7 @@ def compile_tesseract(dem, options):
     from tesseract_decoder import tesseract, utils
 
     options = dict(options)
+    options.pop("xyz_decoding", None)
     if "det_order_method" in options and isinstance(options["det_order_method"], str):
         name = options["det_order_method"]
         try:
@@ -33,6 +47,6 @@ def decode_tesseract(decoder, detectors, num_observables):
     for syndrome in detectors:
         prediction = np.asarray(decoder.decode(np.asarray(syndrome, dtype=bool)), dtype=bool)
         if prediction.shape != (num_observables,):
-            raise ValueError("Tesseract prediction does not match X/Z DEM observables")
+            raise ValueError("Tesseract prediction does not match selected DEM observables")
         predictions.append(prediction)
     return np.asarray(predictions, dtype=bool)

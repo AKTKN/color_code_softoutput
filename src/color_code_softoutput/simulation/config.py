@@ -140,8 +140,9 @@ _CONSTRUCTOR_KEYS = frozenset({"temp_bdry_type", "superdense_circuit", "perfect_
     "color_correlated_weight_basis", "color_correlated_b",
     "exclude_non_essential_pauli_detectors"})
 _DECODE_KEYS = frozenset({"colors", "compute_swim_distance", "full_output", "check_validity", "verbose", "bp_predecoding", "bp_prms"})
-_BOOLEAN_OPTIONS = (_CONSTRUCTOR_KEYS - {"temp_bdry_type", "color_correlated_weight_basis", "color_correlated_b",
-    "perturbation_ensemble_size", "perturbation_alpha", "perturbation_seed"}) | (_DECODE_KEYS - {"colors", "bp_prms"})
+_BOOLEAN_OPTIONS = ((_CONSTRUCTOR_KEYS - {"temp_bdry_type", "color_correlated_weight_basis", "color_correlated_b",
+    "perturbation_ensemble_size", "perturbation_alpha", "perturbation_seed"})
+    | (_DECODE_KEYS - {"colors", "bp_prms"}) | {"xyz_decoding"})
 _SWEEP_ALIASES = frozenset({"d", "rounds", "circuit_type", "cnot_schedule", "noise_model",
     "p_bitflip", "p_depol", "p_reset", "p_meas", "p_cnot", "p_idle", "p_circuit"})
 
@@ -425,8 +426,9 @@ def parse_workflow_config(data: dict) -> WorkflowConfig:
             if raw.get("decode_options"):
                 raise ValueError("tesseract does not accept ColorCode decode_options")
             decode_options = ()
-            if dict(common).get("temp_bdry_type", "Z") in ("Y", "y"):
-                raise ValueError("tesseract XYZ decoding is not supported")
+            if (dict(common).get("temp_bdry_type", "Z") in ("Y", "y")
+                    and not dict(options).get("xyz_decoding", False)):
+                raise ValueError("tesseract Y temporal boundaries require xyz_decoding: true")
             if any(dict(common).get(key, False) for key in
                    ("enable_colorcorrelated_decoding", "enable_cross_color_relifting",
                     "enable_prior_perturbation", "stage1_perturbation", "comparative_decoding")):

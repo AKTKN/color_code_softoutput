@@ -57,6 +57,7 @@ class _CodePair:
     ordinary: ColorCode | None
     tesseract_decoder: object | None = None
     circuit_swim: object | None = None
+    tesseract_num_observables: int | None = None
 
 
 _CODE_CACHE: OrderedDict[tuple, _CodePair] = OrderedDict()
@@ -79,10 +80,15 @@ def _construct(point: ResolvedPoint) -> _CodePair:
                    noise_model=make_noise_model(point.noise_model, point.physical_error_rate))
     configured = ColorCode(**options)
     if is_tesseract:
-        if configured.temp_bdry_type not in ("X", "Z"):
-            raise ValueError("tesseract XYZ decoding is not supported; select X or Z temporal boundary")
-        if configured.dem_xz.num_detectors != configured.circuit.num_detectors:
-            raise ValueError("original X/Z DEM detector order does not match sampled circuit")
+        xyz_decoding = dict(point.decoder_options).get("xyz_decoding", False)
+        if not xyz_decoding and configured.temp_bdry_type not in ("X", "Z"):
+            raise ValueError("tesseract non-X/Z temporal boundaries require xyz_decoding: true")
+        from .tesseract import detector_error_model
+        tesseract_dem = detector_error_model(configured, point.decoder_options)
+        if tesseract_dem.num_detectors != configured.circuit.num_detectors:
+            raise ValueError("Tesseract DEM detector order does not match sampled circuit")
+        if tesseract_dem.num_observables != configured.circuit.num_observables:
+            raise ValueError("Tesseract DEM observable order does not match sampled circuit")
     ordinary = None
     if options.get("enable_colorcorrelated_decoding", False):
         ordinary = ColorCode(**(options | {"enable_colorcorrelated_decoding": False}))
@@ -92,7 +98,12 @@ def _construct(point: ResolvedPoint) -> _CodePair:
             raise ValueError("ordinary and correlated circuits differ")
     if is_tesseract:
         from .tesseract import compile_tesseract
-        return _CodePair(configured, None, compile_tesseract(configured.dem_xz, point.decoder_options))
+        return _CodePair(
+            configured,
+            None,
+            tesseract_decoder=compile_tesseract(tesseract_dem, point.decoder_options),
+            tesseract_num_observables=tesseract_dem.num_observables,
+        )
     circuit_swim = None
     if dict(point.decode_options).get("compute_swim_distance", False) and not configured.dem_manager.swim_data_only:
         from .circuit_swim import CircuitCandidateSwim
@@ -166,7 +177,7 @@ def run_chunk(task: WorkerInput) -> WorkerResult:
     if task.point.decoder_type == "tesseract":
         from .tesseract import decode_tesseract
         predicted = decode_tesseract(pair.tesseract_decoder, detectors,
-                                     pair.configured.dem_xz.num_observables)
+                                     pair.tesseract_num_observables)
         actual_array = np.asarray(actual, dtype=bool)
         if actual_array.ndim == 1 and predicted.shape[1] == 1:
             predicted = predicted[:, 0]
