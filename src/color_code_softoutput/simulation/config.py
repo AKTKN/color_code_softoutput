@@ -201,10 +201,10 @@ def _freeze(value, name):
     if type(value) is float and math.isfinite(value):
         return value
     if isinstance(value, dict):
-        return tuple((k, _freeze(v,name)) for k,v in sorted(value.items()))
+        return tuple((k, _freeze(v, name)) for k, v in sorted(value.items()))
     if isinstance(value, list):
         return tuple(_freeze(v, name) for v in value)
-    raise ValueError(f"{name} must contain only finite JSON scalar/list values")
+    raise ValueError(f"{name} must contain only finite JSON scalar/list/mapping values")
 
 
 def _options(value, name, allowed):
@@ -244,6 +244,7 @@ def _options(value, name, allowed):
 
 
 def decode_option_dict(options):
+    """Restore the BP parameter mapping for saved-config serialization."""
     result = dict(options)
     if "bp_prms" in result:
         result["bp_prms"] = dict(result["bp_prms"])
