@@ -1,0 +1,758 @@
+[
+  {
+    "index": 90,
+    "faults": [
+      [
+        "0",
+        "X"
+      ],
+      [
+        "24",
+        "X"
+      ]
+    ],
+    "actual": true,
+    "prediction": false,
+    "candidate_logicals": [
+      0,
+      1,
+      0
+    ],
+    "candidate_scores": [
+      5.97126183979046,
+      9.17988116449147,
+      5.97126183979046
+    ],
+    "correct_candidate": true,
+    "exact_logical_costs": [
+      5.97126183979046,
+      9.17988116449147
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 5.97126183979046,
+    "global_posteriors_above_half": 0,
+    "projected_probability_min": 2.305494319152327e-14,
+    "projected_probability_max": 0.5
+  },
+  {
+    "index": 375,
+    "faults": [
+      [
+        "4",
+        "X"
+      ],
+      [
+        "8",
+        "X"
+      ]
+    ],
+    "actual": false,
+    "prediction": true,
+    "candidate_logicals": [
+      0,
+      1,
+      1
+    ],
+    "candidate_scores": [
+      9.17988116449147,
+      5.97126183979046,
+      5.97126183979046
+    ],
+    "correct_candidate": true,
+    "exact_logical_costs": [
+      9.17988116449147,
+      5.97126183979046
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 5.97126183979046,
+    "global_posteriors_above_half": 0,
+    "projected_probability_min": 2.305494319152327e-14,
+    "projected_probability_max": 0.5
+  },
+  {
+    "index": 384,
+    "faults": [
+      [
+        "4",
+        "X"
+      ],
+      [
+        "15",
+        "X"
+      ]
+    ],
+    "actual": true,
+    "prediction": false,
+    "candidate_logicals": [
+      0,
+      0,
+      0
+    ],
+    "candidate_scores": [
+      5.278218798889407,
+      5.278218798889407,
+      5.278218798889407
+    ],
+    "correct_candidate": false,
+    "exact_logical_costs": [
+      5.278218798889407,
+      9.862977998242192
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 5.278218798889407,
+    "global_posteriors_above_half": 1,
+    "projected_probability_min": 1.1527471720790742e-14,
+    "projected_probability_max": 0.9998958657634542
+  },
+  {
+    "index": 396,
+    "faults": [
+      [
+        "4",
+        "X"
+      ],
+      [
+        "21",
+        "X"
+      ]
+    ],
+    "actual": true,
+    "prediction": false,
+    "candidate_logicals": [
+      0,
+      0,
+      0
+    ],
+    "candidate_scores": [
+      5.27811572204554,
+      5.27811572204554,
+      5.27811572204554
+    ],
+    "correct_candidate": false,
+    "exact_logical_costs": [
+      5.27811572204554,
+      9.862977998351738
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 5.27811572204554,
+    "global_posteriors_above_half": 1,
+    "projected_probability_min": 1.1527471720790742e-14,
+    "projected_probability_max": 0.9999989371855398
+  },
+  {
+    "index": 433,
+    "faults": [
+      [
+        "4",
+        "Y"
+      ],
+      [
+        "15",
+        "Y"
+      ]
+    ],
+    "actual": true,
+    "prediction": false,
+    "candidate_logicals": [
+      0,
+      0,
+      0
+    ],
+    "candidate_scores": [
+      9.2103403938899,
+      9.2103403938899,
+      9.2103403938899
+    ],
+    "correct_candidate": false,
+    "exact_logical_costs": [
+      4.60517019694495,
+      19.012504105864707
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 4.60517019694495,
+    "global_posteriors_above_half": 1,
+    "projected_probability_min": 1.1295745769969483e-12,
+    "projected_probability_max": 0.9999999890431384
+  },
+  {
+    "index": 795,
+    "faults": [
+      [
+        "11",
+        "X"
+      ],
+      [
+        "24",
+        "X"
+      ]
+    ],
+    "actual": false,
+    "prediction": true,
+    "candidate_logicals": [
+      1,
+      1,
+      1
+    ],
+    "candidate_scores": [
+      5.278218798889407,
+      5.278218798889407,
+      5.278218798889407
+    ],
+    "correct_candidate": false,
+    "exact_logical_costs": [
+      9.862977998242192,
+      5.278218798889407
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 5.278218798889407,
+    "global_posteriors_above_half": 1,
+    "projected_probability_min": 1.1527471720790742e-14,
+    "projected_probability_max": 0.9998958657634542
+  },
+  {
+    "index": 798,
+    "faults": [
+      [
+        "11",
+        "X"
+      ],
+      [
+        "25",
+        "X"
+      ]
+    ],
+    "actual": false,
+    "prediction": true,
+    "candidate_logicals": [
+      1,
+      1,
+      1
+    ],
+    "candidate_scores": [
+      5.278218809623777,
+      5.278218809623777,
+      5.278218809623777
+    ],
+    "correct_candidate": false,
+    "exact_logical_costs": [
+      5.288163932379678,
+      5.278218809623777
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 5.278218809623777,
+    "global_posteriors_above_half": 1,
+    "projected_probability_min": 1.1528672123955977e-14,
+    "projected_probability_max": 0.999895855030202
+  },
+  {
+    "index": 835,
+    "faults": [
+      [
+        "11",
+        "Y"
+      ],
+      [
+        "24",
+        "Y"
+      ]
+    ],
+    "actual": false,
+    "prediction": true,
+    "candidate_logicals": [
+      1,
+      1,
+      1
+    ],
+    "candidate_scores": [
+      9.210340393889826,
+      9.210340393889826,
+      9.210340393889826
+    ],
+    "correct_candidate": false,
+    "exact_logical_costs": [
+      19.0125041058648,
+      4.605170196944912
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 4.605170196944912,
+    "global_posteriors_above_half": 1,
+    "projected_probability_min": 1.129574576997121e-12,
+    "projected_probability_max": 0.9999999890431384
+  },
+  {
+    "index": 837,
+    "faults": [
+      [
+        "11",
+        "Y"
+      ],
+      [
+        "25",
+        "X"
+      ]
+    ],
+    "actual": false,
+    "prediction": true,
+    "candidate_logicals": [
+      0,
+      1,
+      1
+    ],
+    "candidate_scores": [
+      8.517193191416233,
+      5.99146454710798,
+      7.377758908227872
+    ],
+    "correct_candidate": true,
+    "exact_logical_costs": [
+      4.605170185988089,
+      2.0794415416798366
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 2.0794415416798366,
+    "global_posteriors_above_half": 2,
+    "projected_probability_min": 1.0956861630506033e-08,
+    "projected_probability_max": 0.5
+  },
+  {
+    "index": 894,
+    "faults": [
+      [
+        "12",
+        "X"
+      ],
+      [
+        "15",
+        "X"
+      ]
+    ],
+    "actual": false,
+    "prediction": true,
+    "candidate_logicals": [
+      1,
+      1,
+      1
+    ],
+    "candidate_scores": [
+      5.278218809623777,
+      5.278218809623777,
+      5.278218809623777
+    ],
+    "correct_candidate": false,
+    "exact_logical_costs": [
+      5.288163932379678,
+      5.278218809623777
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 5.278218809623777,
+    "global_posteriors_above_half": 1,
+    "projected_probability_min": 1.1528672123955977e-14,
+    "projected_probability_max": 0.999895855030202
+  },
+  {
+    "index": 895,
+    "faults": [
+      [
+        "12",
+        "X"
+      ],
+      [
+        "15",
+        "Y"
+      ]
+    ],
+    "actual": false,
+    "prediction": true,
+    "candidate_logicals": [
+      1,
+      1,
+      0
+    ],
+    "candidate_scores": [
+      5.99146454710798,
+      7.377758908227872,
+      8.517193191416233
+    ],
+    "correct_candidate": true,
+    "exact_logical_costs": [
+      4.605170185988089,
+      2.0794415416798366
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 2.0794415416798366,
+    "global_posteriors_above_half": 2,
+    "projected_probability_min": 1.0956861630506033e-08,
+    "projected_probability_max": 0.5
+  },
+  {
+    "index": 906,
+    "faults": [
+      [
+        "12",
+        "X"
+      ],
+      [
+        "21",
+        "X"
+      ]
+    ],
+    "actual": false,
+    "prediction": true,
+    "candidate_logicals": [
+      1,
+      1,
+      1
+    ],
+    "candidate_scores": [
+      1.386398500778783,
+      1.386398500778783,
+      4.595225052497818
+    ],
+    "correct_candidate": false,
+    "exact_logical_costs": [
+      4.605170186096528,
+      1.386398500778783
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 1.386398500778783,
+    "global_posteriors_above_half": 3,
+    "projected_probability_min": 2.305494319152327e-14,
+    "projected_probability_max": 0.9998958657634542
+  },
+  {
+    "index": 909,
+    "faults": [
+      [
+        "12",
+        "X"
+      ],
+      [
+        "24",
+        "X"
+      ]
+    ],
+    "actual": false,
+    "prediction": true,
+    "candidate_logicals": [
+      1,
+      1,
+      1
+    ],
+    "candidate_scores": [
+      5.27811572204554,
+      5.27811572204554,
+      5.27811572204554
+    ],
+    "correct_candidate": false,
+    "exact_logical_costs": [
+      9.862977998351738,
+      5.27811572204554
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 5.27811572204554,
+    "global_posteriors_above_half": 1,
+    "projected_probability_min": 1.1527471720790742e-14,
+    "projected_probability_max": 0.9999989371855398
+  },
+  {
+    "index": 912,
+    "faults": [
+      [
+        "12",
+        "X"
+      ],
+      [
+        "25",
+        "X"
+      ]
+    ],
+    "actual": false,
+    "prediction": true,
+    "candidate_logicals": [
+      1,
+      1,
+      1
+    ],
+    "candidate_scores": [
+      4.595225052497818,
+      1.386398500778783,
+      1.386398500778783
+    ],
+    "correct_candidate": false,
+    "exact_logical_costs": [
+      4.605170186096528,
+      1.386398500778783
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 1.386398500778783,
+    "global_posteriors_above_half": 3,
+    "projected_probability_min": 2.305494319152327e-14,
+    "projected_probability_max": 0.9998958657634542
+  },
+  {
+    "index": 1347,
+    "faults": [
+      [
+        "21",
+        "X"
+      ],
+      [
+        "25",
+        "X"
+      ]
+    ],
+    "actual": false,
+    "prediction": true,
+    "candidate_logicals": [
+      1,
+      1,
+      1
+    ],
+    "candidate_scores": [
+      1.386398500778783,
+      4.595225052497818,
+      1.386398500778783
+    ],
+    "correct_candidate": false,
+    "exact_logical_costs": [
+      4.605170186096528,
+      1.386398500778783
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 1.386398500778783,
+    "global_posteriors_above_half": 3,
+    "projected_probability_min": 2.305494319152327e-14,
+    "projected_probability_max": 0.9998958657634542
+  },
+  {
+    "index": 1353,
+    "faults": [
+      [
+        "21",
+        "X"
+      ],
+      [
+        "31",
+        "X"
+      ]
+    ],
+    "actual": false,
+    "prediction": true,
+    "candidate_logicals": [
+      1,
+      1,
+      1
+    ],
+    "candidate_scores": [
+      5.278218809623777,
+      5.278218809623777,
+      5.278218809623777
+    ],
+    "correct_candidate": false,
+    "exact_logical_costs": [
+      5.288163932379678,
+      5.278218809623777
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 5.278218809623777,
+    "global_posteriors_above_half": 1,
+    "projected_probability_min": 1.1528672123955977e-14,
+    "projected_probability_max": 0.999895855030202
+  },
+  {
+    "index": 1354,
+    "faults": [
+      [
+        "21",
+        "X"
+      ],
+      [
+        "31",
+        "Y"
+      ]
+    ],
+    "actual": false,
+    "prediction": true,
+    "candidate_logicals": [
+      1,
+      0,
+      1
+    ],
+    "candidate_scores": [
+      7.377758908227872,
+      8.517193191416233,
+      5.99146454710798
+    ],
+    "correct_candidate": true,
+    "exact_logical_costs": [
+      4.605170185988089,
+      2.0794415416798366
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 2.0794415416798366,
+    "global_posteriors_above_half": 2,
+    "projected_probability_min": 1.0956861630506033e-08,
+    "projected_probability_max": 0.5
+  },
+  {
+    "index": 1461,
+    "faults": [
+      [
+        "25",
+        "X"
+      ],
+      [
+        "28",
+        "X"
+      ]
+    ],
+    "actual": false,
+    "prediction": true,
+    "candidate_logicals": [
+      1,
+      1,
+      1
+    ],
+    "candidate_scores": [
+      5.27811572204554,
+      5.27811572204554,
+      5.27811572204554
+    ],
+    "correct_candidate": false,
+    "exact_logical_costs": [
+      9.862977998351738,
+      5.27811572204554
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 5.27811572204554,
+    "global_posteriors_above_half": 1,
+    "projected_probability_min": 1.1527471720790742e-14,
+    "projected_probability_max": 0.9999989371855398
+  },
+  {
+    "index": 1506,
+    "faults": [
+      [
+        "28",
+        "X"
+      ],
+      [
+        "31",
+        "X"
+      ]
+    ],
+    "actual": false,
+    "prediction": true,
+    "candidate_logicals": [
+      1,
+      1,
+      1
+    ],
+    "candidate_scores": [
+      5.278218798889407,
+      5.278218798889407,
+      5.278218798889407
+    ],
+    "correct_candidate": false,
+    "exact_logical_costs": [
+      9.862977998242192,
+      5.278218798889407
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 5.278218798889407,
+    "global_posteriors_above_half": 1,
+    "projected_probability_min": 1.1527471720790742e-14,
+    "projected_probability_max": 0.9998958657634542
+  },
+  {
+    "index": 1515,
+    "faults": [
+      [
+        "28",
+        "X"
+      ],
+      [
+        "36",
+        "X"
+      ]
+    ],
+    "actual": false,
+    "prediction": true,
+    "candidate_logicals": [
+      1,
+      1,
+      0
+    ],
+    "candidate_scores": [
+      5.97126183979046,
+      5.97126183979046,
+      9.17988116449147
+    ],
+    "correct_candidate": true,
+    "exact_logical_costs": [
+      9.17988116449147,
+      5.97126183979046
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 5.97126183979046,
+    "global_posteriors_above_half": 0,
+    "projected_probability_min": 2.305494319152327e-14,
+    "projected_probability_max": 0.5
+  },
+  {
+    "index": 1519,
+    "faults": [
+      [
+        "28",
+        "Y"
+      ],
+      [
+        "31",
+        "Y"
+      ]
+    ],
+    "actual": false,
+    "prediction": true,
+    "candidate_logicals": [
+      1,
+      1,
+      1
+    ],
+    "candidate_scores": [
+      9.210340393889826,
+      9.210340393889826,
+      9.210340393889826
+    ],
+    "correct_candidate": false,
+    "exact_logical_costs": [
+      19.012504105864796,
+      4.605170196944912
+    ],
+    "wrong_class_strictly_cheaper": true,
+    "exact_prefers_correct": false,
+    "returned_sector_cost": 4.605170196944912,
+    "global_posteriors_above_half": 1,
+    "projected_probability_min": 1.129574576997121e-12,
+    "projected_probability_max": 0.9999999890431384
+  }
+]

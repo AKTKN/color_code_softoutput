@@ -8,17 +8,38 @@ from ..circuit_level.decoder import Stage2GrowthBackend
 class CircuitCandidateSwim:
     """Score candidate stage-2 syndromes in a closed triangular memory DEM."""
 
-    def __init__(self, code):
+    def __init__(self, code, *, lazy=False):
         if (code.circuit_type != "tri" or code.temp_bdry_type != "Z"
                 or code.rounds != code.d or code.comparative_decoding
                 or code.circuit.num_observables != 1
                 or tuple(code.cnot_schedule) != (2, 3, 6, 5, 4, 1, 3, 4, 7, 6, 5, 2)):
             raise ValueError("circuit SWIM requires closed d-round triangular Z memory with tri_optimal schedule")
         self.code = code
-        self.backends = {color: Stage2GrowthBackend(code.dem_manager, color)
-                         for color in "rgb"}
-        if any(not backend.topology.class_exists for backend in self.backends.values()):
-            raise ValueError("circuit stage-2 opposite logical class is absent")
+        self._backends = None
+        if not lazy:
+            self.backends
+
+    @property
+    def backends(self):
+        if self._backends is None:
+            backends = {color: Stage2GrowthBackend(self.code.dem_manager, color)
+                        for color in "rgb"}
+            if any(not backend.topology.class_exists for backend in backends.values()):
+                raise ValueError("circuit stage-2 opposite logical class is absent")
+            self._backends = backends
+        return self._backends
+
+    def for_dem_manager(self, manager):
+        """Bind growth and topology to this shot's posterior-prior DEM."""
+        from copy import copy
+        code = copy(self.code)
+        code._dem_manager = manager
+        return type(self)(code)
+
+    def score_candidate(self, detectors, hypothesis, color):
+        """Return only per-shot scores; hypotheses/corrections stay in decoder."""
+        branch = self.backends[color].decode_hypotheses(detectors, hypothesis)
+        return np.asarray([result.phi for result in branch.results], dtype=np.float64)
 
     def score(self, detectors, prediction, extra):
         """Return the same-hard-logical-class minimum across generated candidates."""

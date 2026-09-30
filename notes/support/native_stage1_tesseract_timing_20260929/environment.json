@@ -1,0 +1,137 @@
+{
+  "started": "2026-09-29T04:42:06.301129+00:00",
+  "python": "3.12.14 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:46:43) [GCC 14.3.0]",
+  "executable": "/home/quantum_teresheys/anaconda3/envs/color_code_so/bin/python",
+  "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "cpu": "13th Gen Intel(R) Core(TM) i7-13700H",
+  "visible_cpus": 20,
+  "cpu_affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "thread_environment": {
+    "OMP_NUM_THREADS": null,
+    "OPENBLAS_NUM_THREADS": null,
+    "MKL_NUM_THREADS": null
+  },
+  "packages": {
+    "numpy": "1.26.4",
+    "stim": "1.16.0",
+    "pymatching": "2.2.dev2",
+    "tesseract-decoder": "0.1.1.dev20260910235247"
+  },
+  "module_paths": {
+    "pymatching": "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/PyMatching/src/pymatching/__init__.py",
+    "tesseract_decoder": "/home/quantum_teresheys/anaconda3/envs/color_code_so/lib/python3.12/site-packages/tesseract_decoder.so"
+  },
+  "native_rng_version": 1,
+  "binary_hashes": {
+    "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/PyMatching/src/pymatching/_cpp_pymatching.cpython-312-x86_64-linux-gnu.so": "aa766a8c5f390f4dc086543c7cc8d862846e07acbcaf21852d8d1eb3cd037ce8",
+    "/home/quantum_teresheys/anaconda3/envs/color_code_so/lib/python3.12/site-packages/tesseract_decoder.so": "b4c11a5cc2dcef2599c28199180d9a90fc4d438c56be47128bca5a3e229e23b0"
+  },
+  "repositories": {
+    "root": {
+      "commit": "2f70d4ef58794688dfbfdbd31cdc1b89b9cc0c7b",
+      "branch": "codex/native-stage1-perturbation-20260929",
+      "status": "M notebooks/color_correlated_decoding.ipynb"
+    },
+    "decoder": {
+      "commit": "3955196a9d2280fab555f0cf97510e37b6dd9d23",
+      "branch": "codex/native-stage1-perturbation-20260929",
+      "status": ""
+    },
+    "pymatching": {
+      "commit": "40ef9296f1d73aa4d629460bdc80bcf57bb1f7b5",
+      "branch": "codex/native-stage1-perturbation-20260929",
+      "status": ""
+    }
+  },
+  "program_sha256": "5014def380baaaf5be8ae0b91e36972a27008d5f3676b3e38a8af5fb2962db3a",
+  "settings": {
+    "distances": [
+      9,
+      13
+    ],
+    "p": 0.003,
+    "shots": 20,
+    "warmup_shots": 10,
+    "rounds": "distance",
+    "ensembles": [
+      8,
+      16
+    ],
+    "alpha": 1.0,
+    "stage1_perturbation": true,
+    "stage2": "fixed original prior",
+    "comparison_basis": "original_dem",
+    "stimulus_seed": 20260929,
+    "warmup_seed": 20260930,
+    "perturbation_seed": 20260929,
+    "full_output": false,
+    "metrics": [],
+    "tesseract": {
+      "pqlimit": 1000000,
+      "det_beam": 20,
+      "beam_climbing": true,
+      "no_revisit_dets": true,
+      "num_det_orders": 21,
+      "det_order_method": "Index",
+      "seed": 2384753,
+      "sparsify_errors": false
+    },
+    "color_code_options": {
+      "circuit_type": "tri",
+      "cnot_schedule": "tri_optimal",
+      "temp_bdry_type": "Z",
+      "remove_non_edge_like_errors": true,
+      "comparative_decoding": false
+    }
+  },
+  "inputs": {
+    "9": {
+      "detector_shape": [
+        20,
+        540
+      ],
+      "actual_shape": [
+        20
+      ],
+      "detector_sha256": "44ff8bd76febe2da3e1869180ea6cdfe3e07ba80d9a4e43d8ade4b19ce0f84a8",
+      "actual_sha256": "470aa9031f116e529b94255468b09059c1edde12108a3d9b8dde1a18f035c282",
+      "circuit_sha256": "2eec006e0c4e5cb71406d137e44bcd70ee8bc521a4a3aca70c87ce3d2fd637b9",
+      "dem_xz_sha256": "3e84dfac86cc5e0b7a4bdcaefb59de008fdc0642709da666e87a3e9bfe762ab2"
+    },
+    "13": {
+      "detector_shape": [
+        20,
+        1638
+      ],
+      "actual_shape": [
+        20
+      ],
+      "detector_sha256": "a5bb5d5b64162ddc34cde26720495656ed8d5531e6d199630d5b5a1feef37463",
+      "actual_sha256": "c76998802ff672d6e9dd49147a42a206715e6185ff0cfe8eef4e10c7d158b935",
+      "circuit_sha256": "c8ccfb6d0159018aa9d1d73c7783471fd23b329f98bf25350b2c950d6a7449ec",
+      "dem_xz_sha256": "2be2356ab78d6fc907f836d961e14710621ee28fb7a4bcfb90f2391a860dd728"
+    }
+  },
+  "finished": "2026-09-29T04:42:34.319194+00:00"
+}

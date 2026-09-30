@@ -1,0 +1,92 @@
+# Compare BP on/off x native stage-1 perturbation on/off under bit-flip noise.
+# Requires the global-BP branch in color_code_softoutput_bp_global and its
+# compiled PyMatching backend. Activate color_code_so, then run from the
+# original workspace with the feature worktree's sources:
+# export PYTHONPATH="/home/quantum_teresheys/workspace/color_code_softoutput_bp_global/src:/home/quantum_teresheys/workspace/color_code_softoutput_bp_global/external_libs/color-code-stim/src:/home/quantum_teresheys/workspace/color_code_softoutput_bp_global/external_libs/PyMatching/src"
+# python -m color_code_softoutput.simulation.cli --config configs/example_bpmatching.yaml
+#
+# Each alias samples independently; master_seed does not pair physical shots.
+# With BP, concatenated metrics (including logical_error) are null on
+# BP-converged shots. LER is saved True count / all physical shots; missing
+# converged-shot failures are not reconstructed by this aggregation.
+
+simulation:
+  output_root: results/bpmatching
+  # Shots per (distance, error rate, decoder alias) point; 16 points here.
+  shots: 10000
+  workers: 6
+  master_seed: 20260929
+  buffer_shots: 2000
+  verbose: true
+
+chunking:
+  calibration_shots: 10
+  target_chunk_seconds: 1.0
+  min_chunk_shots: 1
+  max_chunk_shots: 2000
+  throughput_ema_alpha: 0.25
+
+sweep:
+  distance: [5, 7, 9]
+  physical_error_rate: [0.03, 0.04, 0.05]
+  noise_model: depol
+  # One data-noise layer with perfect syndrome measurements.
+  rounds: 2
+  circuit_type: tri
+  cnot_schedule: tri_optimal
+
+color_code_options:
+  temp_bdry_type: Z
+  superdense_circuit: false
+  comparative_decoding: false
+  exclude_non_essential_pauli_detectors: False
+  perfect_first_syndrome_extraction: True
+  # Use the same base-DEM comparison basis for all candidate selections.
+  color_correlated_weight_basis: original_dem
+
+decoders:
+  # 1. Ordinary concatenated MWPM.
+  - decoder_alias: MWPM
+    type: concat_mwpm
+    decode_options: &decode_options
+      colors: all
+      full_output: false
+      # Enable for every alias to include swim_distance.parquet consistently.
+      compute_swim_distance: false
+      bp_predecoding: false
+
+  # 2. Global BP, with concatenated MWPM only on nonconverged shots.
+  - decoder_alias: BP_MWPM
+    type: concat_mwpm
+    decode_options: &bp_decode_options
+      <<: *decode_options
+      bp_predecoding: true
+      bp_prms:
+        max_iter: 20
+        bp_method: min_sum
+        schedule: parallel
+
+  # 3. Concatenated MWPM with native stage-1 perturbation.
+  - decoder_alias: MWPM_perturbation
+    type: perturbation
+    options: &perturbation_options
+      enable_prior_perturbation: true
+      # M includes the unchanged member 0; the other 11 are perturbed.
+      perturbation_ensemble_size: 4
+      perturbation_alpha: 0.6
+      perturbation_seed: 20260929
+      # Set false here to compare original-X/Z-DEM perturbation instead.
+      # Both perturbation aliases share these options.
+      stage1_perturbation: true
+      use_original_prior_for_stage2: true
+    decode_options:
+      <<: *decode_options
+
+  # 4. BP followed, when necessary, by the same perturbed MWPM strategy.
+  # Its base prior is the BP posterior CSS DEM; perturbed priors cap at 0.5.
+  - decoder_alias: BP_MWPM_perturbation
+    type: perturbation
+    options:
+      <<: *perturbation_options
+    decode_options:
+      <<: *bp_decode_options

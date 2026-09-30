@@ -1,5 +1,5 @@
 """Fixed one-round experiment grid and deterministic batch identities."""
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 import hashlib
 import json
@@ -136,12 +136,12 @@ _CONSTRUCTOR_KEYS = frozenset({"temp_bdry_type", "superdense_circuit", "perfect_
     "perfect_logical_measurement", "perfect_first_syndrome_extraction", "perfect_init_final",
     "remove_non_edge_like_errors", "comparative_decoding", "enable_colorcorrelated_decoding",
     "enable_cross_color_relifting", "enable_prior_perturbation", "perturbation_ensemble_size",
-    "perturbation_alpha", "perturbation_seed", "use_original_prior_for_stage2",
+    "perturbation_alpha", "perturbation_seed", "use_original_prior_for_stage2", "stage1_perturbation",
     "color_correlated_weight_basis", "color_correlated_b",
     "exclude_non_essential_pauli_detectors"})
-_DECODE_KEYS = frozenset({"colors", "compute_swim_distance", "full_output", "check_validity", "verbose"})
+_DECODE_KEYS = frozenset({"colors", "compute_swim_distance", "full_output", "check_validity", "verbose", "bp_predecoding", "bp_prms"})
 _BOOLEAN_OPTIONS = (_CONSTRUCTOR_KEYS - {"temp_bdry_type", "color_correlated_weight_basis", "color_correlated_b",
-    "perturbation_ensemble_size", "perturbation_alpha", "perturbation_seed"}) | (_DECODE_KEYS - {"colors"})
+    "perturbation_ensemble_size", "perturbation_alpha", "perturbation_seed"}) | (_DECODE_KEYS - {"colors", "bp_prms"})
 _SWEEP_ALIASES = frozenset({"d", "rounds", "circuit_type", "cnot_schedule", "noise_model",
     "p_bitflip", "p_depol", "p_reset", "p_meas", "p_cnot", "p_idle", "p_circuit"})
 
@@ -200,9 +200,11 @@ def _freeze(value, name):
         return value
     if type(value) is float and math.isfinite(value):
         return value
+    if isinstance(value, dict):
+        return tuple((k, _freeze(v, name)) for k, v in sorted(value.items()))
     if isinstance(value, list):
         return tuple(_freeze(v, name) for v in value)
-    raise ValueError(f"{name} must contain only finite JSON scalar/list values")
+    raise ValueError(f"{name} must contain only finite JSON scalar/list/mapping values")
 
 
 def _options(value, name, allowed):
@@ -234,7 +236,19 @@ def _options(value, name, allowed):
             and len(set(colors)) == len(colors)
         ):
             raise ValueError(f"{name}.colors must be 'all', a color, or a unique color list")
+    if "bp_prms" in value:
+        bp = _mapping(value["bp_prms"], "bp_prms", allowed={"max_iter", "bp_method", "schedule", "ms_scaling_factor", "bp_method_type"})
+        if "max_iter" in bp:
+            _positive_int(bp["max_iter"], "bp_prms.max_iter")
     return tuple((k, _freeze(v, name)) for k, v in sorted(value.items()))
+
+
+def decode_option_dict(options):
+    """Restore the BP parameter mapping for saved-config serialization."""
+    result = dict(options)
+    if "bp_prms" in result:
+        result["bp_prms"] = dict(result["bp_prms"])
+    return result
 
 
 @dataclass(frozen=True)
@@ -295,7 +309,7 @@ class WorkflowConfig:
         return {"simulation": sim, "chunking": asdict(self.chunking), "sweep": asdict(self.sweep),
                 "color_code_options": dict(self.color_code_options),
                 "decoders": [{"type": d.type, "options": dict(d.options),
-                              "decode_options": dict(d.decode_options),
+                              "decode_options": decode_option_dict(d.decode_options),
                               **({"decoder_alias": d.decoder_alias} if d.decoder_alias is not None else {})}
                              for d in self.decoders]}
 
@@ -304,6 +318,62 @@ class WorkflowConfig:
         encoded = json.dumps(self.semantic_dict(), sort_keys=True, separators=(",", ":"),
                              allow_nan=False).encode("utf-8")
         return hashlib.sha256(encoded).hexdigest()[:8]
+
+
+def canonical_native_options(common, decoders):
+    """Save effective native flags without changing siblings' inherited settings."""
+    common = dict(common)
+    if not any((common | dict(d.options)).get("stage1_perturbation", False) for d in decoders):
+        return tuple(sorted(common.items())), tuple(decoders)
+    inherited = {key: common.pop(key) for key in ("enable_prior_perturbation", "use_original_prior_for_stage2")
+                 if key in common}
+    resolved = []
+    for decoder in decoders:
+        options = dict(decoder.options)
+        if decoder.type != "tesseract":
+            options = inherited | options
+            if (common | options).get("stage1_perturbation", False):
+                options.update(enable_prior_perturbation=True, use_original_prior_for_stage2=True)
+                seed = (common | options).get("perturbation_seed")
+                if seed is not None and seed >= 2**64:
+                    raise ValueError("Native perturbation_seed must fit uint64")
+        resolved.append(replace(decoder, options=tuple(sorted(options.items()))))
+    return tuple(sorted(common.items())), tuple(resolved)
+
+
+def resolve_native_seeds(config):
+    """Resolve native/BP ensemble entropy once before planning/spawn."""
+    common, decoders = canonical_native_options(config.color_code_options, config.decoders)
+    common = dict(common)
+
+    def needs_counter_seed(decoder):
+        options = common | dict(decoder.options)
+        bp_ensemble = (dict(decoder.decode_options).get('bp_predecoding', False)
+                       and options.get('enable_prior_perturbation', False))
+        required = options.get('stage1_perturbation', False) or bp_ensemble
+        seed = options.get('perturbation_seed')
+        if required and seed is not None and seed >= 2**64:
+            raise ValueError('Native/global BP perturbation_seed must fit uint64')
+        return required and seed is None
+
+    needs_seed = any(needs_counter_seed(d) for d in decoders)
+    if not needs_seed:
+        return replace(config, color_code_options=tuple(sorted(common.items())), decoders=decoders)
+    import secrets
+    seed = secrets.randbits(64)
+    inherited_none = "perturbation_seed" in common and common["perturbation_seed"] is None
+    if inherited_none:
+        common.pop("perturbation_seed")
+    resolved = []
+    for decoder in decoders:
+        options = dict(decoder.options)
+        if decoder.type != "tesseract":
+            if inherited_none:
+                options.setdefault("perturbation_seed", None)
+            if needs_counter_seed(decoder):
+                options["perturbation_seed"] = seed
+        resolved.append(replace(decoder, options=tuple(sorted(options.items()))))
+    return replace(config, color_code_options=tuple(sorted(common.items())), decoders=tuple(resolved))
 
 
 def parse_workflow_config(data: dict) -> WorkflowConfig:
@@ -359,7 +429,7 @@ def parse_workflow_config(data: dict) -> WorkflowConfig:
                 raise ValueError("tesseract XYZ decoding is not supported")
             if any(dict(common).get(key, False) for key in
                    ("enable_colorcorrelated_decoding", "enable_cross_color_relifting",
-                    "enable_prior_perturbation", "comparative_decoding")):
+                    "enable_prior_perturbation", "stage1_perturbation", "comparative_decoding")):
                 raise ValueError("tesseract requires ordinary ColorCode circuit options")
         else:
             options = _options(raw.get("options", {}), "decoder.options", _CONSTRUCTOR_KEYS)
@@ -367,6 +437,8 @@ def parse_workflow_config(data: dict) -> WorkflowConfig:
         if overlap := set(dict(common)) & set(dict(options)):
             raise ValueError(f"Ambiguous constructor options in color_code_options and decoder.options: {sorted(overlap)}")
         merged = dict(common) | dict(options)
+        if merged.get("stage1_perturbation", False):
+            merged.update(enable_prior_perturbation=True, use_original_prior_for_stage2=True)
         if merged.get("enable_colorcorrelated_decoding", False) and merged.get(
                 "color_correlated_weight_basis", "original_dem") != "original_dem":
             raise ValueError("color-correlated decoding requires original_dem selection basis")
@@ -382,7 +454,8 @@ def parse_workflow_config(data: dict) -> WorkflowConfig:
     aliases = [decoder.decoder_alias or decoder.type for decoder in decoders]
     if len(set(aliases)) != len(aliases):
         raise ValueError("decoder_alias collision: aliases (defaulting to type) must be unique; assign aliases for repeated types")
-    return WorkflowConfig(simulation, chunking, sweep_settings, common, tuple(decoders))
+    common, decoders = canonical_native_options(common, decoders)
+    return WorkflowConfig(simulation, chunking, sweep_settings, common, decoders)
 
 
 def load_workflow_config(path: str | Path) -> WorkflowConfig:

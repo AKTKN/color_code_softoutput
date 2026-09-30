@@ -1,0 +1,23 @@
+[
+  {
+    "name": "physical_d5",
+    "shots": 1596,
+    "failures": 0,
+    "independent_reference_prediction_equality": true,
+    "converged_prediction_equality": true
+  },
+  {
+    "name": "paired_d5",
+    "shots": 2048,
+    "failures": 15,
+    "independent_reference_prediction_equality": true,
+    "converged_prediction_equality": true
+  },
+  {
+    "name": "paired_d7",
+    "shots": 4096,
+    "failures": 18,
+    "independent_reference_prediction_equality": true,
+    "converged_prediction_equality": true
+  }
+]

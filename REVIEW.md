@@ -1,5 +1,88 @@
 # REVIEW.md
 
+## BP stage-1-only priors and native integration (2026-09-30)
+
+The user requested BP posterior generation in stage 1 only, with original
+physical X/Z priors for stage 2 and final candidate selection. BP fallback
+now enforces original stage 2 and `original_dem` selection, independently of
+ordinary decoder options. Perturbation/guide generation retains posterior
+priors and existing RNG scheme/cursors. Converged BP handling and ordinary
+no-BP decoding remain unchanged. Global BP state/log version is 4; reject
+version-2/3 saved states. Native perturbation scheme stays 2.
+
+All-package acceptance: simulator 399 passed; decoder 358 passed, two existing
+skips. Production predictions match the independent hybrid-policy reference
+on all 7,740 archived shots. See
+`notes/support/bp_original_prior_implementation_20260930/report.md`.
+The user authorized publication on `bp_predecoding` and integration with
+`codex/native-stage1-perturbation-20260929`; do not merge main or overwrite
+uncommitted changes in the original workspace.
+
+
+## BP publication integration — 2026-09-30
+
+Reconciled the later user-requested all-shot LER denominator with the earlier
+BP workflow tests and documentation. Baseline choice remains the original
+physical-configuration rule. Nullable failure outcomes remain missing; the
+saved-count statistic does not reconstruct full pipeline failures. Publication
+contains implementation, tests and audit summaries, not notebook run outputs
+or generated datasets. See notes/support/BP_PREDECODING_RELEASE.md.
+
+## BP negative-log X/Z weights — 2026-09-29
+
+Same-agent review and independent numerical oracles verify that uncapped BP
+posteriors are first XOR-aggregated into X/Z mechanisms, then weighted with
+-log(p) via effective priors p/(1+p). Tests distinguish the noncommuting
+global-first alternative and retain detector/observable target labels.
+Reference decoding covers all six strategy families; state rejects previous
+weighting semantics. This changes the fallback heuristic, not the global BP
+model. XOR retains its independent-surrogate limitation; it is not official
+belief matching's addition rule. No LER improvement is established. See
+[validation](notes/support/bp_xz_negative_log_20260929.md).
+
+## Native stage-1 perturbation audit — 2026-09-29
+
+Same-agent source review and independent oracles (not external peer review)
+checked original/work isolation, directed MatchingGraph/SearchGraph weight
+slots, integer normalization, queue clocks, arena reuse and failed-syndrome
+recovery. Independent Python MT19937-64 verifies the random law; fresh graphs
+agree in correction and quantized weight, including >64 fault IDs, boundaries
+and ties. Full decoder references agree for all candidate/output fields, both
+scoring bases and comparative off/on. M1/alpha0 and old fixtures agree exactly.
+Batch/worker/cache/persistence and SWIM/validity checks pass. All-package and
+C++ ASan/UBSan/leak tests pass; no unresolved correctness gate remains.
+
+Native scope is simple fixed check-matrix graphs with finite nonnegative log
+odds; negative-producing perturbations, parallel edges, mutations and special
+APIs are rejected. Retained arenas can grow for a new syndrome. Ordinary
+SWIM/path-gap and False behavior pass regression. No metric definition changes.
+
+Native/direct-stage-1 reference timings use identical draws/output digests.
+Original-DEM comparisons change prior/cross-colour law and are not purely
+semantics-preserving acceleration. Three repeats on ten physical shots do not
+establish LER/asymptotic claims; M1 has noise and no consistent improvement.
+Reference RSS includes native templates. Bare/profile timings are separate.
+Report/dependency/source/cleanup evidence:
+`notes/support/native_stage1_perturbation_20260929/`.
+
+## Per-shot runtime optimization audit — 2026-09-28
+
+Same-agent source review and independent fresh-build oracles establish exact
+hard/full-output equivalence under matched per-shot draws. Frozen pristine
+072a87d fixtures cover ordinary decoding, guide scheduling, relifting, M=1
+and alpha=0 with comparative decoding off/on. Cache construction, mutations,
+parallel-edge winners, ties, chunked streams, save/load and hard-output
+allocation regressions pass. The installed PyMatching fork has no verified
+cheap bulk reweighting path preserving check-matrix merging; new stochastic
+weights still require complete graph construction.
+
+M>1, alpha>0 results intentionally differ from historical fixed-ensemble
+runs. Timing against that implementation includes the authorized sampling
+change and must not be attributed solely to optimization. Bounded benchmark
+results and source limits are in
+`notes/support/decoder_runtime_optimization_20260928/report.md` and `audit.md`.
+No metric theorem, confidence interpretation or asymptotic claim is added.
+
 ## Ensemble stage-2 SWIM integration audit — 2026-09-27
 
 The `ba6f7dc` color-code-stim stage-2 backend and PyMatching `83cee05cc`

@@ -1,0 +1,11 @@
+{
+  "branch": "codex/global-bp-predecoding-20260929",
+  "new_sample_seed": 2026093007,
+  "new_sample_shots": 4096,
+  "sha256": {
+    "/home/quantum_teresheys/workspace/color_code_softoutput_bp_global/external_libs/color-code-stim/src/color_code_stim/color_code.py": "6c7c6b6e1be4e576141fbfbc0b271d03abccd842b767b1e946874b5133d4599c",
+    "/home/quantum_teresheys/workspace/color_code_softoutput_bp_global/external_libs/color-code-stim/src/color_code_stim/decoders/concat_matching_decoder.py": "e2a55523620b812018ce06f7909863f0dd0eae5030a75a9bb8ae7974e330febc",
+    "/home/quantum_teresheys/workspace/color_code_softoutput_bp_global/external_libs/color-code-stim/src/color_code_stim/decoders/belief_concat_matching_decoder.py": "f7d557dfdc082a3e27304e7ef131cc0b410ec2cca86487b2e725faf61ce4e659",
+    "/home/quantum_teresheys/workspace/color_code_softoutput_bp_global/external_libs/color-code-stim/src/color_code_stim/dem_utils/global_dem.py": "5de29bab2844b2cae63de83cd9a36aed4ed68c779de614982d065533b44611c2"
+  }
+}

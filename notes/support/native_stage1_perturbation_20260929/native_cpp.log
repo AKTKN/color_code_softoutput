@@ -1,0 +1,270 @@
+Running main() from /tmp/color-native-stage1-build/_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 99 tests from 22 test suites.
+[----------] Global test environment set-up.
+[----------] 3 tests from SoftOutputMetric
+[ RUN      ] SoftOutputMetric.PartialAndParallelEdges
+[       OK ] SoftOutputMetric.PartialAndParallelEdges (0 ms)
+[ RUN      ] SoftOutputMetric.UniqueBoundaryHalfEdgeRestriction
+[       OK ] SoftOutputMetric.UniqueBoundaryHalfEdgeRestriction (0 ms)
+[ RUN      ] SoftOutputMetric.OrdinaryWeightAndPrediction
+[       OK ] SoftOutputMetric.OrdinaryWeightAndPrediction (0 ms)
+[----------] 3 tests from SoftOutputMetric (1 ms total)
+
+[----------] 2 tests from Main
+[ RUN      ] Main.predict
+[       OK ] Main.predict (0 ms)
+[ RUN      ] Main.count_mistakes
+[       OK ] Main.count_mistakes (0 ms)
+[----------] 2 tests from Main (1 ms total)
+
+[----------] 2 tests from StimIO
+[ RUN      ] StimIO.IntermediateWeightedGraph
+[       OK ] StimIO.IntermediateWeightedGraph (0 ms)
+[ RUN      ] StimIO.MergeWeights
+[       OK ] StimIO.MergeWeights (0 ms)
+[----------] 2 tests from StimIO (0 ms total)
+
+[----------] 13 tests from MwpmDecoding
+[ RUN      ] MwpmDecoding.CompareSolutionWeights
+[       OK ] MwpmDecoding.CompareSolutionWeights (1263 ms)
+[ RUN      ] MwpmDecoding.CompareSolutionWeightsWithNoLimitOnNumObservables
+[       OK ] MwpmDecoding.CompareSolutionWeightsWithNoLimitOnNumObservables (968 ms)
+[ RUN      ] MwpmDecoding.DecodeToMatchEdges
+[       OK ] MwpmDecoding.DecodeToMatchEdges (132 ms)
+[ RUN      ] MwpmDecoding.DecodeToEdges
+[       OK ] MwpmDecoding.DecodeToEdges (491 ms)
+[ RUN      ] MwpmDecoding.CompareSolutionObsWithMaxNumBuckets
+[       OK ] MwpmDecoding.CompareSolutionObsWithMaxNumBuckets (499 ms)
+[ RUN      ] MwpmDecoding.FillBitVectorFromObsMask
+[       OK ] MwpmDecoding.FillBitVectorFromObsMask (0 ms)
+[ RUN      ] MwpmDecoding.BitVectorToObsMask
+[       OK ] MwpmDecoding.BitVectorToObsMask (0 ms)
+[ RUN      ] MwpmDecoding.HandleAllNegativeWeights
+[       OK ] MwpmDecoding.HandleAllNegativeWeights (1 ms)
+[ RUN      ] MwpmDecoding.HandleSomeNegativeWeights
+[       OK ] MwpmDecoding.HandleSomeNegativeWeights (0 ms)
+[ RUN      ] MwpmDecoding.NegativeEdgeWeightFromStim
+[       OK ] MwpmDecoding.NegativeEdgeWeightFromStim (2 ms)
+[ RUN      ] MwpmDecoding.NegativeEdgeWeightFromStimDecodeToEdges
+[       OK ] MwpmDecoding.NegativeEdgeWeightFromStimDecodeToEdges (4 ms)
+[ RUN      ] MwpmDecoding.NoValidSolutionForLineGraph
+[       OK ] MwpmDecoding.NoValidSolutionForLineGraph (0 ms)
+[ RUN      ] MwpmDecoding.InvalidSyndromeForToricCode
+[       OK ] MwpmDecoding.InvalidSyndromeForToricCode (10 ms)
+[----------] 13 tests from MwpmDecoding (3374 ms total)
+
+[----------] 13 tests from Varying
+[ RUN      ] Varying.GrowingZeroRadiusAtTime
+[       OK ] Varying.GrowingZeroRadiusAtTime (0 ms)
+[ RUN      ] Varying.GetDistanceAtTime
+[       OK ] Varying.GetDistanceAtTime (0 ms)
+[ RUN      ] Varying.VaryingString
+[       OK ] Varying.VaryingString (0 ms)
+[ RUN      ] Varying.ThenSlopeAt
+[       OK ] Varying.ThenSlopeAt (0 ms)
+[ RUN      ] Varying.AdditionAndSubtraction
+[       OK ] Varying.AdditionAndSubtraction (0 ms)
+[ RUN      ] Varying.InplaceAdditionAndSubtraction
+[       OK ] Varying.InplaceAdditionAndSubtraction (0 ms)
+[ RUN      ] Varying.from_base_and_growth
+[       OK ] Varying.from_base_and_growth (0 ms)
+[ RUN      ] Varying.growing_value_at_time
+[       OK ] Varying.growing_value_at_time (0 ms)
+[ RUN      ] Varying.shrinking_value_at_time
+[       OK ] Varying.shrinking_value_at_time (0 ms)
+[ RUN      ] Varying.frozen
+[       OK ] Varying.frozen (0 ms)
+[ RUN      ] Varying.TimeToXInterceptWhenAddedTo
+[       OK ] Varying.TimeToXInterceptWhenAddedTo (0 ms)
+[ RUN      ] Varying.TimeToXIntercept
+[       OK ] Varying.TimeToXIntercept (0 ms)
+[ RUN      ] Varying.Equality
+[       OK ] Varying.Equality (0 ms)
+[----------] 13 tests from Varying (0 ms total)
+
+[----------] 2 tests from Graph
+[ RUN      ] Graph.AddEdge
+[       OK ] Graph.AddEdge (0 ms)
+[ RUN      ] Graph.AddBoundaryEdge
+[       OK ] Graph.AddBoundaryEdge (0 ms)
+[----------] 2 tests from Graph (0 ms total)
+
+[----------] 4 tests from DetectorNode
+[ RUN      ] DetectorNode.IndexOfNeighber
+[       OK ] DetectorNode.IndexOfNeighber (0 ms)
+[ RUN      ] DetectorNode.compute_wrapped_radius_within_layer_at_time
+[       OK ] DetectorNode.compute_wrapped_radius_within_layer_at_time (0 ms)
+[ RUN      ] DetectorNode.compute_stitch_radius_at_time_bounded_by_region_towards_neighbor_across_collision
+[       OK ] DetectorNode.compute_stitch_radius_at_time_bounded_by_region_towards_neighbor_across_collision (0 ms)
+[ RUN      ] DetectorNode.compute_stitch_radius_at_time_bounded_by_region_towards_neighbor_across_skewed_collision
+[       OK ] DetectorNode.compute_stitch_radius_at_time_bounded_by_region_towards_neighbor_across_skewed_collision (0 ms)
+[----------] 4 tests from DetectorNode (0 ms total)
+
+[----------] 2 tests from CompressedEdge
+[ RUN      ] CompressedEdge.Reversed
+[       OK ] CompressedEdge.Reversed (0 ms)
+[ RUN      ] CompressedEdge.MergedWith
+[       OK ] CompressedEdge.MergedWith (0 ms)
+[----------] 2 tests from CompressedEdge (0 ms total)
+
+[----------] 5 tests from GraphFillRegion
+[ RUN      ] GraphFillRegion.BlossomBuilder
+[       OK ] GraphFillRegion.BlossomBuilder (0 ms)
+[ RUN      ] GraphFillRegion.TopRegion
+[       OK ] GraphFillRegion.TopRegion (0 ms)
+[ RUN      ] GraphFillRegion.AddMatch
+[       OK ] GraphFillRegion.AddMatch (0 ms)
+[ RUN      ] GraphFillRegion.descendance_ordering_le
+[       OK ] GraphFillRegion.descendance_ordering_le (0 ms)
+[ RUN      ] GraphFillRegion.descendance_ordering_lt
+[       OK ] GraphFillRegion.descendance_ordering_lt (0 ms)
+[----------] 5 tests from GraphFillRegion (0 ms total)
+
+[----------] 1 test from MatchTest
+[ RUN      ] MatchTest.equality
+[       OK ] MatchTest.equality (0 ms)
+[----------] 1 test from MatchTest (0 ms total)
+
+[----------] 5 tests from GraphFlooder
+[ RUN      ] GraphFlooder.PriorityQueue
+[       OK ] GraphFlooder.PriorityQueue (0 ms)
+[ RUN      ] GraphFlooder.CreateRegion
+[       OK ] GraphFlooder.CreateRegion (0 ms)
+[ RUN      ] GraphFlooder.RegionGrowingToBoundary
+[       OK ] GraphFlooder.RegionGrowingToBoundary (0 ms)
+[ RUN      ] GraphFlooder.RegionHitRegion
+[       OK ] GraphFlooder.RegionHitRegion (0 ms)
+[ RUN      ] GraphFlooder.RegionGrowingThenFrozenThenStartShrinking
+[       OK ] GraphFlooder.RegionGrowingThenFrozenThenStartShrinking (0 ms)
+[----------] 5 tests from GraphFlooder (0 ms total)
+
+[----------] 9 tests from AlternatingTree
+[ RUN      ] AlternatingTree.FindRoot
+[       OK ] AlternatingTree.FindRoot (0 ms)
+[ RUN      ] AlternatingTree.UnstableEraseInt
+[       OK ] AlternatingTree.UnstableEraseInt (0 ms)
+[ RUN      ] AlternatingTree.UnstableEraseAltTreeEdge
+[       OK ] AlternatingTree.UnstableEraseAltTreeEdge (0 ms)
+[ RUN      ] AlternatingTree.AllNodesInTree
+[       OK ] AlternatingTree.AllNodesInTree (0 ms)
+[ RUN      ] AlternatingTree.TreeEqual
+[       OK ] AlternatingTree.TreeEqual (0 ms)
+[ RUN      ] AlternatingTree.BecomeRoot
+[       OK ] AlternatingTree.BecomeRoot (0 ms)
+[ RUN      ] AlternatingTree.CommonAncestor
+[       OK ] AlternatingTree.CommonAncestor (0 ms)
+[ RUN      ] AlternatingTree.PrunedUpwardPathStoppingBefore
+[       OK ] AlternatingTree.PrunedUpwardPathStoppingBefore (0 ms)
+[ RUN      ] AlternatingTree.PrunedUpwardBackEdgePathStoppingBefore
+[       OK ] AlternatingTree.PrunedUpwardBackEdgePathStoppingBefore (0 ms)
+[----------] 9 tests from AlternatingTree (0 ms total)
+
+[----------] 14 tests from Mwpm
+[ RUN      ] Mwpm.BlossomCreatedThenShattered
+[       OK ] Mwpm.BlossomCreatedThenShattered (0 ms)
+[ RUN      ] Mwpm.BlossomShatterDrivenWithoutFlooder
+[       OK ] Mwpm.BlossomShatterDrivenWithoutFlooder (0 ms)
+[ RUN      ] Mwpm.BranchingTreeFormsBlossomThenHitsBoundaryMatch
+[       OK ] Mwpm.BranchingTreeFormsBlossomThenHitsBoundaryMatch (0 ms)
+[ RUN      ] Mwpm.BoundaryMatchHitsTree
+[       OK ] Mwpm.BoundaryMatchHitsTree (0 ms)
+[ RUN      ] Mwpm.ShatterBlossomAndExtractMatchesForPair
+[       OK ] Mwpm.ShatterBlossomAndExtractMatchesForPair (0 ms)
+[ RUN      ] Mwpm.ObsMaskToSetBits
+[       OK ] Mwpm.ObsMaskToSetBits (0 ms)
+[ RUN      ] Mwpm.ShatterBlossomAndExtractMatches
+[       OK ] Mwpm.ShatterBlossomAndExtractMatches (0 ms)
+[ RUN      ] Mwpm.ShatterBlossomAndExtractMatchEdges
+[       OK ] Mwpm.ShatterBlossomAndExtractMatchEdges (0 ms)
+[ RUN      ] Mwpm.ShatterAndMatchBlossomMatchedToBoundaryMatch
+[       OK ] Mwpm.ShatterAndMatchBlossomMatchedToBoundaryMatch (0 ms)
+[ RUN      ] Mwpm.ShatterAndMatchBlossomMatchedToBoundaryMatchEdges
+[       OK ] Mwpm.ShatterAndMatchBlossomMatchedToBoundaryMatchEdges (0 ms)
+[ RUN      ] Mwpm.MatchingResult
+[       OK ] Mwpm.MatchingResult (0 ms)
+[ RUN      ] Mwpm.TwoRegionsGrowingThenMatching
+[       OK ] Mwpm.TwoRegionsGrowingThenMatching (0 ms)
+[ RUN      ] Mwpm.RegionHittingMatchThenMatchedToOtherRegion
+[       OK ] Mwpm.RegionHittingMatchThenMatchedToOtherRegion (0 ms)
+[ RUN      ] Mwpm.RegionHittingMatchFormingBlossomThenMatchingToBoundary
+[       OK ] Mwpm.RegionHittingMatchFormingBlossomThenMatchingToBoundary (0 ms)
+[----------] 14 tests from Mwpm (1 ms total)
+
+[----------] 1 test from flood_check_event
+[ RUN      ] flood_check_event.basic_usage
+[       OK ] flood_check_event.basic_usage (0 ms)
+[----------] 1 test from flood_check_event (0 ms total)
+
+[----------] 5 tests from radix_heap_queue
+[ RUN      ] radix_heap_queue.basic_usage
+[       OK ] radix_heap_queue.basic_usage (0 ms)
+[ RUN      ] radix_heap_queue.sorts_fuzz
+[       OK ] radix_heap_queue.sorts_fuzz (0 ms)
+[ RUN      ] radix_heap_queue.bucket_for
+[       OK ] radix_heap_queue.bucket_for (0 ms)
+[ RUN      ] radix_heap_queue.wraparound_all_the_way_around
+[       OK ] radix_heap_queue.wraparound_all_the_way_around (103 ms)
+[ RUN      ] radix_heap_queue.clear
+[       OK ] radix_heap_queue.clear (0 ms)
+[----------] 5 tests from radix_heap_queue (104 ms total)
+
+[----------] 1 test from mwpm_event
+[ RUN      ] mwpm_event.basic_usage
+[       OK ] mwpm_event.basic_usage (0 ms)
+[----------] 1 test from mwpm_event (0 ms total)
+
+[----------] 1 test from QueuedEventTracker
+[ RUN      ] QueuedEventTracker.basic_usage
+[       OK ] QueuedEventTracker.basic_usage (0 ms)
+[----------] 1 test from QueuedEventTracker (0 ms total)
+
+[----------] 3 tests from cyclic
+[ RUN      ] cyclic.comparison
+[       OK ] cyclic.comparison (0 ms)
+[ RUN      ] cyclic.arithmetic
+[       OK ] cyclic.arithmetic (0 ms)
+[ RUN      ] cyclic.widen_from_nearby_reference
+[       OK ] cyclic.widen_from_nearby_reference (0 ms)
+[----------] 3 tests from cyclic (0 ms total)
+
+[----------] 2 tests from SearchGraph
+[ RUN      ] SearchGraph.AddEdge
+[       OK ] SearchGraph.AddEdge (0 ms)
+[ RUN      ] SearchGraph.AddBoundaryEdge
+[       OK ] SearchGraph.AddBoundaryEdge (0 ms)
+[----------] 2 tests from SearchGraph (0 ms total)
+
+[----------] 3 tests from SearchFlooder
+[ RUN      ] SearchFlooder.RepCodeDetectorSearch
+[       OK ] SearchFlooder.RepCodeDetectorSearch (0 ms)
+[ RUN      ] SearchFlooder.RepCodeBoundarySearch
+[       OK ] SearchFlooder.RepCodeBoundarySearch (0 ms)
+[ RUN      ] SearchFlooder.RepCodeSourceToDestPath
+[       OK ] SearchFlooder.RepCodeSourceToDestPath (0 ms)
+[----------] 3 tests from SearchFlooder (0 ms total)
+
+[----------] 4 tests from UserGraph
+[ RUN      ] UserGraph.ConstructGraph
+[       OK ] UserGraph.ConstructGraph (0 ms)
+[ RUN      ] UserGraph.AddNoise
+[       OK ] UserGraph.AddNoise (0 ms)
+[ RUN      ] UserGraph.NodesAlongShortestPath
+[       OK ] UserGraph.NodesAlongShortestPath (0 ms)
+[ RUN      ] UserGraph.DecodeUserGraphDetectionEventOnBoundaryNode
+[       OK ] UserGraph.DecodeUserGraphDetectionEventOnBoundaryNode (0 ms)
+[----------] 4 tests from UserGraph (0 ms total)
+
+[----------] 4 tests from Perturbation
+[ RUN      ] Perturbation.RandomPrimitiveKnownValues
+[       OK ] Perturbation.RandomPrimitiveKnownValues (0 ms)
+[ RUN      ] Perturbation.FreshConstructionAndStableWorkspace
+[       OK ] Perturbation.FreshConstructionAndStableWorkspace (64 ms)
+[ RUN      ] Perturbation.ResetAfterInfeasibleSyndrome
+[       OK ] Perturbation.ResetAfterInfeasibleSyndrome (0 ms)
+[ RUN      ] Perturbation.OriginalSolverAndUnsupportedInputs
+[       OK ] Perturbation.OriginalSolverAndUnsupportedInputs (0 ms)
+[----------] 4 tests from Perturbation (65 ms total)
+
+[----------] Global test environment tear-down
+[==========] 99 tests from 22 test suites ran. (3553 ms total)
+[  PASSED  ] 99 tests.

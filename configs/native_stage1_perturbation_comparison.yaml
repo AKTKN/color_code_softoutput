@@ -1,0 +1,42 @@
+# python -m color_code_softoutput.simulation.cli --config configs/native_stage1_perturbation_comparison.yaml
+# A bounded example. Native mode requires the modified PyMatching backend.
+simulation:
+  output_root: results
+  shots: 1000
+  workers: 2
+  master_seed: 20260929
+  buffer_shots: 5000
+  verbose: true
+chunking:
+  calibration_shots: 8
+  target_chunk_seconds: 1.0
+  min_chunk_shots: 1
+  max_chunk_shots: 4096
+  throughput_ema_alpha: 0.25
+sweep:
+  distance: [3, 5]
+  physical_error_rate: [0.03, 0.05]
+  noise_model: bitflip
+  rounds: 1
+  circuit_type: tri
+  cnot_schedule: tri_optimal
+color_code_options:
+  temp_bdry_type: Z
+decoders:
+  - decoder_alias: ordinary
+    type: concat_mwpm
+  - decoder_alias: original_dem_perturbation
+    type: perturbation
+    options: &prior_options
+      enable_prior_perturbation: true
+      perturbation_ensemble_size: 12
+      perturbation_alpha: 1.0
+      perturbation_seed: 20260929
+      use_original_prior_for_stage2: true
+      color_correlated_weight_basis: original_dem
+      stage1_perturbation: false
+  - decoder_alias: native_stage1_perturbation
+    type: perturbation
+    options:
+      <<: *prior_options
+      stage1_perturbation: true

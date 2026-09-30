@@ -12,7 +12,8 @@ import numpy as np
 from color_code_stim import ColorCode
 
 from .noise import make_noise_model
-from .task import ResolvedPoint
+from .config import decode_option_dict
+from .task import ResolvedPoint, metric_names
 
 
 CACHE_MAXSIZE = 4
@@ -95,7 +96,8 @@ def _construct(point: ResolvedPoint) -> _CodePair:
     circuit_swim = None
     if dict(point.decode_options).get("compute_swim_distance", False) and not configured.dem_manager.swim_data_only:
         from .circuit_swim import CircuitCandidateSwim
-        circuit_swim = CircuitCandidateSwim(configured)
+        circuit_swim = CircuitCandidateSwim(configured,
+            lazy=dict(point.decode_options).get('bp_predecoding', False))
     return _CodePair(configured, ordinary, circuit_swim=circuit_swim)
 
 
@@ -103,7 +105,16 @@ def _codes(point: ResolvedPoint) -> _CodePair:
     key = _semantics(point)
     if key in _CODE_CACHE:
         _CODE_CACHE.move_to_end(key)
-        return _CODE_CACHE[key]
+        pair = _CODE_CACHE[key]
+        # Metric requests are deliberately absent from the hard-decoder key.
+        # A cached plain decoder may later be asked for circuit SWIM.
+        if (point.decoder_type != "tesseract" and
+                dict(point.decode_options).get("compute_swim_distance", False) and
+                pair.circuit_swim is None and not pair.configured.dem_manager.swim_data_only):
+            from .circuit_swim import CircuitCandidateSwim
+            pair.circuit_swim = CircuitCandidateSwim(pair.configured,
+                lazy=dict(point.decode_options).get('bp_predecoding', False))
+        return pair
     pair = _construct(point)
     _CODE_CACHE[key] = pair
     if len(_CODE_CACHE) > CACHE_MAXSIZE:
@@ -162,25 +173,50 @@ def run_chunk(task: WorkerInput) -> WorkerResult:
         metrics = {"logical_error": logical_errors(predicted, actual_array, task.shot_count)}
         return WorkerResult(task.point_id, task.chunk_id, task.shot_start, task.shot_count,
                             perf_counter() - started, metrics)
-    decode_options = dict(task.point.decode_options)
+    decode_options = decode_option_dict(task.point.decode_options)
     correlated = pair.ordinary is not None
     options = dict(task.point.color_code_options) | dict(task.point.decoder_options)
     relifting = options.get("enable_cross_color_relifting", False)
-    perturbation = options.get("enable_prior_perturbation", False)
+    perturbation = options.get("enable_prior_perturbation", False) or options.get("stage1_perturbation", False)
+    if options.get("stage1_perturbation", False):
+        decode_options["perturbation_shot_offset"] = task.shot_start
     swim = decode_options.get("compute_swim_distance", False)
     comparative = options.get("comparative_decoding", False)
     circuit_swim = swim and pair.circuit_swim is not None
+    if decode_options.get("bp_predecoding", False):
+        decode_options["bp_shot_offset"] = task.shot_start
+        # The BP wrapper rebuilds the scorer on each posterior-prior DEM.
+        if circuit_swim:
+            decode_options["compute_swim_distance"] = False
+            decode_options["candidate_scorer"] = pair.circuit_swim.score_candidate
+        _, bp_metrics = pair.configured.decode(
+            detectors, **(decode_options | {"metrics": metric_names(task.point),
+                                          "actual_observables": actual}))
+        bp_metrics = {name: bp_metrics[name] for name in metric_names(task.point)}
+        return WorkerResult(task.point_id, task.chunk_id, task.shot_start, task.shot_count,
+                            perf_counter() - started, bp_metrics)
+    if not decode_options.get("full_output", False):
+        baseline = None
+        if correlated:
+            baseline_options = decode_options | {"full_output": False,
+                                                 "compute_swim_distance": False}
+            baseline = pair.ordinary.decode(detectors, **baseline_options)
+        if circuit_swim:
+            decode_options["compute_swim_distance"] = False
+            decode_options["candidate_scorer"] = pair.circuit_swim.score_candidate
+        prediction, metrics = pair.configured.decode(
+            detectors, **(decode_options | {
+                "full_output": False, "metrics": metric_names(task.point),
+                "actual_observables": actual, "baseline_predictions": baseline,
+            }),
+        )
+        return WorkerResult(task.point_id, task.chunk_id, task.shot_start, task.shot_count,
+                            perf_counter() - started, metrics)
     if circuit_swim:
         decode_options["compute_swim_distance"] = False
         decode_options["return_candidate_data"] = True
-    if correlated or relifting or perturbation or swim or comparative:
-        # The common-prior comparison requires the public full-output fields.
-        decode_options["full_output"] = True
-    configured_result = pair.configured.decode(detectors, **decode_options)
-    if decode_options.get("full_output", False):
-        prediction, extra = configured_result
-    else:
-        prediction, extra = configured_result, None
+    # Explicit full_output=True retains the established diagnostic oracle.
+    prediction, extra = pair.configured.decode(detectors, **decode_options)
     final_fail = logical_errors(prediction, actual, task.shot_count)
     metrics = {"logical_error": final_fail}
     if swim:

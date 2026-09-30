@@ -1,0 +1,132 @@
+{'distance': 9, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'first_decode', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 21.875 graphs 6
+{'distance': 9, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'first_decode', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 21.431 graphs 6
+{'distance': 9, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 16.39 graphs 6
+{'distance': 9, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 1.515 graphs 0
+{'distance': 9, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 1} ms/shot 0.74 graphs 0
+{'distance': 9, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 1} ms/shot 13.114 graphs 6
+{'distance': 9, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 2} ms/shot 13.7 graphs 6
+{'distance': 9, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 2} ms/shot 0.852 graphs 0
+{'distance': 9, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 10, 'repeat': 0} ms/shot 0.281 graphs 0
+{'distance': 9, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 10, 'repeat': 0} ms/shot 1.784 graphs 6
+{'distance': 9, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 100, 'repeat': 0} ms/shot 0.646 graphs 6
+{'distance': 9, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 100, 'repeat': 0} ms/shot 0.14 graphs 0
+COMPLETE 9 M1 False
+{'distance': 9, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'warm_format_switch', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 21.249 graphs 6
+{'distance': 9, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'warm_format_switch', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 0.795 graphs 0
+{'distance': 9, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 18.774 graphs 6
+{'distance': 9, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 0.641 graphs 0
+{'distance': 9, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 1} ms/shot 0.616 graphs 0
+{'distance': 9, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 1} ms/shot 18.378 graphs 6
+{'distance': 9, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 2} ms/shot 18.96 graphs 6
+{'distance': 9, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 2} ms/shot 0.651 graphs 0
+{'distance': 9, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 10, 'repeat': 0} ms/shot 0.231 graphs 0
+{'distance': 9, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 10, 'repeat': 0} ms/shot 1.445 graphs 6
+{'distance': 9, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 100, 'repeat': 0} ms/shot 0.325 graphs 6
+{'distance': 9, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 100, 'repeat': 0} ms/shot 0.192 graphs 0
+COMPLETE 9 M1 True
+{'distance': 9, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'first_decode', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 9036.381 graphs 72
+{'distance': 9, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'first_decode', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 333.078 graphs 72
+{'distance': 9, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 182.443 graphs 72
+{'distance': 9, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 184.47 graphs 66
+{'distance': 9, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 1} ms/shot 180.611 graphs 66
+{'distance': 9, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 1} ms/shot 184.594 graphs 72
+{'distance': 9, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 2} ms/shot 185.045 graphs 72
+{'distance': 9, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 2} ms/shot 193.174 graphs 66
+{'distance': 9, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 10, 'repeat': 0} ms/shot 191.372 graphs 660
+{'distance': 9, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 10, 'repeat': 0} ms/shot 36.438 graphs 72
+COMPLETE 9 M12 False
+{'distance': 9, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'warm_format_switch', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 207.696 graphs 72
+{'distance': 9, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'warm_format_switch', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 180.8 graphs 66
+{'distance': 9, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 174.977 graphs 72
+{'distance': 9, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 185.426 graphs 66
+{'distance': 9, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 1} ms/shot 182.775 graphs 66
+{'distance': 9, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 1} ms/shot 177.27 graphs 72
+{'distance': 9, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 2} ms/shot 189.767 graphs 72
+{'distance': 9, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 2} ms/shot 190.127 graphs 66
+{'distance': 9, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 10, 'repeat': 0} ms/shot 188.342 graphs 660
+{'distance': 9, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 10, 'repeat': 0} ms/shot 31.476 graphs 72
+COMPLETE 9 M12 True
+{'distance': 13, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'first_decode', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 70.645 graphs 6
+{'distance': 13, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'first_decode', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 47.406 graphs 6
+{'distance': 13, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 43.516 graphs 6
+{'distance': 13, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 1.996 graphs 0
+{'distance': 13, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 1} ms/shot 1.204 graphs 0
+{'distance': 13, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 1} ms/shot 44.098 graphs 6
+{'distance': 13, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 2} ms/shot 42.707 graphs 6
+{'distance': 13, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 2} ms/shot 1.301 graphs 0
+{'distance': 13, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 10, 'repeat': 0} ms/shot 0.719 graphs 0
+{'distance': 13, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 10, 'repeat': 0} ms/shot 4.706 graphs 6
+{'distance': 13, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 100, 'repeat': 0} ms/shot 1.348 graphs 6
+{'distance': 13, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 100, 'repeat': 0} ms/shot 0.489 graphs 0
+COMPLETE 13 M1 False
+{'distance': 13, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'warm_format_switch', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 56.0 graphs 6
+{'distance': 13, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'warm_format_switch', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 1.481 graphs 0
+{'distance': 13, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 50.377 graphs 6
+{'distance': 13, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 1.318 graphs 0
+{'distance': 13, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 1} ms/shot 1.068 graphs 0
+{'distance': 13, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 1} ms/shot 45.01 graphs 6
+{'distance': 13, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 2} ms/shot 43.604 graphs 6
+{'distance': 13, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 2} ms/shot 1.201 graphs 0
+{'distance': 13, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 10, 'repeat': 0} ms/shot 0.536 graphs 0
+{'distance': 13, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 10, 'repeat': 0} ms/shot 4.954 graphs 6
+{'distance': 13, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 100, 'repeat': 0} ms/shot 1.395 graphs 6
+{'distance': 13, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 100, 'repeat': 0} ms/shot 0.627 graphs 0
+COMPLETE 13 M1 True
+{'distance': 13, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'first_decode', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 28168.676 graphs 72
+{'distance': 13, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'first_decode', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 1080.274 graphs 72
+{'distance': 13, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 567.164 graphs 72
+{'distance': 13, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 621.629 graphs 66
+{'distance': 13, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 1} ms/shot 668.889 graphs 66
+{'distance': 13, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 1} ms/shot 570.35 graphs 72
+{'distance': 13, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 2} ms/shot 731.568 graphs 72
+{'distance': 13, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 2} ms/shot 867.574 graphs 66
+{'distance': 13, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 10, 'repeat': 0} ms/shot 651.527 graphs 660
+{'distance': 13, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 10, 'repeat': 0} ms/shot 95.554 graphs 72
+COMPLETE 13 M12 False
+{'distance': 13, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'warm_format_switch', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 641.002 graphs 72
+{'distance': 13, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'warm_format_switch', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 684.745 graphs 66
+{'distance': 13, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 589.921 graphs 72
+{'distance': 13, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 687.113 graphs 66
+{'distance': 13, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 1} ms/shot 606.339 graphs 66
+{'distance': 13, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 1} ms/shot 553.684 graphs 72
+{'distance': 13, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 2} ms/shot 601.915 graphs 72
+{'distance': 13, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 2} ms/shot 591.693 graphs 66
+{'distance': 13, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 10, 'repeat': 0} ms/shot 633.573 graphs 660
+{'distance': 13, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 10, 'repeat': 0} ms/shot 89.028 graphs 72
+COMPLETE 13 M12 True
+{'distance': 17, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'first_decode', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 202.727 graphs 6
+{'distance': 17, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'first_decode', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 122.922 graphs 6
+{'distance': 17, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 103.359 graphs 6
+{'distance': 17, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 1.74 graphs 0
+{'distance': 17, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 1} ms/shot 1.558 graphs 0
+{'distance': 17, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 1} ms/shot 99.262 graphs 6
+{'distance': 17, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 2} ms/shot 100.615 graphs 6
+{'distance': 17, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 2} ms/shot 1.906 graphs 0
+{'distance': 17, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 10, 'repeat': 0} ms/shot 1.279 graphs 0
+{'distance': 17, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 10, 'repeat': 0} ms/shot 11.175 graphs 6
+{'distance': 17, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 100, 'repeat': 0} ms/shot 2.396 graphs 6
+{'distance': 17, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 100, 'repeat': 0} ms/shot 1.119 graphs 0
+COMPLETE 17 M1 False
+{'distance': 17, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'warm_format_switch', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 116.782 graphs 6
+{'distance': 17, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'warm_format_switch', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 2.346 graphs 0
+{'distance': 17, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 99.831 graphs 6
+{'distance': 17, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 2.095 graphs 0
+{'distance': 17, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 1} ms/shot 1.89 graphs 0
+{'distance': 17, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 1} ms/shot 99.783 graphs 6
+{'distance': 17, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 2} ms/shot 97.477 graphs 6
+{'distance': 17, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 2} ms/shot 1.856 graphs 0
+{'distance': 17, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 10, 'repeat': 0} ms/shot 1.153 graphs 0
+{'distance': 17, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 10, 'repeat': 0} ms/shot 10.881 graphs 6
+{'distance': 17, 'mode': 'M1', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 100, 'repeat': 0} ms/shot 2.728 graphs 6
+{'distance': 17, 'mode': 'M1', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 100, 'repeat': 0} ms/shot 1.527 graphs 0
+COMPLETE 17 M1 True
+{'distance': 17, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'first_decode', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 69728.132 graphs 72
+{'distance': 17, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'first_decode', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 2676.372 graphs 72
+{'distance': 17, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 1768.784 graphs 72
+{'distance': 17, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': False, 'batch_size': 1, 'repeat': 0} ms/shot 1482.171 graphs 66
+COMPLETE 17 M12 False
+{'distance': 17, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'warm_format_switch', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 1571.292 graphs 72
+{'distance': 17, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'warm_format_switch', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 1603.91 graphs 66
+{'distance': 17, 'mode': 'M12', 'variant': 'legacy_fixed_072a87d', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 1621.377 graphs 72
+{'distance': 17, 'mode': 'M12', 'variant': 'optimized_final', 'phase': 'steady', 'full_output': True, 'batch_size': 1, 'repeat': 0} ms/shot 1587.758 graphs 66
+COMPLETE 17 M12 True

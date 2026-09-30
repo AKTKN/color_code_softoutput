@@ -1,0 +1,16 @@
+{
+  "deleted_directory": "/tmp/color-native-stage1-timing",
+  "measurement_program": "measure.py",
+  "program_sha256": "31bb3704c9ccd909234e5e477e75c5b0fc3ad573379a010ffe9fc3179ac53a8c",
+  "removed_contents": [
+    "measurement program",
+    "temporary archived checkpoint package",
+    "presampled detector/observable NPZ arrays",
+    "36 per-case JSON files",
+    "Python cache files"
+  ],
+  "time_utc": "2026-09-28T16:57:20.115513+00:00",
+  "retained_artifacts": "Raw CSVs, hashes, environment, verification, suite logs and report in this directory",
+  "build_retained": "/tmp/color-native-stage1-build is a backend/test build, not a measurement program",
+  "deleted_directory_absent": true
+}

@@ -1,5 +1,83 @@
 # color-code-softoutput
 
+Global DEM BP predecoding is available on
+`bp_predecoding` in this repository and both external
+decoder/backend repositories. Set `decode_options.bp_predecoding: true` and
+optionally `bp_prms: {max_iter: 10}`. See
+[`configs/global_bp_example.yaml`](configs/global_bp_example.yaml) and the
+[implementation report](notes/support/global_bp_predecoding_20260929/report.md).
+BP fallback version 4 aggregates the uncapped global posteriors
+into X/Z DEM mechanisms with the existing independent-XOR rule, then assigns
+`w=-log(p)`. Color decomposition receives effective priors `p/(1+p)` so the
+existing log-odds API reproduces those X/Z weights for **stage 1 only**.
+**Stage 2 and final candidate selection always use the original pre-BP
+physical prior**, including with native stage-1 perturbation. See the
+[weighting specification](external_libs/color-code-stim/docs/global_bp_predecoding.md).
+New run logs record `weight_rule="negative_log_xz_probability"` and physical
+stage-2/selection priors; old version-2/3
+decoder states require their original implementation for replay.
+The workflow adds boolean `bp_converged.parquet`; all concatenated metrics
+are null on converged shots. As requested, LER is the saved True count divided
+by all physical shots; nulls do not reduce the denominator. This does not
+reconstruct missing converged-shot failures. Soft-output statistics use only
+scored shots. Physical/converged shot counts are reported explicitly.
+
+Use branch `bp_predecoding` in all three repositories, including the two
+external checkouts. The [release notes](notes/support/BP_PREDECODING_RELEASE.md)
+summarize the implementation, subsequent corrections and audit artifacts.
+
+For this isolated checkout, activate `color_code_so`, install `ldpc>=2,<3`,
+and select its sources without changing the installed original checkouts:
+
+```bash
+export PYTHONPATH="$PWD/src:$PWD/external_libs/color-code-stim/src:$PWD/external_libs/PyMatching/src"
+./scripts/run_experiment.sh configs/global_bp_example.yaml
+```
+
+Native BP perturbation requires the compiled backend from this branch. Build
+it from `external_libs/PyMatching` with `env -u DEBUG
+CMAKE_BUILD_PARALLEL_LEVEL=4 python setup.py build_ext --inplace`; its submodules
+must be initialized. The local `color_code_so` environment has ldpc 2.4.1.
+
+The YAML simulation now defaults to requested scalar metrics with
+`full_output=False`. The decoder returns only the `(shots,)` arrays required
+by the saved point schema; candidate diagnostics are available through an
+explicit `decode_options: {full_output: true}`. Predictions, metric meanings,
+Parquet columns and perturbation sampling are preserved. See
+[`simulation output contract`](src/color_code_softoutput/README.md#yaml-workflow-point-storage).
+The [validation and measurement report](notes/support/compact_experiment_metrics_20260929/report.md)
+records identical saved values and reduced allocation peaks, with mixed decode
+time results.
+
+Native stage-1 perturbation is available through
+[`configs/native_stage1_perturbation_comparison.yaml`](configs/native_stage1_perturbation_comparison.yaml).
+Set `stage1_perturbation: true` under a `type: perturbation` decoder; M includes
+the unperturbed member. Stage 2 always uses cached original priors. False keeps
+the original-DEM perturbation workflow. The new mode changes candidate
+generation, while final scoring and existing output semantics are retained.
+
+Use the `codex/native-stage1-perturbation-20260929` branches of both external
+repositories for this option. In the `color_code_so` environment, rebuild the
+PyMatching backend with
+`CMAKE_BUILD_PARALLEL_LEVEL=4 python -m pip install --no-build-isolation -e external_libs/PyMatching`.
+The decoder must also be imported from the corresponding editable checkout.
+See the decoder's
+[native mode guide](https://github.com/AKTKN/color-code-stim/blob/codex/native-stage1-perturbation-20260929/docs/native_stage1_perturbation.md)
+and PyMatching's
+[API guide](https://github.com/AKTKN/PyMatching/blob/codex/native-stage1-perturbation-20260929/docs/native_perturbation.md).
+
+The workflow saves the resolved native seed and RNG scheme version and uses
+absolute per-point shot indices, so worker scheduling/cache reconstruction
+does not change perturbations for the same supplied shots. Stim sampling and
+its existing chunk-seed policy remain unchanged. Timing reports separate
+same-prior-specification acceleration from comparisons against the old mode.
+The [implementation and timing report](notes/support/native_stage1_perturbation_20260929/report.md)
+records regression tests, cold/warm timings, graph counts, memory and exact
+dependency commits. YAML aliases use independent physical samples; the
+report includes the pre-resampling fixed-ensemble measurements as a separate
+baseline. Native decoder timings use identical presampled shots within each
+measured condition.
+
 ## Canonical YAML simulation
 
 Run in the `color_code_so` environment. This minimal configuration sweeps two
@@ -65,6 +143,46 @@ bitflip -> NoiseModel(bitflip=p)
 depol   -> NoiseModel(depol=p)
 uniform -> NoiseModel.uniform_circuit_noise(p)
 ```
+
+### Round count and X/Z detectors for depolarizing experiments
+
+`rounds` counts **all syndrome extraction rounds**, including the first one.
+With `perfect_first_syndrome_extraction: true`, the first extraction is
+noiseless and the remaining `rounds - 1` extractions receive the configured
+round noise. Initialization and final measurement noise have separate controls
+(`perfect_logical_initialization` and `perfect_logical_measurement`); they are
+already absent in the `depol`-only noise model above.
+
+For triangular Z-memory circuits, the first round measures both X and Z
+stabilizers, but defines only Z detectors. X detectors compare consecutive
+X-stabilizer measurements and appear from the second round onward when
+`exclude_non_essential_pauli_detectors: false` (the default). Consequently,
+`rounds: 1` has no X detectors, and a global DEM from that circuit cannot
+provide the X/Z syndrome correlation information needed by global BP.
+
+For a noiseless reference extraction followed by **one application of data
+depolarization** and another extraction, use these settings in the YAML:
+
+```yaml
+sweep:
+  noise_model: depol
+  rounds: 2
+  circuit_type: tri
+
+color_code_options:
+  temp_bdry_type: Z
+  perfect_first_syndrome_extraction: true
+  exclude_non_essential_pauli_detectors: false
+```
+
+Keep the other sweep, simulation and decoder settings from your configuration.
+This produces both X and Z detectors. The global-BP worktree's DEM generator
+retains mechanisms affecting both detector types before CSS separation. For
+example, at `d=5`, `p=0.03`, this configuration has 9 X and 27 Z detectors,
+one depolarizing layer, and 19 global mechanisms affecting both X and Z
+detectors. Global-BP decoding uses the separate
+`color_code_softoutput_bp_global` worktree; these circuit settings themselves
+are also supported by the original decoder checkout.
 
 The run root is `YY_MM_DD_HH_MM_SS_{hash8}` under `output_root`, where the
 hash covers the validated semantic configuration. Each point directory is:
@@ -260,6 +378,36 @@ each plotted physical condition. Comparability checks use the settings
 recorded in the saved logs; the canonical logs do not certify historical
 cluster source versions. `notebooks/color_correlated_decoding.ipynb` now
 uses the two-run example above; set `additional_sources = []` for one run.
+
+The original workspace's readers also support saved global-BP runs with
+`decode_options.bp_predecoding` and `bp_prms`. Rerun the analysis notebook's
+first cell to reload them. `bp_converged.parquet` must contain a non-null
+boolean for every physical shot; concatenated metrics must be null exactly
+where BP converged. LER uses the original aggregation: the saved True count
+divided by the total physical shot count, also when BP is enabled. Nulls do
+not contribute to the numerator; they do not reduce the denominator.
+Summaries expose `physical_shots`, `bp_converged_shots`, and
+`statistics_scope="all shots"`. An all-converged file with all-null failure
+labels has a saved True count of zero and the original nonzero shot count.
+This does not reconstruct the missing logical-error outcomes on null shots.
+
+Baseline overlays and improvement ratios retain the original representative
+selection by physical configuration; BP settings introduce no additional
+restriction or virtual baseline alias. Paired methods keep their own baseline.
+Soft-output plots exclude skipped shots lacking scores and reject mixed BP sampling scopes
+within one group. With no scored shots they report that no scores are available.
+This compatibility update concerns analysis; running global-BP decoding still
+uses the separate `color_code_softoutput_bp_global` worktree described in
+`configs/example_bpmatching.yaml`.
+
+That BP worktree now uses version 4: aggregate uncapped global
+posteriors into X/Z DEM mechanisms with independent XOR, assign `w=-log(p)`,
+then pass `p/(1+p)` to stage-1 color decomposition. Stage 2 and final selection
+use the original physical prior. The conversion is
+after X/Z aggregation and before stage-1 decomposition. New run logs
+identify `weight_rule="negative_log_xz_probability"`; existing saved runs
+retain their old weighting. See the
+[implementation details](../color_code_softoutput_bp_global/external_libs/color-code-stim/docs/global_bp_predecoding.md).
 
 ## Setup
 

@@ -1,0 +1,10 @@
+{
+  "summary_arithmetic_rows": 60,
+  "final_source_hashes_verified": 10,
+  "decoder_passed": 231,
+  "decoder_existing_skips": 2,
+  "workspace_passed": 318,
+  "measurement_programs_deleted": true,
+  "pymatching_checkout_unchanged": true,
+  "diff_checks_passed": true
+}

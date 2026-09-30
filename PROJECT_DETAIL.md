@@ -1,5 +1,39 @@
 # PROJECT_DETAIL.md
 
+## Native stage-1 candidate generation — 2026-09-29
+
+The user-approved opt-in `stage1_perturbation` moves candidate generation to
+PyMatching: original decomposed stage-1 priors are perturbed independently by
+edge/colour/shot/member. The decoder runs fixed original stage 2 and existing
+mapping/scoring. Member 0 stays unchanged, comparative classes share draws,
+and absolute IDs plus saved seed/scheme/cursor enable replay across batch,
+worker and cache changes. False retains original-DEM mode.
+
+The backend reuses fixed simple nonnegative topology/workspace and explicitly
+rejects unsupported graph/API cases. Physical maps, metric definitions,
+growth conventions and proved statements are unchanged. Full regressions,
+sanitizers and independent oracles pass. Bounded timings distinguish same-law
+acceleration from old/new-law comparisons. No stochastic-M>1 equivalence,
+LER improvement, calibration or asymptotic claim follows. Report/dependencies:
+`notes/support/native_stage1_perturbation_20260929/report.md`.
+
+## Per-shot prior perturbation and runtime refactor — 2026-09-28
+
+The user-authorized runtime prompt corrects the historical lifetime-fixed
+ensemble to independent common-X/Z-DEM perturbations for each shot/member.
+Each draw is shared across colors and comparative hypotheses; shot-major RNG
+state persists across calls and save/load. Unaffected modes retain their
+existing candidate ordering, scoring, logical interpretation and SWIM rules.
+
+The current main decoder uses six fixed base matchings, a 32-entry exact
+dynamic matching LRU, current-shot graph references and symbolic probability
+plans with the original dynamic stage-2 column order. Hard output omits
+diagnostic tensors while preserving required original-DEM reconstruction and
+candidate scoring. Exact independent fresh-build and pristine-output tests
+separate the sampling correction from optimization. See
+`notes/support/decoder_runtime_optimization_20260928/report.md` for bounded
+measurements; no theorem, metric definition or saved campaign is changed.
+
 ## Ensemble SWIM numerical integration — 2026-09-27
 
 The user-authorized canonical YAML extension evaluates the original

@@ -1,0 +1,83 @@
+{
+  "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "python": "3.12.14",
+  "processor": "13th Gen Intel(R) Core(TM) i7-13700H",
+  "versions": {
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "stim": "1.16.0",
+    "pymatching": "2.2.dev2",
+    "pyarrow": "25.0.1",
+    "pytest": "9.1.1"
+  },
+  "threads": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "base_commits": {
+    "root": "ad0d1c93da074f10305d553157a788b0931b6388",
+    "decoder": "6a6bd8b30b3de62c0a4132fcf440bde48c3e3f3a",
+    "pymatching": "40ef9296f1d73aa4d629460bdc80bcf57bb1f7b5"
+  },
+  "source_sha256": {
+    "src/color_code_softoutput/simulation/cli.py": "c05487d2895abba5828204541b48d8cebb8aa098135b38499e09be171ec0e640",
+    "src/color_code_softoutput/simulation/config.py": "4842a5a8df26d4c867a2832091864c6c2856986b60e5c9e39297a5a6930767a3",
+    "src/color_code_softoutput/simulation/adaptive_benchmark.py": "14279c31d82bb48b26753e91c6051810f93d2ac5167396549f16246c93082ce4",
+    "src/color_code_softoutput/simulation/storage.py": "cdaaff84c242d099d1cebbb485173a2270f06322824e368469cbbeed67182256",
+    "src/color_code_softoutput/simulation/task.py": "4e0557a09ac0f93341f3a5fa4048b5d765ed893c0fba821331bf579d758384bf",
+    "src/color_code_softoutput/simulation/runner.py": "0ab7298e5f588b4abe9a758a337fb98fdeb3eeeb7af2938f0c15cec03a2a1383",
+    "src/color_code_softoutput/simulation/parallel_runner.py": "4b2fd7a752aa69dd605cbf6e5145a418bd8951394c6f6375dc26eec77d5cf93f",
+    "src/color_code_softoutput/simulation/pairing.py": "037316f9769b096fcd92243b1aa8826ed46fc3e7215d777a87b785b5e0ae1bac",
+    "src/color_code_softoutput/simulation/sampling.py": "e8f3acbb017389f9a6e87aa78ece99d7597c7def8854a2c1fd160a483cbd1418",
+    "src/color_code_softoutput/simulation/__init__.py": "ab56d8381b41a4ba9a12225864f4e6d26cf7094a7d369df442421004ca8b04c6",
+    "src/color_code_softoutput/simulation/tesseract.py": "4d9b1e4b2e7dd611fa2d0bbdfabebf8f40ce1bb68d6c069369913f0a03e398d6",
+    "src/color_code_softoutput/simulation/provenance.py": "5ca14b8955c10ba94cb413e2256a61af671a563d340c493f8cba8b50eda617d6",
+    "src/color_code_softoutput/simulation/circuit_swim.py": "81117c9cde463f98696624ef642ad947904b4ae1d676888130ceb81f75d12326",
+    "src/color_code_softoutput/simulation/noise.py": "50d0d548398d25b06c7edbaa340af5945d5602a85ba0fe68f785771f2b62c918",
+    "src/color_code_softoutput/simulation/workflow_storage.py": "5c21cd2f11c15923ce181340fce685819143e1735e01e75b2b2af84cabe7ebdb",
+    "src/color_code_softoutput/simulation/scheduler.py": "39a3ddf4574ebc0739fc15c498abae92b62b4d861ee6708f44c9691dd1cdc95c",
+    "src/color_code_softoutput/simulation/worker.py": "6be7700721624dd8ee931ba074e6539cdc30130b7573541a9a89988235c84f65",
+    "src/color_code_softoutput/simulation/planner.py": "13a45769cea4dd86d2e60a880a0da75cd40be99f7cef24ae99d5f8c2b9b72c58",
+    "external_libs/color-code-stim/src/color_code_stim/decoders/baseline_equivalence.py": "802a3a0139bbaa458e471bb6aa906958d0264289cf899733d9fca58e222f63af",
+    "external_libs/color-code-stim/src/color_code_stim/decoders/belief_concat_matching_decoder.py": "50a05de8abf60e332dae62d3181c2d1379adc8416409cafabea8337404f9bef9",
+    "external_libs/color-code-stim/src/color_code_stim/decoders/color_correlated_decoding.py": "2e943edff27ef8d10ef4fab630cd31ee16c57cc0ce8f2ceca074091889e891dc",
+    "external_libs/color-code-stim/src/color_code_stim/decoders/__init__.py": "4dc227014b26dabd5cb89f8167c7b7fa69b5e25baaefb6f67f2bbf6671336e6f",
+    "external_libs/color-code-stim/src/color_code_stim/decoders/native_stage1_perturbation.py": "3580c1b2f456d83f901f39e936128191dac9a73203c7008f7a15ea870bdf4380",
+    "external_libs/color-code-stim/src/color_code_stim/decoders/concat_matching_decoder.py": "e2a55523620b812018ce06f7909863f0dd0eae5030a75a9bb8ae7974e330febc",
+    "external_libs/color-code-stim/src/color_code_stim/decoders/prior_perturbation.py": "d01c0bf50720d2baaee3b239b2f52f1375759cae9cbdcbe60325621f231cdd1d",
+    "external_libs/color-code-stim/src/color_code_stim/decoders/cross_color_relifting.py": "127f80d32caa3bd0feb93758fa50ad49116f0ad3a1e40bc88dc99b9f1dd07092",
+    "external_libs/color-code-stim/src/color_code_stim/decoders/experiment_metrics.py": "68ebbfc4d922507d8731f69aa95b65ae8186d1d794402c0f008c0d4ccc1f9fd1",
+    "external_libs/color-code-stim/src/color_code_stim/decoders/matching_cache.py": "18fab6b0e1bf0ec4708f161a1019318dcc55377cd4b30532494aa20fb45b591b",
+    "external_libs/color-code-stim/src/color_code_stim/decoders/base.py": "d1821fb7324c4971667d06d5894b658b20de028ba64ffab7019b1919a565337a",
+    "external_libs/color-code-stim/src/color_code_stim/decoders/bp_decoder.py": "9f25a75f2d9822c050c005503807952fc4c87ce78d18e1bee04f39c76404dd8e",
+    "external_libs/color-code-stim/src/color_code_stim/color_code.py": "a6492ec6836e615ea0bd9c54f731ea1d635b62f4c96f884b8202ae59fc62c64f"
+  },
+  "benchmark_program_sha256": "62074cbb91a4e211c92c2c6a17c76fb8599e5a22b058cef77b118cb82b4567a0",
+  "test_results": {
+    "before": {
+      "root": "325 passed",
+      "decoder": "252 passed, 2 skipped"
+    },
+    "after": {
+      "root": "361 passed",
+      "decoder": "308 passed, 2 skipped"
+    }
+  },
+  "backend_binary": {
+    "path": "/home/quantum_teresheys/workspace/color_code_softoutput/external_libs/PyMatching/src/pymatching/_cpp_pymatching.cpython-312-x86_64-linux-gnu.so",
+    "sha256": "aa766a8c5f390f4dc086543c7cc8d862846e07acbcaf21852d8d1eb3cd037ce8"
+  },
+  "equivalence_checks": {
+    "cases": 16,
+    "timing_repetitions_per_route": 3,
+    "checksum_checks_per_case": 4,
+    "all_equal": true
+  },
+  "tested_worktree_note": "Base commits identify the starting revisions; source_sha256 identifies the tested implementation.",
+  "published_dependencies": {
+    "color_code_stim": "3955196a9d2280fab555f0cf97510e37b6dd9d23",
+    "pymatching": "40ef9296f1d73aa4d629460bdc80bcf57bb1f7b5",
+    "branch": "codex/native-stage1-perturbation-20260929"
+  }
+}

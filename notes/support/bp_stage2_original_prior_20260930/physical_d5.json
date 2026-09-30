@@ -1,0 +1,78 @@
+{
+  "name": "physical_d5",
+  "d": 5,
+  "p": 0.03,
+  "shots": 1596,
+  "bp_parameters": {
+    "bp_method": "min_sum",
+    "max_iter": 20,
+    "schedule": "parallel"
+  },
+  "checks": {
+    "fallback_shots": 1217,
+    "stage1_permutations": 3651,
+    "stage2_graph_permutations": 3651,
+    "independent_stage2_weight_checks": 3651,
+    "alternate_stage2_logical_differences": 0
+  },
+  "ordinary_failures": 0,
+  "converged": 379,
+  "converged_failures": 0,
+  "methods": {
+    "current": {
+      "failures": 21,
+      "fallback_failures": 21,
+      "rescued": 0,
+      "worsened": 0,
+      "paired_binomial_p": null,
+      "single_failures": 0,
+      "double_failures": 21,
+      "rescued_vs_ordinary": 0,
+      "worsened_vs_ordinary": 21
+    },
+    "stage2_only": {
+      "failures": 18,
+      "fallback_failures": 18,
+      "rescued": 3,
+      "worsened": 0,
+      "paired_binomial_p": null,
+      "single_failures": 0,
+      "double_failures": 18,
+      "rescued_vs_ordinary": 0,
+      "worsened_vs_ordinary": 18
+    },
+    "selection_only": {
+      "failures": 15,
+      "fallback_failures": 15,
+      "rescued": 6,
+      "worsened": 0,
+      "paired_binomial_p": null,
+      "single_failures": 0,
+      "double_failures": 15,
+      "rescued_vs_ordinary": 0,
+      "worsened_vs_ordinary": 15
+    },
+    "stage2_and_selection": {
+      "failures": 0,
+      "fallback_failures": 0,
+      "rescued": 21,
+      "worsened": 0,
+      "paired_binomial_p": null,
+      "single_failures": 0,
+      "double_failures": 0,
+      "rescued_vs_ordinary": 0,
+      "worsened_vs_ordinary": 0
+    },
+    "ordinary_fallback": {
+      "failures": 0,
+      "fallback_failures": 0,
+      "rescued": 21,
+      "worsened": 0,
+      "paired_binomial_p": null,
+      "single_failures": 0,
+      "double_failures": 0,
+      "rescued_vs_ordinary": 0,
+      "worsened_vs_ordinary": 0
+    }
+  }
+}

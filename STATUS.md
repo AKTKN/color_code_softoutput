@@ -1,3 +1,269 @@
+## BP stage-1-only priors and native integration (2026-09-30)
+
+The user requested BP posterior generation in stage 1 only, with original
+physical X/Z priors for stage 2 and final candidate selection. BP fallback
+now enforces original stage 2 and `original_dem` selection, independently of
+ordinary decoder options. Perturbation/guide generation retains posterior
+priors and existing RNG scheme/cursors. Converged BP handling and ordinary
+no-BP decoding remain unchanged. Global BP state/log version is 4; reject
+version-2/3 saved states. Native perturbation scheme stays 2.
+
+All-package acceptance: simulator 399 passed; decoder 358 passed, two existing
+skips. Production predictions match the independent hybrid-policy reference
+on all 7,740 archived shots. See
+`notes/support/bp_original_prior_implementation_20260930/report.md`.
+The user authorized publication on `bp_predecoding` and integration with
+`codex/native-stage1-perturbation-20260929`; do not merge main or overwrite
+uncommitted changes in the original workspace.
+
+# BP publication integration (2026-09-30)
+
+Prepared `bp_predecoding` in the simulator, decoder and PyMatching repos.
+Integrated the original workspace's later BP analysis correction and tests:
+saved True count / all physical shots, unchanged baseline selection, validated
+BP null masks and scored-only soft-output statistics. Included circuit-round
+documentation, example config, official surface smoke scripts and numerical
+audit reports. Original notebook outputs and generated datasets remain local.
+See [release notes](notes/support/BP_PREDECODING_RELEASE.md).
+
+Publication validation: decoder **345 passed / 2 existing skips**. Simulator
+full suite **398 passed** with one outdated plot assertion: zero LER is
+intentionally hidden on a log axis. Updated that assertion to check the
+retained zero rate and finite interval in the plotted source table; both BP
+workflow/analysis test modules then pass **38 tests**. No production change
+followed the full-suite run. Decoder correction commit: `bd2ed2a`; PyMatching
+BP implementation commit: `0f143d6f9`.
+
+# BP negative-log X/Z weighting (2026-09-29)
+
+Follow-up audit of the user's 23:27 run confirms application through exact
+first-chunk replay at all 36 points. On archived d5 double faults, failures
+change 23 -> 21, while ordinary decoding has 0. All 126 stages of the 21
+failures pass independent exhaustive minimum-weight checks; the derived CSS
+objective strictly favors the wrong logical class in all 21. No production
+change was made by that audit. See the
+[report](notes/support/bp_negative_log_audit_20260929/report.md).
+
+Implemented the user's requested order: uncapped global BP posteriors ->
+independent-XOR X/Z mechanism aggregation -> -log(p) -> effective prior
+p/(1+p) -> existing color/stage decomposition. Global BP state/log version
+is 3 (`negative_log_xz_probability`); native perturbation remains scheme 2.
+Old BP state is rejected explicitly. No-BP behavior, BP convergence,
+RNG/cursors, metrics/schema and historical runs are unchanged.
+
+Validation: **62 focused tests passed; full decoder 345 passed / 2 existing
+skips; root 386 passed**. Independent references check the transformation
+order, >0.5 and boundary probabilities, corrections and scores across all
+six strategy families, full/compact metrics, persistence and spawn workers.
+See [report](notes/support/bp_xz_negative_log_20260929.md). No LER campaign,
+backend rebuild, commit or publication was performed. Next task: user-run
+comparison under the new weighting rule; no improvement claim is established.
+
+# Expanded overall native stage-1 / Tesseract timing (2026-09-29)
+
+Completed the requested 30-shot overall API latency comparison with M=4/8/16/
+24/32 and Tesseract, uniform circuit p=.003, alpha=1, rounds=d. Groups ran
+sequentially: d=5,9,13,17 then d=7,11,15; one fresh process per distance
+released its graphs and search memory before the next point. Each distance
+shares the same 30 physical syndromes across all six decoders, with balanced
+rotating order. Timing covers syndrome input through final prediction;
+construction/sampling/warmup/statistics/diagnostics are separate.
+
+All 1,260 positive finite per-shot rows, 42 mean/min/max/median/std summaries,
+input/circuit/DEM hashes, process intervals and matching source hashes pass
+independent checks. All 1,050 native predictions match same-seed/shot-ID
+full-output diagnostics. Mean native latency is lower at d>=7 for all tested
+M; at d5 M4 is approximately tied, larger M favors Tesseract. At d7 M32,
+median order differs from mean order. Tesseract d17 mean/median/max are
+5578.305/2493.455/46760.684 ms. These finite samples do not establish matched
+accuracy or universal speed ratios.
+
+Report, group/point raw data, models, provenance, CSVs and report figures
+(PNG/PDF, overview also SVG) are entirely under
+`results/decoder_timing_native_stage1_tesseract_20260929_143813/`.
+Measurement and report-generation programs were deleted; implementation,
+YAML and existing data were unchanged. Results remain local and Git-ignored.
+
+# Native stage-1 / Tesseract paired timing (2026-09-29)
+
+Completed the requested current-environment comparison at d=9,13, rounds=d,
+uniform circuit noise p=.003, alpha=1, native M=8/16, 20 shared shots per
+distance. Warm prediction-only compact single-shot decode means (ms) are
+d9: 4.177 / 7.387 / Tesseract 17.948; d13: 12.642 / 23.932 / Tesseract
+559.282. The report includes observed min/max and medians, Tesseract's
+existing beam20/pqlimit1M/21-order settings, initialization, inputs and exact
+source/binary provenance. Tesseract's d13 maximum is 2771.277 ms; 20-shot
+mean ratios do not establish universal speed or LER superiority.
+
+All 80 measured native predictions match same-seed/shot-ID full-output batch
+diagnostics. All 120 timing rows and six summary rows pass independent CSV
+statistics/pairing/order checks. Measurement programs were deleted; decoder
+sources and YAML were unchanged. Report and artifacts:
+`notes/support/native_stage1_tesseract_timing_20260929/`.
+
+# Requested scalar experiment output (2026-09-29)
+
+Implemented the authorized decoder metrics API and switched the YAML worker
+to full_output=False by default. It derives requested fields from the saved
+schema and receives only `(shots,)` arrays. Matching, priors, member 0,
+RNG/cursors, original scoring, baseline/ties and final stored fields retain
+their semantics. SWIM is reduced inside candidate processing using the
+existing geometry backend; native batch views and relift aliases are reused.
+A cached plain decoder can prepare circuit SWIM when it is first requested.
+Explicit full_output=True retains the diagnostic path.
+
+Validation: **root 361 passed; decoder 308 passed / two existing skips**.
+Exact same-shot comparisons cover every saved column and dtype, Parquet
+tables, superdense, comparative, spatial/circuit SWIM, both perturbation
+methods, relifting, M1/alpha0, zero ties, split/empty batches and recovery.
+Requested output does not allocate all-candidate correction exports; warm
+native matching factories are not called. PyMatching is unchanged.
+
+Report/CSV/checksums/environment and tested source hashes:
+`notes/support/compact_experiment_metrics_20260929/`. Against pre-change
+6a6bd8b full-output sources, native M12/N10 traced allocation peaks decrease
+~79.5% (~83.1% comparative). Runtime is **mixed**: basic d9/d13 increases
+34.4%/15.7%; d17 decreases 2.8%. Comparative decreases 0.7–5.5%.
+These allocation reductions are not process-wide RSS reductions, and copy
+costs were not isolated. On-disk data were already compact; their size/schema
+is unchanged. Timing programs, temporary old sources and probe files removed.
+
+# Native stage-1 perturbation implementation (2026-09-29)
+
+Completed the user-approved three-package plan. PyMatching supplies shot-major
+ensembles from original decomposed stage-1 priors, a pristine solver and a
+reusable work solver. Both MatchingGraph and SearchGraph weight slots are
+updated with existing quantization/normalization rules; queues and arenas
+reset safely, including recovery after failed syndromes. False retains
+ordinary/SWIM/path-gap APIs. Native unsupported cases fail explicitly.
+
+ColorCode/decoder `stage1_perturbation=True` canonicalizes effective prior
+flags, preserves member 0 and final outputs, shares draws across comparative
+classes and reuses original stage-2 matchings. False retains checkpoint
+original-DEM perturbation. Seed, scheme and cursor survive save/load; legacy
+files default False. Root YAML/planner/worker/metadata integration forwards
+absolute shot indices and shares one resolved entropy seed across workers.
+The dedicated config is `configs/native_stage1_perturbation_comparison.yaml`;
+main.yaml and physical Stim sampling are unchanged.
+
+Before publication: decoder 231 passed/two existing skips, root 318,
+PyMatching Python 117 and C++ 95 passed. Final: **root 325; decoder 252/two
+existing skips; PyMatching Python 129 and C++ 99 passed**. C++ ASan/UBSan/leak
+checks pass. Independent random/fresh matching/full-pipeline oracles,
+all candidates/scoring, M1/alpha0, boundaries/ties/>64 fault IDs, recovery,
+SWIM/validity, batching, worker 1/2, cache recreation and persistence pass.
+
+Bounded d9/13/17, uniform p=.001, rounds=d, M1/12, alpha1, N1/10, three-repeat
+evidence: `notes/support/native_stage1_perturbation_20260929/`. M12/full-output/
+10-shot native means are **3.499/10.171/25.956 ms/shot**, **11.61/11.77/11.66x**
+faster than same-law fresh stage-1 builds and **24.58/27.72/41.83x** faster
+than original-DEM perturbation with fixed stage 2. The latter changes the
+candidate law and does not establish a LER improvement. M1 shows no consistent
+runtime improvement. Warm native factory/C++ builds are zero in both stages.
+Cold setup, profiles, RSS, raw CSVs and source/environment hashes are separate.
+Timing programs and temporary checkpoint/data/child JSONs were deleted.
+
+Published checkpoints on `codex/per-shot-runtime-20260929`: root `5c7d355`,
+decoder `ddfd777`. All three feature branches are
+`codex/native-stage1-perturbation-20260929`, based on these checkpoints and
+PyMatching `7a26e6a8e`. Exact dependency SHAs:
+`notes/support/native_stage1_perturbation_20260929/dependencies.json`.
+No main merge, larger campaign or new soft-output theorem was performed.
+
+## Follow-up: comparison with pre-resampling fixed ensemble — 2026-09-29
+
+The prior 24.58–41.83x figures compared native stage 1 with the checkpoint's
+per-shot original-DEM resampling implementation. For the user's requested
+pre-resampling baseline, the existing `legacy_fixed_072a87d` measurements
+give 31.476 ms/shot (d9, batch 10), 89.028 ms/shot (d13, batch 10), and
+1621.377 ms/shot (d17, batch 1), all M12/full-output. Corresponding native
+means are 3.499, 10.171, and 28.127 ms/shot: 9.00x, 8.75x, and 57.64x shorter
+decode time in those records. The old values are one repeat from 2026-09-28;
+native values are three repeats from 2026-09-29 on separate Stim inputs.
+The old fixed ensemble perturbed stage 2 too; native mode fixes original stage
+2. This is an integrated workflow comparison, not an isolated estimate of
+resampling overhead. Data and ratios:
+`notes/support/native_stage1_perturbation_20260929/pre_resampling_fixed_ensemble_comparison.csv`.
+
+# Direct stage-1 perturbation probe (2026-09-28)
+
+Answered the user's performance question with a temporary in-memory sampler
+prototype, leaving production decoder source unchanged. d9/d13, M12, uniform
+p=.001, rounds=d, full_output=True, steady 10-shot batch: original-DEM perturbation
+with original stage2 takes 85.16/250.11 ms per shot; direct stage1-prior
+perturbation with original stage2 takes 58.07/150.51 ms, a 1.47/1.66x speedup.
+Both still construct 33 new stage1 weighted matchings per shot. Input-array
+mutation does not update an already constructed PyMatching object; native
+replacement invalidates/prepares the internal MWPM on the next decode.
+
+An additional prototype preserves original-DEM draws and outputs but skips
+unused stage2 probability/sorting/map computation: 64.37/191.73 ms per shot,
+with every full-output field exactly equal to the current original-stage2
+mode. All candidate syndromes in all probe calls pass independent parity
+checks. Direct stage1 is a different candidate-generation rule, including
+different cross-color prior correlations; no LER conclusion is drawn.
+The report, 40 raw rows and environment are in
+`notes/support/decoder_runtime_optimization_20260928/stage1_direct_probe.md`.
+Program and temporary directory were deleted. No production mode was added,
+no commit/push and no campaign. The earlier 6–7x historical slowdown measured
+perturbed stage2, not the original-stage2 setting.
+
+# Per-shot perturbation runtime implementation (2026-09-28)
+
+Implemented the corrected runtime prompt locally on
+`external_libs/color-code-stim/` main, starting at `072a87d`. Each shot/member
+receives a fresh common-X/Z-DEM perturbation shared across colors and logical
+hypotheses. RNG/cursor state resumes after save/load; M1/alpha0 retain original
+batched arithmetic. Six fixed base matchings, exact dynamic LRU32 plus
+current-shot references, symbolic probability/source plans and hard-output
+retention reductions remove repeated fixed work while preserving dynamic
+column ordering, source maps, candidate scoring/selection, guide and SWIM rules.
+
+Independent fresh DEM/decomposition/matching oracles match all per-shot
+outputs; pristine fixtures match all unaffected modes. Final decoder suite:
+231 passed, two existing skips; root suite: 318 passed. Mutation/ties,
+comparative graph sharing, chunk/empty/single calls, persistence and allocation
+regressions pass. PyMatching, configs, saved runs and other feature worktrees
+are unchanged. No native weight mutation, new threading or installation.
+
+Bounded d=9/13/17, uniform p=.001, rounds=d timings, environment, raw CSVs
+and audit are in `notes/support/decoder_runtime_optimization_20260928/`.
+M1 full-output/10shot improves 6.3–9.4x (84–89% shorter) against pristine
+main. Same-spec M12 improves 37–64x against uncached per-shot reconstruction.
+Historical fixed-ensemble M12 batches are a different comparison: new
+full-output/10shot is 6.0–7.1x slower at d9/d13 because it constructs 660
+graphs rather than sharing 72 across that batch. Warm/initialization and
+resident memory are recorded separately. This is finite runtime evidence,
+not an asymptotic/LER claim. Measurement scripts and temporary reference
+packages were deleted after execution. No commit/push or campaign was done.
+
+# Historical runtime-optimization prompt correction (2026-09-28)
+
+Created `prompts/codex_decoder_runtime_optimization_prompt.md` from the supplied
+optimization prompt. The user requires fresh independent original-X/Z-DEM
+perturbations for every shot, with each shot/member draw shared across colors
+and comparative hypotheses. Revised cache expectations, bounded dynamic
+storage, RNG/chunk/output equivalence tests, persistence checks and benchmark
+comparisons accordingly. At this checkpoint the decoder still used a fixed
+ensemble; the prompt identifies per-shot resampling as the authorized semantic
+correction and requires optimization equivalence against an uncached per-shot
+reference using identical draws. Document consistency checks pass. No decoder
+implementation, sampling campaign, test suite, or benchmark was run for this
+prompt-editing request.
+
+# Decoder timing scaling (2026-09-28)
+
+Measured paired 10-shot wall times at d=9,11,13,15,17 with uniform circuit
+noise p=0.001 and rounds=d for perturbation M=12/M=1 and Tesseract. The report,
+scaling figure, 215-row summary CSV, 150-row per-shot CSV and initialization
+CSV are in `notes/support/decoder_timing_scaling_20260928/`. Includes stagewise
+PyMatching API/native call times, graph construction, candidate evaluation,
+residual work and per-call averages. All call counts, wrapper prediction/weight
+equivalence and CSV arithmetic checks pass. At d=17, Tesseract's mean
+166.756 ms is affected by a 931.803 ms shot; its median is 78.216 ms.
+Temporary scripts/instrumentation were removed; decoder source and YAML
+remain unchanged. These bounded timings do not establish asymptotic scaling.
+
 # Ensemble-size figure (2026-09-28)
 
 Added `analysis/ensemble_size.py` with parameter-based ensemble-size tables
@@ -1438,3 +1704,29 @@ three focused suites (37 passed). The bounded test run covers both score
 bases and a two-shot reduced grid. No commit, push or campaign was performed.
 The full root suite passed (260 tests) and the full decoder suite passed
 (156 tests, two existing skips). Both repositories passed `git diff --check`.
+# Global DEM BP predecoding (2026-09-29)
+
+Implemented the authorized global-BP flow and root package integration in
+the isolated `color_code_softoutput_bp_global` worktree; all three repositories
+use `codex/global-bp-predecoding-20260929`. BP runs on the unsplit global DEM
+before CSS preparation. Converged shots use global observable corrections;
+other shots use capped posterior priors, exact XOR contraction, aligned
+X/Z/color decomposition and the configured ordinary/advanced strategy.
+Logical labels follow X/Z memory; Y and cultivation BP are explicitly unsupported.
+Native BP perturbation uses explicit post-perturbation probability clipping
+to 0.5 (scheme version 2), preserving baseline and RNG draws.
+
+YAML adds bp_predecoding/bp_prms and bp_converged.parquet. Concatenated fields
+are null exactly on BP-converged shots. Analysis states its nonconverged-shot
+scope and retains physical/converged counts. Global BP seed/cursor survive
+save/load and skipped/split/spawn processing. ldpc 2.4.1 was installed in
+color_code_so, with no broken pip requirements. Original workspace user
+changes are preserved. Toy distribution enumeration, original CSS marginal
+consistency, posterior column reordering, physical correction validity,
+native clipping, same-shot full/compact output, storage and real spawn tests
+pass. Final acceptance: root **386**, decoder **336 / two existing skips**,
+PyMatching Python **131**, C++ **100**. The d5/T5 bounded correction checks
+pass for X/Z memory, superdense, comparative and native ensembles. Both BP
+scheme-2 and ordinary scheme-1 native runs retain per-point version metadata.
+Source commits and acceptance hashes are recorded in
+`notes/support/global_bp_predecoding_20260929/report.md`.

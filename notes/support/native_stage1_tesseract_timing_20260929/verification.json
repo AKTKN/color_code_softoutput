@@ -1,0 +1,37 @@
+{
+  "d9_M8": {
+    "compact_single_shot_matches_full_batch": true,
+    "native_ensemble_class": "NativeStage1Ensemble",
+    "native_matchers": 3,
+    "enable_prior_perturbation": true,
+    "use_original_prior_for_stage2": true
+  },
+  "d9_M16": {
+    "compact_single_shot_matches_full_batch": true,
+    "native_ensemble_class": "NativeStage1Ensemble",
+    "native_matchers": 3,
+    "enable_prior_perturbation": true,
+    "use_original_prior_for_stage2": true
+  },
+  "d13_M8": {
+    "compact_single_shot_matches_full_batch": true,
+    "native_ensemble_class": "NativeStage1Ensemble",
+    "native_matchers": 3,
+    "enable_prior_perturbation": true,
+    "use_original_prior_for_stage2": true
+  },
+  "d13_M16": {
+    "compact_single_shot_matches_full_batch": true,
+    "native_ensemble_class": "NativeStage1Ensemble",
+    "native_matchers": 3,
+    "enable_prior_perturbation": true,
+    "use_original_prior_for_stage2": true
+  },
+  "csv_audit": {
+    "per_shot_rows": 120,
+    "summary_rows": 6,
+    "statistics_recomputed": true,
+    "paired_input_metadata": true,
+    "rotating_order_checked": true
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "start_utc": "2026-09-28T14:29:53.759940+00:00",
+  "sha256": "29a7f2420cc548fad80b847ebc3f3045c2f9c4358ce0933782b6c456a35329c3",
+  "end_utc": "2026-09-28T14:33:18.564905+00:00",
+  "M1": "all fields/predictions bitwise equal to pristine 072a87d for each pair",
+  "M12": "first ensemble bitwise equal; subsequent legacy fixed vs new independently resampled ensembles have different semantics"
+}

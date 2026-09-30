@@ -1,0 +1,938 @@
+[
+  {
+    "index": 103,
+    "actual": false,
+    "current": true,
+    "hybrid": true,
+    "current_candidates": [
+      true,
+      true,
+      true
+    ],
+    "hybrid_candidates": [
+      true,
+      true,
+      true
+    ],
+    "current_posterior_scores": [
+      14.93979059338096,
+      14.93979059338096,
+      14.93979059338096
+    ],
+    "hybrid_posterior_scores": [
+      23.009383320086247,
+      14.93979059338096,
+      15.615546031229036
+    ],
+    "current_physical_scores": [
+      13.469183319945893,
+      13.469183319945893,
+      13.469183319945893
+    ],
+    "hybrid_physical_scores": [
+      13.469183319945893,
+      13.469183319945893,
+      13.469183319945893
+    ]
+  },
+  {
+    "index": 244,
+    "actual": false,
+    "current": false,
+    "hybrid": true,
+    "current_candidates": [
+      false,
+      false,
+      false
+    ],
+    "hybrid_candidates": [
+      false,
+      false,
+      true
+    ],
+    "current_posterior_scores": [
+      17.59328804770477,
+      17.59328804770477,
+      17.59328804770477
+    ],
+    "hybrid_posterior_scores": [
+      17.59328804770477,
+      33.140718276787574,
+      21.670230519097736
+    ],
+    "current_physical_scores": [
+      16.836479149932366,
+      16.836479149932366,
+      16.836479149932366
+    ],
+    "hybrid_physical_scores": [
+      16.836479149932366,
+      16.836479149932366,
+      13.469183319945893
+    ]
+  },
+  {
+    "index": 267,
+    "actual": false,
+    "current": true,
+    "hybrid": false,
+    "current_candidates": [
+      true,
+      true,
+      true
+    ],
+    "hybrid_candidates": [
+      false,
+      true,
+      true
+    ],
+    "current_posterior_scores": [
+      4.077839971552584,
+      1.3865917604432818,
+      1.3865917604432818
+    ],
+    "hybrid_posterior_scores": [
+      4.094344563695753,
+      1.3865917604432818,
+      1.3865917604432818
+    ],
+    "current_physical_scores": [
+      10.10188748995942,
+      10.10188748995942,
+      10.10188748995942
+    ],
+    "hybrid_physical_scores": [
+      6.7345916599729465,
+      10.10188748995942,
+      10.10188748995942
+    ]
+  },
+  {
+    "index": 325,
+    "actual": true,
+    "current": false,
+    "hybrid": true,
+    "current_candidates": [
+      true,
+      false,
+      false
+    ],
+    "hybrid_candidates": [
+      true,
+      true,
+      true
+    ],
+    "current_posterior_scores": [
+      10.96127784668399,
+      8.28712919725746,
+      6.9008348361375695
+    ],
+    "hybrid_posterior_scores": [
+      41.95357206147385,
+      16.98533058338512,
+      15.59903622226523
+    ],
+    "current_physical_scores": [
+      26.938366639891786,
+      30.30566246987826,
+      23.57107080990531
+    ],
+    "hybrid_physical_scores": [
+      20.20377497991884,
+      20.20377497991884,
+      13.469183319945893
+    ]
+  },
+  {
+    "index": 358,
+    "actual": true,
+    "current": false,
+    "hybrid": true,
+    "current_candidates": [
+      false,
+      false,
+      false
+    ],
+    "hybrid_candidates": [
+      false,
+      false,
+      true
+    ],
+    "current_posterior_scores": [
+      4.753595320955675,
+      4.753595320955675,
+      4.753595320955675
+    ],
+    "hybrid_posterior_scores": [
+      4.753595320955675,
+      8.81373580540691,
+      8.81373580382846
+    ],
+    "current_physical_scores": [
+      10.10188748995942,
+      10.10188748995942,
+      10.10188748995942
+    ],
+    "hybrid_physical_scores": [
+      10.10188748995942,
+      10.10188748995942,
+      6.7345916599729465
+    ]
+  },
+  {
+    "index": 471,
+    "actual": false,
+    "current": true,
+    "hybrid": false,
+    "current_candidates": [
+      true,
+      true,
+      false
+    ],
+    "hybrid_candidates": [
+      false,
+      true,
+      false
+    ],
+    "current_posterior_scores": [
+      5.44673737166631,
+      5.44673737166631,
+      8.13739583005665
+    ],
+    "hybrid_posterior_scores": [
+      8.13739583005665,
+      5.44673737166631,
+      8.13739583005665
+    ],
+    "current_physical_scores": [
+      10.10188748995942,
+      10.10188748995942,
+      6.7345916599729465
+    ],
+    "hybrid_physical_scores": [
+      6.7345916599729465,
+      10.10188748995942,
+      6.7345916599729465
+    ]
+  },
+  {
+    "index": 478,
+    "actual": false,
+    "current": true,
+    "hybrid": false,
+    "current_candidates": [
+      true,
+      false,
+      true
+    ],
+    "hybrid_candidates": [
+      true,
+      false,
+      false
+    ],
+    "current_posterior_scores": [
+      2.8403918255911442,
+      11.029080950035345,
+      2.8403918255911447
+    ],
+    "hybrid_posterior_scores": [
+      2.8403918255911442,
+      41.953572061473864,
+      17.62718446955751
+    ],
+    "current_physical_scores": [
+      20.20377497991884,
+      33.67295829986473,
+      20.20377497991884
+    ],
+    "hybrid_physical_scores": [
+      20.20377497991884,
+      20.20377497991884,
+      16.836479149932366
+    ]
+  },
+  {
+    "index": 509,
+    "actual": false,
+    "current": false,
+    "hybrid": true,
+    "current_candidates": [
+      false,
+      false,
+      true
+    ],
+    "hybrid_candidates": [
+      false,
+      true,
+      true
+    ],
+    "current_posterior_scores": [
+      15.684231068328454,
+      15.684231068328454,
+      17.699134088870718
+    ],
+    "hybrid_posterior_scores": [
+      30.5049252639705,
+      17.699134088870718,
+      17.699134088870718
+    ],
+    "current_physical_scores": [
+      23.571070809905315,
+      23.571070809905315,
+      20.20377497991884
+    ],
+    "hybrid_physical_scores": [
+      23.571070809905315,
+      20.20377497991884,
+      20.20377497991884
+    ]
+  },
+  {
+    "index": 542,
+    "actual": false,
+    "current": true,
+    "hybrid": true,
+    "current_candidates": [
+      true,
+      true,
+      true
+    ],
+    "hybrid_candidates": [
+      true,
+      true,
+      true
+    ],
+    "current_posterior_scores": [
+      4.11144907831019,
+      4.11144907831019,
+      4.11144907831019
+    ],
+    "hybrid_posterior_scores": [
+      4.11144907831019,
+      4.11144907831019,
+      4.11144907831019
+    ],
+    "current_physical_scores": [
+      10.10188748995942,
+      10.10188748995942,
+      10.10188748995942
+    ],
+    "hybrid_physical_scores": [
+      10.10188748995942,
+      10.10188748995942,
+      10.10188748995942
+    ]
+  },
+  {
+    "index": 617,
+    "actual": true,
+    "current": false,
+    "hybrid": false,
+    "current_candidates": [
+      false,
+      false,
+      false
+    ],
+    "hybrid_candidates": [
+      false,
+      false,
+      false
+    ],
+    "current_posterior_scores": [
+      8.796938856765165,
+      8.796938856765165,
+      8.796938856765165
+    ],
+    "hybrid_posterior_scores": [
+      8.796938856765165,
+      20.301030504470003,
+      8.796938856765165
+    ],
+    "current_physical_scores": [
+      10.10188748995942,
+      10.10188748995942,
+      10.10188748995942
+    ],
+    "hybrid_physical_scores": [
+      10.10188748995942,
+      10.10188748995942,
+      10.10188748995942
+    ]
+  },
+  {
+    "index": 636,
+    "actual": false,
+    "current": true,
+    "hybrid": true,
+    "current_candidates": [
+      true,
+      true,
+      true
+    ],
+    "hybrid_candidates": [
+      true,
+      true,
+      true
+    ],
+    "current_posterior_scores": [
+      13.604789526648618,
+      13.604789526648618,
+      13.604789526648618
+    ],
+    "hybrid_posterior_scores": [
+      13.604789526648618,
+      13.604789526648618,
+      13.604789526648618
+    ],
+    "current_physical_scores": [
+      13.469183319945893,
+      13.469183319945893,
+      13.469183319945893
+    ],
+    "hybrid_physical_scores": [
+      13.469183319945893,
+      13.469183319945893,
+      13.469183319945893
+    ]
+  },
+  {
+    "index": 676,
+    "actual": true,
+    "current": false,
+    "hybrid": false,
+    "current_candidates": [
+      false,
+      false,
+      true
+    ],
+    "hybrid_candidates": [
+      false,
+      false,
+      true
+    ],
+    "current_posterior_scores": [
+      8.881836305003525,
+      8.881836305004038,
+      9.574983485563632
+    ],
+    "hybrid_posterior_scores": [
+      8.881836305004038,
+      8.881836305004038,
+      12.28303368666569
+    ],
+    "current_physical_scores": [
+      16.836479149932366,
+      16.836479149932366,
+      20.20377497991884
+    ],
+    "hybrid_physical_scores": [
+      16.836479149932366,
+      16.836479149932366,
+      20.20377497991884
+    ]
+  },
+  {
+    "index": 704,
+    "actual": false,
+    "current": true,
+    "hybrid": false,
+    "current_candidates": [
+      true,
+      true,
+      true
+    ],
+    "hybrid_candidates": [
+      true,
+      true,
+      false
+    ],
+    "current_posterior_scores": [
+      4.7538876773498195,
+      4.7538876773498195,
+      4.7538876773498195
+    ],
+    "hybrid_posterior_scores": [
+      4.770684712937411,
+      4.770684712937411,
+      4.770392181099271
+    ],
+    "current_physical_scores": [
+      10.10188748995942,
+      10.10188748995942,
+      10.10188748995942
+    ],
+    "hybrid_physical_scores": [
+      10.10188748995942,
+      10.10188748995942,
+      6.7345916599729465
+    ]
+  },
+  {
+    "index": 818,
+    "actual": true,
+    "current": false,
+    "hybrid": false,
+    "current_candidates": [
+      false,
+      false,
+      false
+    ],
+    "hybrid_candidates": [
+      false,
+      false,
+      false
+    ],
+    "current_posterior_scores": [
+      9.574983485564092,
+      8.1886891244442,
+      8.1886891244442
+    ],
+    "hybrid_posterior_scores": [
+      11.589886506106355,
+      8.1886891244442,
+      8.1886891244442
+    ],
+    "current_physical_scores": [
+      20.20377497991884,
+      13.469183319945893,
+      13.469183319945893
+    ],
+    "hybrid_physical_scores": [
+      16.836479149932366,
+      13.469183319945893,
+      13.469183319945893
+    ]
+  },
+  {
+    "index": 934,
+    "actual": false,
+    "current": true,
+    "hybrid": false,
+    "current_candidates": [
+      false,
+      false,
+      true
+    ],
+    "hybrid_candidates": [
+      false,
+      false,
+      true
+    ],
+    "current_posterior_scores": [
+      9.574983485564092,
+      10.896739325546417,
+      8.881836305004146
+    ],
+    "hybrid_posterior_scores": [
+      10.896739325546417,
+      10.896739325546417,
+      8.881836305004146
+    ],
+    "current_physical_scores": [
+      20.20377497991884,
+      13.469183319945893,
+      16.836479149932366
+    ],
+    "hybrid_physical_scores": [
+      13.469183319945893,
+      13.469183319945893,
+      16.836479149932366
+    ]
+  },
+  {
+    "index": 975,
+    "actual": false,
+    "current": true,
+    "hybrid": true,
+    "current_candidates": [
+      true,
+      true,
+      true
+    ],
+    "hybrid_candidates": [
+      true,
+      true,
+      true
+    ],
+    "current_posterior_scores": [
+      7.4955419438842545,
+      7.4955419438842545,
+      7.4955419438842545
+    ],
+    "hybrid_posterior_scores": [
+      7.4955419438842545,
+      7.4955419438842545,
+      7.4955419438842545
+    ],
+    "current_physical_scores": [
+      10.10188748995942,
+      10.10188748995942,
+      10.10188748995942
+    ],
+    "hybrid_physical_scores": [
+      10.10188748995942,
+      10.10188748995942,
+      10.10188748995942
+    ]
+  },
+  {
+    "index": 981,
+    "actual": true,
+    "current": false,
+    "hybrid": false,
+    "current_candidates": [
+      false,
+      false,
+      false
+    ],
+    "hybrid_candidates": [
+      false,
+      false,
+      false
+    ],
+    "current_posterior_scores": [
+      1.4037014033031636,
+      1.4037014033031636,
+      1.4037014033031636
+    ],
+    "hybrid_posterior_scores": [
+      1.4037014033031636,
+      1.4037014033031636,
+      1.4037014033031636
+    ],
+    "current_physical_scores": [
+      13.469183319945893,
+      13.469183319945893,
+      13.469183319945893
+    ],
+    "hybrid_physical_scores": [
+      13.469183319945893,
+      13.469183319945893,
+      13.469183319945893
+    ]
+  },
+  {
+    "index": 1465,
+    "actual": false,
+    "current": false,
+    "hybrid": true,
+    "current_candidates": [
+      false,
+      false,
+      false
+    ],
+    "hybrid_candidates": [
+      false,
+      false,
+      true
+    ],
+    "current_posterior_scores": [
+      8.881836305004146,
+      8.881836305004146,
+      8.881836305004146
+    ],
+    "hybrid_posterior_scores": [
+      8.881836305004146,
+      8.881836305004146,
+      10.89673932554641
+    ],
+    "current_physical_scores": [
+      16.836479149932366,
+      16.836479149932366,
+      16.836479149932366
+    ],
+    "hybrid_physical_scores": [
+      16.836479149932366,
+      16.836479149932366,
+      13.469183319945893
+    ]
+  },
+  {
+    "index": 1500,
+    "actual": false,
+    "current": true,
+    "hybrid": false,
+    "current_candidates": [
+      true,
+      true,
+      false
+    ],
+    "hybrid_candidates": [
+      false,
+      true,
+      false
+    ],
+    "current_posterior_scores": [
+      14.331838258886249,
+      13.010082418903522,
+      13.635426496114444
+    ],
+    "hybrid_posterior_scores": [
+      14.957182336096885,
+      14.991083887768596,
+      14.957182336096885
+    ],
+    "current_physical_scores": [
+      20.20377497991884,
+      26.938366639891786,
+      23.57107080990531
+    ],
+    "hybrid_physical_scores": [
+      16.836479149932366,
+      20.20377497991884,
+      16.836479149932366
+    ]
+  },
+  {
+    "index": 1613,
+    "actual": false,
+    "current": true,
+    "hybrid": false,
+    "current_candidates": [
+      true,
+      true,
+      true
+    ],
+    "hybrid_candidates": [
+      true,
+      false,
+      false
+    ],
+    "current_posterior_scores": [
+      8.881836305004146,
+      8.881836305004146,
+      8.881836305004146
+    ],
+    "hybrid_posterior_scores": [
+      8.881836305004146,
+      10.89673932554641,
+      20.301333118984033
+    ],
+    "current_physical_scores": [
+      16.836479149932366,
+      16.836479149932366,
+      16.836479149932366
+    ],
+    "hybrid_physical_scores": [
+      16.836479149932366,
+      13.469183319945893,
+      13.469183319945893
+    ]
+  },
+  {
+    "index": 1698,
+    "actual": false,
+    "current": true,
+    "hybrid": false,
+    "current_candidates": [
+      true,
+      true,
+      true
+    ],
+    "hybrid_candidates": [
+      true,
+      false,
+      true
+    ],
+    "current_posterior_scores": [
+      4.7538875904297555,
+      4.7538875904297555,
+      4.7538875904297555
+    ],
+    "hybrid_posterior_scores": [
+      8.81402807488099,
+      8.813735802329392,
+      4.7538875904297555
+    ],
+    "current_physical_scores": [
+      10.10188748995942,
+      10.10188748995942,
+      10.10188748995942
+    ],
+    "hybrid_physical_scores": [
+      10.10188748995942,
+      6.7345916599729465,
+      10.10188748995942
+    ]
+  },
+  {
+    "index": 1816,
+    "actual": true,
+    "current": false,
+    "hybrid": false,
+    "current_candidates": [
+      false,
+      false,
+      true
+    ],
+    "hybrid_candidates": [
+      false,
+      false,
+      true
+    ],
+    "current_posterior_scores": [
+      21.75957709941714,
+      21.75957709941714,
+      24.50152885219503
+    ],
+    "hybrid_posterior_scores": [
+      21.75957709941714,
+      24.467627300519347,
+      24.50152885219503
+    ],
+    "current_physical_scores": [
+      23.571070809905315,
+      23.571070809905315,
+      26.93836663989179
+    ],
+    "hybrid_physical_scores": [
+      23.571070809905315,
+      23.571070809905315,
+      26.93836663989179
+    ]
+  },
+  {
+    "index": 1899,
+    "actual": true,
+    "current": false,
+    "hybrid": false,
+    "current_candidates": [
+      false,
+      false,
+      false
+    ],
+    "hybrid_candidates": [
+      false,
+      false,
+      false
+    ],
+    "current_posterior_scores": [
+      7.495541943884255,
+      7.495541943884255,
+      7.495541943884255
+    ],
+    "hybrid_posterior_scores": [
+      7.495541943884255,
+      7.495541943884255,
+      7.495541943884255
+    ],
+    "current_physical_scores": [
+      10.10188748995942,
+      10.10188748995942,
+      10.10188748995942
+    ],
+    "hybrid_physical_scores": [
+      10.10188748995942,
+      10.10188748995942,
+      10.10188748995942
+    ]
+  },
+  {
+    "index": 1991,
+    "actual": true,
+    "current": false,
+    "hybrid": true,
+    "current_candidates": [
+      false,
+      false,
+      false
+    ],
+    "hybrid_candidates": [
+      true,
+      true,
+      false
+    ],
+    "current_posterior_scores": [
+      2.147244645031199,
+      2.147244645031199,
+      2.147244645031199
+    ],
+    "hybrid_posterior_scores": [
+      25.087337875827657,
+      16.934037288997562,
+      2.147244645031199
+    ],
+    "current_physical_scores": [
+      16.836479149932366,
+      16.836479149932366,
+      16.836479149932366
+    ],
+    "hybrid_physical_scores": [
+      13.469183319945893,
+      13.469183319945893,
+      16.836479149932366
+    ]
+  },
+  {
+    "index": 1997,
+    "actual": false,
+    "current": true,
+    "hybrid": true,
+    "current_candidates": [
+      true,
+      true,
+      true
+    ],
+    "hybrid_candidates": [
+      true,
+      true,
+      true
+    ],
+    "current_posterior_scores": [
+      10.203592144984729,
+      10.203592144984729,
+      10.203592144984729
+    ],
+    "hybrid_posterior_scores": [
+      10.203592144984729,
+      10.203592144984729,
+      10.203592144984729
+    ],
+    "current_physical_scores": [
+      10.10188748995942,
+      10.10188748995942,
+      10.10188748995942
+    ],
+    "hybrid_physical_scores": [
+      10.10188748995942,
+      10.10188748995942,
+      10.10188748995942
+    ]
+  },
+  {
+    "index": 2040,
+    "actual": false,
+    "current": true,
+    "hybrid": false,
+    "current_candidates": [
+      true,
+      true,
+      true
+    ],
+    "hybrid_candidates": [
+      true,
+      false,
+      true
+    ],
+    "current_posterior_scores": [
+      4.7538876773498195,
+      4.7538876773498195,
+      4.7538876773498195
+    ],
+    "hybrid_posterior_scores": [
+      4.770684712937411,
+      4.770392181099271,
+      4.770684712937411
+    ],
+    "current_physical_scores": [
+      10.10188748995942,
+      10.10188748995942,
+      10.10188748995942
+    ],
+    "hybrid_physical_scores": [
+      10.10188748995942,
+      6.7345916599729465,
+      10.10188748995942
+    ]
+  }
+]

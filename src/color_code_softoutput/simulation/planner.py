@@ -5,7 +5,7 @@ import hashlib
 from itertools import product
 import json
 
-from .config import WorkflowConfig
+from .config import WorkflowConfig, canonical_native_options
 from .task import ResolvedPoint
 
 
@@ -25,24 +25,25 @@ def run_directory_name(config: WorkflowConfig, timestamp: datetime) -> str:
 def plan_points(config: WorkflowConfig) -> tuple[ResolvedPoint, ...]:
     """Expand and preflight every point before any simulation starts."""
     sweep = config.sweep
+    common, decoders = canonical_native_options(config.color_code_options, config.decoders)
     rounds_axis = (None,) if sweep.rounds == "distance" else sweep.rounds
     points = []
     seen_names = set()
     seen_ids = set()
     for d, p, noise, rounds, circuit, schedule, decoder in product(
             sweep.distance, sweep.physical_error_rate, sweep.noise_model, rounds_axis,
-            sweep.circuit_type, sweep.cnot_schedule, config.decoders):
+            sweep.circuit_type, sweep.cnot_schedule, decoders):
         r = d if rounds is None else rounds
         semantic = {"distance": d, "physical_error_rate": p, "noise_model": noise,
                     "rounds": r, "circuit_type": circuit, "cnot_schedule": schedule,
-                    "decoder_type": decoder.type, "color_code_options": dict(config.color_code_options),
+                    "decoder_type": decoder.type, "color_code_options": dict(common),
                     "decoder_options": dict(decoder.options), "decode_options": dict(decoder.decode_options)}
         if decoder.decoder_alias is not None:
             semantic["decoder_alias"] = decoder.decoder_alias
         digest = hashlib.sha256(json.dumps(semantic, sort_keys=True, separators=(",", ":"),
                                          allow_nan=False).encode("utf-8")).hexdigest()
         point = ResolvedPoint(digest, decoder.type, d, p, noise, r, circuit, schedule,
-                              config.simulation.shots, config.color_code_options,
+                              config.simulation.shots, common,
                               decoder.options, decoder.decode_options, decoder.decoder_alias)
         name = point_directory_name(point)
         if name in seen_names or point.point_id in seen_ids:

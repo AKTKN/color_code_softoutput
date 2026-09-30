@@ -1,0 +1,59 @@
+{
+  "independent_gray_code_enumeration": "passed",
+  "pattern_count": 524288,
+  "structure": [
+    {
+      "d": 5,
+      "shape": [
+        18,
+        19
+      ],
+      "active_rows": 9,
+      "pauli_metadata": 2,
+      "global_equals_css": true,
+      "projection_groups_singleton": true
+    },
+    {
+      "d": 7,
+      "shape": [
+        36,
+        37
+      ],
+      "active_rows": 18,
+      "pauli_metadata": 2,
+      "global_equals_css": true,
+      "projection_groups_singleton": true
+    },
+    {
+      "d": 9,
+      "shape": [
+        60,
+        61
+      ],
+      "active_rows": 30,
+      "pauli_metadata": 2,
+      "global_equals_css": true,
+      "projection_groups_singleton": true
+    }
+  ],
+  "versions": {
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "stim": "1.16.0",
+    "ldpc": "2.4.1",
+    "pymatching": "2.2.dev2"
+  },
+  "sha256": {
+    "/home/quantum_teresheys/workspace/color_code_softoutput_bp_global/external_libs/color-code-stim/src/color_code_stim/decoders/bp_decoder.py": "bb9145a81e246dc716e22d22e66f5e1b8adf954a020723a5e1ba8599c4aa2f1a",
+    "/home/quantum_teresheys/workspace/color_code_softoutput_bp_global/external_libs/color-code-stim/src/color_code_stim/decoders/belief_concat_matching_decoder.py": "2fa0d02e0b20d0a7639d010d7c6483b4d006b282c05188229c86593a22d79062",
+    "/home/quantum_teresheys/workspace/color_code_softoutput_bp_global/external_libs/color-code-stim/src/color_code_stim/decoders/concat_matching_decoder.py": "e2a55523620b812018ce06f7909863f0dd0eae5030a75a9bb8ae7974e330febc",
+    "/home/quantum_teresheys/workspace/color_code_softoutput_bp_global/external_libs/color-code-stim/src/color_code_stim/dem_utils/global_dem.py": "b86db48f6bbb10c94e0a32bb34df57614095a1c40acd74e152975ea0689f608e",
+    "/home/quantum_teresheys/workspace/color_code_softoutput_bp_global/external_libs/color-code-stim/src/color_code_stim/dem_utils/dem_manager.py": "fe0e9261bb40f5c9fe012cc2019e93372638865d49d2283415b269a654e8a97b",
+    "/home/quantum_teresheys/workspace/color_code_softoutput_bp_global/external_libs/color-code-stim/src/color_code_stim/decoders/matching_cache.py": "18fab6b0e1bf0ec4708f161a1019318dcc55377cd4b30532494aa20fb45b591b"
+  },
+  "commits": {
+    "/home/quantum_teresheys/workspace/color_code_softoutput_bp_global": "666ade3e422a21eb019dbd9a2e9904daf8763f2e",
+    "/home/quantum_teresheys/workspace/color_code_softoutput_bp_global/external_libs/color-code-stim": "65ef2ad7514a3d67f5f286ef02a3abd5824cad97",
+    "/home/quantum_teresheys/workspace/color_code_softoutput_bp_global/external_libs/PyMatching": "0f143d6f9bb2683de5e8872fd6586f56065d0d22"
+  }
+}
