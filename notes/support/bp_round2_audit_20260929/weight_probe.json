@@ -1,0 +1,20 @@
+[
+  {
+    "inputs": "physical",
+    "count": 1596,
+    "failures": 18,
+    "converged_failures": 0,
+    "fallback_failures": 18,
+    "changed": 5,
+    "single_fail": 0,
+    "pair_fail": 18
+  },
+  {
+    "inputs": "paired",
+    "count": 2048,
+    "failures": 20,
+    "converged_failures": 1,
+    "fallback_failures": 19,
+    "changed": 7
+  }
+]

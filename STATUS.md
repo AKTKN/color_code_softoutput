@@ -1,3 +1,157 @@
+# BP stage-2 original-prior hypothesis (2026-09-30)
+
+Tested the user's hypothesis with exactly unchanged BP stage-1 solutions and
+original pre-BP physical stage-2 graphs, translating all source/virtual-row
+indices. Restoring both stage 2 and final color selection changes d5 exhaustive
+double-fault failures 21 -> 0; paired random failures d5 24 -> 15 and d7
+30 -> 18, equal to ordinary counts in those samples. Stage-2-only restoration
+gives 18/21/27 failures, so final selection matters. This is a diagnostic
+probe, not a new production option or a default change. No perturbation used.
+12,087 independent graph/weight alignments agree, and 63 stage-2 solves pass
+exhaustive GF(2) minimum checks. Full current-BP baselines reproduce exactly.
+See [report](notes/support/bp_stage2_original_prior_20260930/report.md).
+
+# Version-3 BP run audit (2026-09-29)
+
+Audited `results/bpmatching/26_09_29_23_27_44_9926fe3c`. Saved version-3
+metadata and exact first-calibration replay across all 36 points confirm
+the new rule; BP d5/p=.05 shot 1 distinguishes new from old weighting.
+The requested depolarizing/round-2 options and X/Z global mechanisms are
+present. Reusing archived d5 inputs gives old/new min_sum double-fault
+failures 23/21 (ordinary 0), and sampled failures 25/24 (ordinary 15).
+Independent physical injection/source checks pass. All 126 stage minima
+for the 21 failing double faults pass exhaustive GF(2) enumeration; exact
+CSS-sector optimization favors the wrong class in all 21. Hence no
+weight-propagation or matching-minimization bug is found in these cases;
+the BP/projection/objective combination remains the demonstrated issue.
+Diagnostic sum aggregation yields 23 double-fault / 22 sampled failures,
+so that difference alone does not fix it. No physical-code limitation is
+inferred. Source, options and experiment files are unchanged. See
+[audit](notes/support/bp_negative_log_audit_20260929/report.md).
+
+# BP negative-log X/Z weighting implemented (2026-09-29)
+
+The separate `../color_code_softoutput_bp_global` root/decoder worktrees now
+aggregate uncapped global posteriors into X/Z mechanisms with independent
+XOR, then encode -log(p) as p/(1+p) before color/stage decomposition.
+State/log version 3 records `negative_log_xz_probability`; native scheme 2
+and no-BP behavior remain unchanged. Previous version-2 state is explicitly
+rejected. This implements the user's specified transformation location;
+the aggregation rule itself remains XOR. Decoder 345 passed / 2 existing
+skips; root 386 passed; focused 62 passed. See
+[implementation and validation](../color_code_softoutput_bp_global/notes/support/bp_xz_negative_log_20260929.md).
+No LER study, backend rebuild, commit or push was performed. Existing result
+files are unchanged. Next task: user-run comparison using the new rule.
+
+# Posterior projection isolation (2026-09-29)
+
+Reused official surface-code smoke inputs to vary only pre-matching global
+probability cap and CSS aggregation. Independent geometric sector projection
+matches the official incidence map. BP, convergence decisions, topology,
+-log weights and matching remain fixed. Official/cap+XOR failures:
+d5 product_sum 107/107, min_sum 113/107; d7 product_sum 43/45, min_sum 60/59.
+All variants retain improvement over MWPM 161/90. Official replay matches
+all archived predictions and flags; independent saved-array recount passes.
+Thus this preprocessing difference alone is not established as the cause of
+color-code degradation. It remains a posterior-independence approximation;
+subsequent log-odds/concatenated behavior and posterior quality are separate.
+No resampling or production source/config change. Report and reproducers:
+surface_code_test/results/beliefmatching_smoke_20260929/projection_probe/.
+
+# Official surface-code BeliefMatching smoke (2026-09-29)
+
+Ran the unmodified official library at 4458c278 with isolated upstream
+PyMatching 2.3.1 and existing ldpc 2.4.1. Rotated Z-memory code capacity,
+one data-depolarizing layer p=.05 between two perfect extractions, X/Z
+detectors present. Same 20,000 shots per distance across all three methods:
+d5 MWPM/product_sum/min_sum failures 161/107/113; d7 90/43/60. All counts
+include BP-converged failures. Paired rescued/worsened counts favor both BP
+methods; this is finite evidence, not a threshold or color-code conclusion.
+All physical single-Pauli checks pass; independent saved-array recount passes.
+
+Reproducer: surface_code_test/scripts/beliefmatching_smoke.py.
+Report, pinned provenance, circuits, DEMs and raw paired arrays:
+surface_code_test/results/beliefmatching_smoke_20260929/.
+Existing Conda installation and project decoder sources are unchanged.
+Next: min_sum alone does not explain the color-code degradation; compare
+its posterior-to-matching adaptation separately if pursuing the cause.
+
+# Two-round BP follow-up audit (2026-09-29)
+
+Saved run 9926fe3c correctly enables rounds=2, perfect-first extraction and
+both detector sectors. Actual BP matrices retain joint X/Z mechanisms;
+there is one depolarizing layer. No additional option-forwarding/source-map
+bug was found in the bounded checks. Missing full converged-shot failure
+labels remain an evaluation defect; the all-shot denominator is unchanged.
+
+Independent physical fault insertion at d5,p=.03: all 57 singles pass;
+1,539 distinct-qubit double Pauli patterns give ordinary/min_sum/product_sum/
+min_sum-scale-.625 failures 0/23/12/6. Direct ldpc agrees for all 1,596 inputs
+in each variant. Nineteen of 23 min_sum failures have three wrong color
+candidates; uncapping rescues none of those 23. A -log(p) objective probe
+retaining cap/XOR gives 18 double failures. The circuit fix alone was never
+evidence that BP accuracy would improve.
+
+Paired d5,p=.05,2,048-shot bounded diagnostic: total failures 15/25/19/17;
+-log probe 20. Includes converged failures, which current storage omits.
+This small sample does not establish precise LER ratios or a universal best
+setting. Source hashes unchanged; no production/config/data changes.
+Report, independent checks and retained inputs:
+`notes/support/bp_round2_audit_20260929/`. Next: preserve total error outcomes
+before controlled BP/fallback comparisons; no large campaign performed.
+
+# Simulator README clarification (2026-09-29)
+
+Documented total versus noisy extraction rounds, first-round Z-only detectors
+for triangular Z memory, and the existing two-round/perfect-first configuration
+for one depolarizing layer with both X/Z detectors. The YAML keys were checked
+against the configuration parser; detector/noise/mechanism counts were directly
+verified in the preceding circuit inspection. See README.md, "Round count and
+X/Z detectors for depolarizing experiments". Documentation only; no new run.
+
+# BP predecoding validity audit (2026-09-29)
+
+Audited the saved 449d8157 run against its actual global-BP worktree at
+color-code-stim 65ef2ad, not the original checkout's historical BP wrapper.
+Found that saved logical_error omits converged BP failures: saved True/all
+shots is a lower bound on total hybrid LER. The user-selected all-shot
+analysis denominator was preserved. No decoder/config/data changes.
+
+Exhaustive d5 double-error checks: ordinary 0/171 failures, current min_sum
+BP 13/171, product_sum BP 0/171. Removing caps alone gives 15/171.
+All single mechanisms and all double mechanisms at d7/d9 pass both methods.
+Exact d5 2^19 enumeration, independently checked by Gray-code XOR, gives
+p=.03 ordinary/min_sum/product_sum LER .00199041/.00621237/.00223961;
+p=.05 .00835279/.01837148/.00895194. Converged BP failures are nonzero.
+The one-round Z-memory global and CSS DEMs coincide; no extra cross-sector
+syndrome information enters BP. Existing 28 BP/projection tests pass.
+
+Report, reproducers, finite results and source hashes:
+`notes/support/bp_predecoding_audit_20260929/`. This is a finite implementation
+and objective-function audit, not a general no-bug/performance theorem.
+Next: retain full-shot failure labels before comparing BP variants; treat
+cap/XOR/log-odds choices and the circuit's available syndrome separately.
+No Monte Carlo campaign, source fix, branch merge or publication performed.
+
+# Saved global-BP analysis in the original workspace (2026-09-29)
+
+User correction: LER retains its original denominator of all physical shots,
+including BP-converged shots. Saved True failure values are counted; nulls
+do not contribute to that count and do not reduce the denominator. Baseline
+overlays/ratios retain their original selection rule, without BP restrictions.
+The earlier conditional-LER and separate-baseline changes were unauthorized
+and have been reversed. BP config parsing, convergence/null-mask validation
+and nullable soft-output reading remain supported.
+
+The preceding version passed 374 root tests. All 49 affected analysis tests
+pass after the correction. Read-only
+verification covers all 36 points of the actual BP run, LER/legends and
+improvement plots at p=.03/.04/.05, plus the notebook's unmodified first
+cell. Saved files, user notebook edits and external sources are preserved.
+No benchmark was launched. Rerun the first notebook cell; its p=.002 ratio
+selection must be changed by the user to a saved probability.
+See `notes/support/BP_SAVED_RUN_ANALYSIS.md` for source paths and checks.
+
 # Expanded overall native stage-1 / Tesseract timing (2026-09-29)
 
 Completed the requested 30-shot overall API latency comparison with M=4/8/16/
@@ -1643,3 +1797,13 @@ three focused suites (37 passed). The bounded test run covers both score
 bases and a two-shot reduced grid. No commit, push or campaign was performed.
 The full root suite passed (260 tests) and the full decoder suite passed
 (156 tests, two existing skips). Both repositories passed `git diff --check`.
+# BP/perturbation benchmark configuration example (2026-09-29)
+
+Added `configs/example_bpmatching.yaml` at the requested original workspace
+path. It compares BP on/off with native stage-1 perturbation on/off, using
+one-round bitflip noise, d=3/5, p=.03/.05, and 1000 shots per point. All 16
+expanded points pass preflight against the isolated global-BP sources; the
+configured ldpc parameters decode the known no-fault syndrome successfully.
+No experiment was launched. Comments include the feature PYTHONPATH, the
+original-DEM perturbation switch, independent alias sampling, and BP's
+nonconverged-shot-only LER scope because converged-shot metrics are null.

@@ -139,9 +139,9 @@ _CONSTRUCTOR_KEYS = frozenset({"temp_bdry_type", "superdense_circuit", "perfect_
     "perturbation_alpha", "perturbation_seed", "use_original_prior_for_stage2", "stage1_perturbation",
     "color_correlated_weight_basis", "color_correlated_b",
     "exclude_non_essential_pauli_detectors"})
-_DECODE_KEYS = frozenset({"colors", "compute_swim_distance", "full_output", "check_validity", "verbose"})
+_DECODE_KEYS = frozenset({"colors", "compute_swim_distance", "full_output", "check_validity", "verbose", "bp_predecoding", "bp_prms"})
 _BOOLEAN_OPTIONS = (_CONSTRUCTOR_KEYS - {"temp_bdry_type", "color_correlated_weight_basis", "color_correlated_b",
-    "perturbation_ensemble_size", "perturbation_alpha", "perturbation_seed"}) | (_DECODE_KEYS - {"colors"})
+    "perturbation_ensemble_size", "perturbation_alpha", "perturbation_seed"}) | (_DECODE_KEYS - {"colors", "bp_prms"})
 _SWEEP_ALIASES = frozenset({"d", "rounds", "circuit_type", "cnot_schedule", "noise_model",
     "p_bitflip", "p_depol", "p_reset", "p_meas", "p_cnot", "p_idle", "p_circuit"})
 
@@ -200,9 +200,11 @@ def _freeze(value, name):
         return value
     if type(value) is float and math.isfinite(value):
         return value
+    if isinstance(value, dict):
+        return tuple((k, _freeze(v, name)) for k, v in sorted(value.items()))
     if isinstance(value, list):
         return tuple(_freeze(v, name) for v in value)
-    raise ValueError(f"{name} must contain only finite JSON scalar/list values")
+    raise ValueError(f"{name} must contain only finite JSON scalar/list/mapping values")
 
 
 def _options(value, name, allowed):
@@ -234,7 +236,19 @@ def _options(value, name, allowed):
             and len(set(colors)) == len(colors)
         ):
             raise ValueError(f"{name}.colors must be 'all', a color, or a unique color list")
+    if "bp_prms" in value:
+        bp = _mapping(value["bp_prms"], "bp_prms", allowed={"max_iter", "bp_method", "schedule", "ms_scaling_factor", "bp_method_type"})
+        if "max_iter" in bp:
+            _positive_int(bp["max_iter"], "bp_prms.max_iter")
     return tuple((k, _freeze(v, name)) for k, v in sorted(value.items()))
+
+
+def decode_option_dict(options):
+    """Restore the BP parameter mapping for saved-config serialization."""
+    result = dict(options)
+    if "bp_prms" in result:
+        result["bp_prms"] = dict(result["bp_prms"])
+    return result
 
 
 @dataclass(frozen=True)
@@ -295,7 +309,7 @@ class WorkflowConfig:
         return {"simulation": sim, "chunking": asdict(self.chunking), "sweep": asdict(self.sweep),
                 "color_code_options": dict(self.color_code_options),
                 "decoders": [{"type": d.type, "options": dict(d.options),
-                              "decode_options": dict(d.decode_options),
+                              "decode_options": decode_option_dict(d.decode_options),
                               **({"decoder_alias": d.decoder_alias} if d.decoder_alias is not None else {})}
                              for d in self.decoders]}
 

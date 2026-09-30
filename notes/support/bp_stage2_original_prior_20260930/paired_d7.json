@@ -1,0 +1,68 @@
+{
+  "name": "paired_d7",
+  "d": 7,
+  "p": 0.05,
+  "shots": 4096,
+  "bp_parameters": {
+    "bp_method": "min_sum",
+    "max_iter": 20,
+    "schedule": "parallel"
+  },
+  "checks": {
+    "fallback_shots": 2094,
+    "stage1_permutations": 6282,
+    "stage2_graph_permutations": 6282,
+    "independent_stage2_weight_checks": 6282,
+    "alternate_stage2_logical_differences": 0
+  },
+  "ordinary_failures": 18,
+  "converged": 2002,
+  "converged_failures": 0,
+  "methods": {
+    "current": {
+      "failures": 30,
+      "fallback_failures": 30,
+      "rescued": 0,
+      "worsened": 0,
+      "paired_binomial_p": 1.0,
+      "rescued_vs_ordinary": 10,
+      "worsened_vs_ordinary": 22
+    },
+    "stage2_only": {
+      "failures": 27,
+      "fallback_failures": 27,
+      "rescued": 8,
+      "worsened": 5,
+      "paired_binomial_p": 0.5810546875,
+      "rescued_vs_ordinary": 8,
+      "worsened_vs_ordinary": 17
+    },
+    "selection_only": {
+      "failures": 29,
+      "fallback_failures": 29,
+      "rescued": 9,
+      "worsened": 8,
+      "paired_binomial_p": 1.0,
+      "rescued_vs_ordinary": 8,
+      "worsened_vs_ordinary": 19
+    },
+    "stage2_and_selection": {
+      "failures": 18,
+      "fallback_failures": 18,
+      "rescued": 20,
+      "worsened": 8,
+      "paired_binomial_p": 0.03569813817739487,
+      "rescued_vs_ordinary": 5,
+      "worsened_vs_ordinary": 5
+    },
+    "ordinary_fallback": {
+      "failures": 18,
+      "fallback_failures": 18,
+      "rescued": 22,
+      "worsened": 10,
+      "paired_binomial_p": 0.050102459732443094,
+      "rescued_vs_ordinary": 0,
+      "worsened_vs_ordinary": 0
+    }
+  }
+}

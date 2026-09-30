@@ -1,5 +1,16 @@
 # AGENTS.md
 
+## Current BP X/Z weighting change (2026-09-29)
+
+The user's requested BP fallback change lives in the separate
+`../color_code_softoutput_bp_global` worktree. Aggregate uncapped global BP
+posteriors with independent XOR into X/Z DEM mechanisms, then assign -log(p)
+using effective priors p/(1+p) before color/stage decomposition. State/log
+version 3 records `negative_log_xz_probability`; old version-2 states are
+rejected. Native perturbation remains scheme 2. See that worktree's
+`notes/support/bp_xz_negative_log_20260929.md`. This supersedes older audit
+descriptions only for newly run decoding; historical results are unchanged.
+
 ## Current requested scalar output authorization (2026-09-29)
 
 The user authorized decoder/simulation output changes, exact full-output
@@ -477,6 +488,74 @@ Whenever work is completed:
 
 ## Last update
 
+2026-09-30 — Tested BP stage 1 with physical-prior stage 2 and separately
+controlled final candidate scoring. Both restored gives d5 double-fault
+21 -> 0 and random d5/d7 24 -> 15 / 30 -> 18, matching ordinary counts.
+Diagnostic scripts and independent verification are in
+notes/support/bp_stage2_original_prior_20260930/. Production sources and
+defaults remain unchanged. Next task: separately requested hybrid option or
+further experiments; no broad superiority claim is established.
+
+2026-09-29 — Audited version-3 BP run 23_27_44_9926fe3c. Replayed first
+chunks of all 36 points, including an old/new-discriminating saved failure.
+Archived d5 double faults give 21 BP failures vs ordinary 0; independent
+enumeration verifies all 126 matching stages and wrong-class lower CSS
+objective in all 21. No production code/options changed. See
+notes/support/bp_negative_log_audit_20260929/report.md. Next task: separately
+requested investigation of BP/projection/objective approximation; no physical
+limitation or general improvement claim follows from this finite audit.
+
+2026-09-29 — Isolated posterior cap/CSS aggregation on archived official
+surface-code shots. Cap+XOR retains the BP benefit with fixed -log matching;
+sector/source maps and official replay agree exactly. No resampling or
+production changes. Report: surface_code_test/results/
+beliefmatching_smoke_20260929/projection_probe/report.md.
+
+2026-09-29 — Ran requested official BeliefMatching surface-code smoke on
+shared depolarizing code-capacity shots. d5/d7 ordinary failures 161/90,
+product_sum 107/43, min_sum 113/60 (20k shots each distance, all outcomes
+included). Isolated upstream backend; existing environment/source preserved.
+See surface_code_test/results/beliefmatching_smoke_20260929/report.md.
+
+2026-09-29 — Audited two-round BP run 9926fe3c. Circuit options correctly
+retain X/Z correlations; independent physical faults reveal remaining
+min_sum/fallback logical failures, with no new wiring bug found. Bounded
+paired total failures and probability/weight probes are recorded under
+`notes/support/bp_round2_audit_20260929/`. Sources/config/data unchanged.
+
+2026-09-29 — Added the requested simulator README note: rounds includes the
+perfect first extraction; one-round Z memory has no X detectors; rounds=2
+with perfect_first_syndrome_extraction=True gives a reference extraction and
+one depolarizing layer with X/Z detectors. Existing circuit checks support
+the example. See README.md and STATUS.md.
+
+2026-09-29 — Audited saved global-BP run 449d8157 against the separate BP
+worktree. Full d5 enumeration exposes min_sum fallback degradation and
+missing converged-shot failure labels; see
+`notes/support/bp_predecoding_audit_20260929/report.md`. No decoder, config,
+saved data or analysis denominator changed. Existing BP/projection 28 tests
+pass; source hashes and independent count verification are recorded.
+
+2026-09-29 — User correction: LER must keep total physical shots as its
+denominator, counting saved True values and ignoring nulls in the numerator.
+Removed conditional-LER and BP-specific baseline-selection changes. Retain
+the original baseline rules, BP config parsing and null-mask validation.
+See notes/support/BP_SAVED_RUN_ANALYSIS.md. Next task: rerun notebook analysis.
+
+2026-09-29 — Original-workspace analysis now reads saved global-BP metadata
+and nullable concatenated metrics. Conditional denominators, strict BP masks,
+population-specific baselines and soft-output plots are covered by 13 new
+independent fixtures; all 374 root tests pass. The actual 36-point BP run,
+unmodified notebook first cell and plots pass read-only verification.
+See notes/support/BP_SAVED_RUN_ANALYSIS.md. Next task: rerun notebook analysis
+with saved p=.03/.04/.05; preserve user notebook/results and external sources.
+
+2026-09-29 — Added configs/example_bpmatching.yaml in the original workspace:
+four BP/perturbation cases with bitflip noise. All 16 settings pass preflight
+using global-BP worktree sources; no experiment launched. Its comments explain
+source selection, native/original-DEM perturbation and nullable BP metrics.
+Next task: user-selected benchmark execution; preserve existing user changes.
+
 2026-09-29 — Completed expanded 30-shot overall native M=4/8/16/24/32 versus
 Tesseract timings at p=.003/alpha1/rounds=d. Groups d=5,9,13,17 and d=7,11,15
 ran sequentially with fresh per-distance processes. Report and all data/figures:
@@ -931,6 +1010,32 @@ The primary crossing is unresolved at the upper grid endpoint; numerical
 limitations and the missing dual certificate remain explicit in the review.
 
 ## Next task
+
+Do not attribute color-code degradation to pre-matching cap/XOR alone: the
+controlled surface-code projection probe retains improvement. Distinguish
+posterior quality, aggregation approximation and downstream weight/decoder
+behavior when choosing the next controlled comparison.
+
+Use the official surface-code smoke as a finite paired reference: both BP
+methods improve there, so min_sum alone does not establish the cause of the
+color-code adaptation's degradation. Preserve the recorded noise convention.
+
+Use the two-round BP audit to guide subsequent changes. Full-shot failure
+recording remains necessary; product_sum, scaling, and -log weighting each
+reduce some finite failures but do not establish a general repair.
+
+Use the README's round-count and X/Z-detector guidance when configuring
+future depolarizing/global-BP comparisons.
+
+Review the BP audit before interpreting physical performance. Record total
+failure on every shot (including BP convergence) for future hybrid LER;
+separately compare BP method, cap/weight law, and available syndrome data.
+Existing saved nulls cannot recover converged-shot failures.
+
+Rerun the original analysis notebook's first cell for saved BP runs. LER uses
+saved True counts divided by all physical shots; baseline rules are unchanged.
+See `notes/support/BP_SAVED_RUN_ANALYSIS.md`. The currently selected p=.002
+is absent from the saved BP run; choose p=.03/.04/.05 for improvement plots.
 
 Review the 30-shot overall timing report and export figures at
 `results/decoder_timing_native_stage1_tesseract_20260929_143813/report.md`.

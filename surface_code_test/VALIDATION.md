@@ -1,3 +1,15 @@
+## Official BeliefMatching paired smoke — 2026-09-29
+
+Unmodified official source 4458c278, upstream PyMatching 2.3.1, ldpc 2.4.1.
+Code-capacity depolarization p=.05, 20k paired shots per distance. Ordinary /
+product_sum / min_sum failures: d5 161/107/113; d7 90/43/60. Single-Pauli
+insertion (75/147 faults) passes all methods, zero-noise circuits have zero
+detection/observable events, joint X/Z mechanisms are present, and saved
+arrays independently reproduce all counts. See
+results/beliefmatching_smoke_20260929/report.md and provenance.json.
+This separately authorized finite smoke leaves the existing SO workflow
+and decoder dependencies unchanged; it is not a threshold study.
+
 # Surface-code path-gap v1 extension — 2026-09-19
 
 Implemented the user-requested global-subtraction metric in the existing

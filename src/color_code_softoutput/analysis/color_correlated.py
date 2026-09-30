@@ -41,26 +41,64 @@ def _per_round(rate: float, rounds: int) -> float:
     return float(-np.expm1(np.log1p(-rate) / rounds))
 
 
-def _metric_count(path: Path, metric: str, expected_shots: int) -> int:
+def _bp_convergence(directory: Path, expected_shots: int) -> pa.ChunkedArray:
+    """Read the BP mask after validating its schema and physical shot order."""
+    path = directory / "bp_converged.parquet"
+    chunks = []
+    offset = 0
+    with pq.ParquetFile(path) as source:
+        if (source.schema_arrow.names != ["shot_index", "bp_converged"]
+                or source.schema_arrow.field(0).type != pa.int64()
+                or source.schema_arrow.field(1).type != pa.bool_()
+                or source.metadata.num_rows != expected_shots):
+            raise ValueError(f"Invalid BP convergence schema or shot count: {path}")
+        for batch in source.iter_batches(batch_size=65_536):
+            if (batch.column(0).null_count or batch.column(1).null_count
+                    or not np.array_equal(batch.column(0).to_numpy(),
+                                          np.arange(offset, offset + len(batch)))):
+                raise ValueError(f"Invalid BP convergence shot indices or null values: {path}")
+            chunks.append(batch.column(1))
+            offset += len(batch)
+    return pa.chunked_array(chunks, type=pa.bool_())
+
+
+def _sampling_scope(point):
+    """Identify scored-shot populations for soft-output grouping."""
+    options = dict(point.decode_options)
+    if not options.get("bp_predecoding", False):
+        return ("all shots", ())
+    parameters = {"max_iter": 10, "bp_method": "product_sum", "schedule": "parallel"}
+    parameters.update(dict(options.get("bp_prms", ())))
+    return ("BP-nonconverged shots", tuple(sorted(parameters.items())))
+
+
+def _metric_count(path: Path, metric: str, expected_shots: int, *, allow_null=False) -> int:
     """Count a binary metric with bounded batches and verify its shot indices."""
     if not path.is_file():
         raise FileNotFoundError(f"Missing metric file: {path}")
     with pq.ParquetFile(path) as source:
         schema = source.schema_arrow
-        expected_type = pa.bool_() if metric in ("logical_error", "default_logical_error") else pa.uint8()
+        expected_type = pa.bool_() if metric in ("logical_error", "default_logical_error", "bp_converged") else pa.uint8()
         if (schema.names != ["shot_index", metric]
                 or schema.field("shot_index").type != pa.int64()
                 or schema.field(metric).type != expected_type
                 or source.metadata.num_rows != expected_shots):
             raise ValueError(f"Invalid schema or shot count: {path}")
+        convergence = None
+        if allow_null:
+            convergence = _bp_convergence(path.parent, expected_shots)
         count = 0
         offset = 0
         for batch in source.iter_batches(batch_size=65_536):
             indices = batch.column(0).to_numpy()
-            values = batch.column(1).to_numpy(zero_copy_only=False)
-            if (batch.column(0).null_count or batch.column(1).null_count
+            values = batch.column(1).drop_null().to_numpy(zero_copy_only=False)
+            if (batch.column(0).null_count or (batch.column(1).null_count and not allow_null)
                     or not np.array_equal(indices, np.arange(offset, offset + len(batch)))):
                 raise ValueError(f"Invalid shot indices or null values: {path}")
+            if convergence is not None and not np.array_equal(
+                    batch.column(1).is_null().to_numpy(zero_copy_only=False),
+                    convergence.slice(offset,len(batch)).to_numpy(zero_copy_only=False)):
+                raise ValueError("Metric null positions disagree with BP convergence")
             if metric in COUNTS and np.any(values > 1):
                 raise ValueError(f"Nonbinary flag values: {path}")
             count += int(np.count_nonzero(values))
@@ -139,8 +177,10 @@ class ColorCorrelatedRun:
         # while requiring the established color-correlated contract.
         paired = advanced and (all(paired_files) or options.get("enable_colorcorrelated_decoding", False))
         metrics = _PAIRED_METRICS if paired else ("logical_error",)
+        bp = dict(point.decode_options).get("bp_predecoding", False)
+        skipped = _metric_count(directory / "bp_converged.parquet", "bp_converged", point.shots) if bp else 0
         counts = {
-            metric: _metric_count(directory / f"{metric}.parquet", metric, point.shots)
+            metric: _metric_count(directory / f"{metric}.parquet", metric, point.shots, allow_null=bp)
             for metric in metrics
         }
         per_round = point.noise_model == "uniform"
@@ -186,6 +226,9 @@ class ColorCorrelatedRun:
         else:
             record["default_ler_low"] = np.nan
             record["default_ler_high"] = np.nan
+        if bp:
+            record.update(physical_shots=point.shots,bp_converged_shots=skipped,
+                          statistics_scope="all shots")
         self._cache[name] = record
         return record
 
@@ -196,6 +239,10 @@ class ColorCorrelatedRun:
             self._summarize_point(name) for name in selected["point_directory"]
         ])
         result = selected.merge(aggregates, on="point_directory", validate="one_to_one")
+        if "statistics_scope" in result:
+            result["statistics_scope"] = result.statistics_scope.fillna("all shots")
+            result["physical_shots"] = result.physical_shots.fillna(result.expected_shots).astype("int64")
+            result["bp_converged_shots"] = result.bp_converged_shots.fillna(0).astype("int64")
         for name in ("default_failures", "better_weight_count", "effect_count",
                      "worsened_count", "net_effect_count"):
             result[name] = result[name].astype("Int64")
@@ -378,13 +425,14 @@ class ColorCorrelatedRun:
         figure, ax = self._axes(ax, plot_width, plot_height)
         self._draw(table, ax, names, "physical_error_rate", "logical_error_rate",
                    intervals=True, yscale=yscale)
+        finite_intervals = np.isfinite(table.ler_high).any()
         upper = min(1.0, float(table.ler_high.max()) * 1.15)
-        if yscale == "log":
+        if yscale == "log" and finite_intervals:
             positive = table.loc[table.ler_low > 0, "ler_low"]
             floor = min(float(table.ler_high.min()) / 10,
                         float(positive.min()) if len(positive) else np.inf)
             ax.set_ylim(floor / 1.5, max(upper, floor * 10))
-        else:
+        elif yscale == "linear" and finite_intervals:
             ax.set_ylim(0, upper)
         ax.set(xlabel="Physical error rate",
                ylabel="Logical error rate per round" if (table.noise_model == "uniform").all()

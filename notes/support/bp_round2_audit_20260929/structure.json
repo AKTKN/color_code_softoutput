@@ -1,0 +1,68 @@
+[
+  {
+    "d": 5,
+    "detectors": {
+      "Z": 27,
+      "X": 9
+    },
+    "global_shape": [
+      36,
+      57
+    ],
+    "global_mechanisms": 57,
+    "mixed": 19,
+    "noise": [
+      [
+        "DEPOLARIZE1",
+        [
+          0.03
+        ],
+        19
+      ]
+    ]
+  },
+  {
+    "d": 7,
+    "detectors": {
+      "Z": 54,
+      "X": 18
+    },
+    "global_shape": [
+      72,
+      111
+    ],
+    "global_mechanisms": 111,
+    "mixed": 37,
+    "noise": [
+      [
+        "DEPOLARIZE1",
+        [
+          0.03
+        ],
+        37
+      ]
+    ]
+  },
+  {
+    "d": 9,
+    "detectors": {
+      "Z": 90,
+      "X": 30
+    },
+    "global_shape": [
+      120,
+      183
+    ],
+    "global_mechanisms": 183,
+    "mixed": 61,
+    "noise": [
+      [
+        "DEPOLARIZE1",
+        [
+          0.03
+        ],
+        61
+      ]
+    ]
+  }
+]

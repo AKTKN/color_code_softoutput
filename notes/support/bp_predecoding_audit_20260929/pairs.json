@@ -1,0 +1,193 @@
+[
+  {
+    "d": 5,
+    "method": "min_sum",
+    "pairs": 171,
+    "ordinary_fail": 0,
+    "bp_fail": 13,
+    "converged": 30,
+    "converged_fail": 0,
+    "fallback_fail": 13,
+    "nonconv_above_half_shots": 60,
+    "bad_pairs": [
+      [
+        0,
+        13
+      ],
+      [
+        2,
+        11
+      ],
+      [
+        2,
+        12
+      ],
+      [
+        2,
+        13
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        7
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        9,
+        13
+      ],
+      [
+        11,
+        12
+      ],
+      [
+        11,
+        15
+      ],
+      [
+        12,
+        14
+      ],
+      [
+        14,
+        15
+      ],
+      [
+        14,
+        18
+      ]
+    ],
+    "variants": {
+      "uncapped": {
+        "fail": 15,
+        "changed": 2
+      },
+      "prior_fallback": {
+        "fail": 0,
+        "changed": 13
+      }
+    },
+    "example": {
+      "pair": [
+        0,
+        13
+      ],
+      "detectors": [
+        0,
+        2,
+        7
+      ],
+      "actual": false,
+      "pred": true,
+      "converged": false,
+      "llrs": [
+        7.7836405962212485,
+        -7.7836405962212485,
+        7.7836405962212485,
+        11.675460894331874,
+        19.459101490553124,
+        11.675460894331874,
+        15.567281192442497,
+        11.675460894331874,
+        7.7836405962212485,
+        7.7836405962212485,
+        11.675460894331874,
+        19.45910149055312,
+        0.0,
+        0.0,
+        15.567281192442497,
+        0.0,
+        7.7836405962212485,
+        0.0,
+        3.8918202981106242
+      ],
+      "source_priors": [
+        0.020000000000000042,
+        0.020000000000000042,
+        0.020000000000000042,
+        0.020000000000000042,
+        0.020000000000000042,
+        0.020000000000000042,
+        0.020000000000000042,
+        0.020000000000000042,
+        0.020000000000000042,
+        0.020000000000000042,
+        0.020000000000000042,
+        0.020000000000000042,
+        0.020000000000000042,
+        0.020000000000000042,
+        0.020000000000000042,
+        0.020000000000000042,
+        0.020000000000000042,
+        0.020000000000000042,
+        0.020000000000000042
+      ]
+    }
+  },
+  {
+    "d": 5,
+    "method": "product_sum",
+    "pairs": 171,
+    "ordinary_fail": 0,
+    "bp_fail": 0,
+    "converged": 102,
+    "converged_fail": 0,
+    "fallback_fail": 0,
+    "nonconv_above_half_shots": 36,
+    "bad_pairs": []
+  },
+  {
+    "d": 7,
+    "method": "min_sum",
+    "pairs": 666,
+    "ordinary_fail": 0,
+    "bp_fail": 0,
+    "converged": 319,
+    "converged_fail": 0,
+    "fallback_fail": 0,
+    "nonconv_above_half_shots": 240,
+    "bad_pairs": []
+  },
+  {
+    "d": 7,
+    "method": "product_sum",
+    "pairs": 666,
+    "ordinary_fail": 0,
+    "bp_fail": 0,
+    "converged": 579,
+    "converged_fail": 0,
+    "fallback_fail": 0,
+    "nonconv_above_half_shots": 54,
+    "bad_pairs": []
+  },
+  {
+    "d": 9,
+    "method": "min_sum",
+    "pairs": 1830,
+    "ordinary_fail": 0,
+    "bp_fail": 0,
+    "converged": 1241,
+    "converged_fail": 0,
+    "fallback_fail": 0,
+    "nonconv_above_half_shots": 449,
+    "bad_pairs": []
+  },
+  {
+    "d": 9,
+    "method": "product_sum",
+    "pairs": 1830,
+    "ordinary_fail": 0,
+    "bp_fail": 0,
+    "converged": 1716,
+    "converged_fail": 0,
+    "fallback_fail": 0,
+    "nonconv_above_half_shots": 75,
+    "bad_pairs": []
+  }
+]

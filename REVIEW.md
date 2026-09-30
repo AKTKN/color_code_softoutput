@@ -1,5 +1,85 @@
 # REVIEW.md
 
+## Original-prior BP stage 2 — 2026-09-30
+
+Same-agent diagnostic review uses unchanged BP stage-1 bits, validated graph
+and source permutations, original stage-2 graphs, a separate weight-replacement
+construction (12,087 agrees), and 63 exhaustive stage-2 minimum checks.
+Restoring both stage 2 and final scoring corrects all 21 prior double-fault
+failures and recovers ordinary failure counts in two bounded random samples.
+Stage-2-only and scoring-only controls are weaker. The exact physical
+enumeration has no sampling p-value. Random paired p-values are exploratory;
+ordinary superiority, general-distance or circuit-noise claims are unsupported.
+No production package change was made. See
+[report](notes/support/bp_stage2_original_prior_20260930/report.md).
+
+## Version-3 BP failure audit — 2026-09-29
+
+Same-agent review with independent physical-fault injection, direct LDPC,
+explicit posterior contraction and GF(2) solution enumeration. First chunks
+of all 36 saved conditions reproduce; one saved failure distinguishes the
+new rule from the old. All 126 stages of 21 failing double faults attain
+their weighted minima. Exact optimization over CSS logical classes prefers
+the wrong class in all 21, so a matching solver defect is not the explanation
+for these examples. This is not exact inference under the physical noise
+channel and does not establish a color-code physical limitation. Full-run
+replay is unavailable because adaptive chunk sizes/source snapshots were
+not saved. Converged-shot failure nulls remain an acknowledged saved-output
+limitation, not a reason for inflated BP failures. See
+[audit](notes/support/bp_negative_log_audit_20260929/report.md).
+
+## BP X/Z negative-log implementation — 2026-09-29
+
+Implemented and checked in the isolated BP worktree: transformation follows
+X/Z XOR aggregation and precedes color decomposition. Independent oracles
+distinguish global-first transformation, check >0.5 posteriors and compare
+corrections/scores across six strategies. Full decoder/root suites pass.
+This is same-agent review with independent oracles, not external peer review.
+The retained XOR approximation differs from official addition, and no LER
+improvement follows from implementation acceptance. See the
+[report](../color_code_softoutput_bp_global/notes/support/bp_xz_negative_log_20260929.md).
+
+## Posterior-to-CSS isolation — 2026-09-29
+
+On archived surface-code inputs, introducing only the local global-.5 cap
+and independent-XOR projection preserves official BM improvement. BP and
+-log matching remain fixed; independent geometric projection equals the
+official map. No evidence here makes that preprocessing difference a fatal
+cause of color-code degradation. XOR is exact only for the independent
+surrogate, not the syndrome-conditioned joint posterior; the official sum
+is also approximate. This test does not establish equivalence of posterior
+quality or subsequent log-odds/concatenated behavior. See
+`surface_code_test/results/beliefmatching_smoke_20260929/projection_probe/report.md`.
+
+## Two-round global-BP follow-up — 2026-09-29
+
+The saved rounds=2/perfect-first run 9926fe3c has both detector sectors and
+joint global mechanisms. Independent Stim physical-fault insertion and direct
+ldpc checks found no additional source/option wiring error. The specified
+min_sum/posterior fallback still fails 23 of 1539 d5 double Pauli inputs;
+19 have no correct color candidate. Other BP/weight choices reduce but do
+not eliminate the failures. Bounded paired totals include converged failures
+and expose the retained nullable-error evaluation defect. Do not mistake
+restored X information for a demonstrated accuracy fix, or call small-sample
+variant ordering a universal result. See
+`notes/support/bp_round2_audit_20260929/report.md` and its independent checks.
+
+## BP predecoding audit — 2026-09-29
+
+Finite audit and independent Gray-code check: see
+`notes/support/bp_predecoding_audit_20260929/report.md`. Global-BP 65ef2ad
+passes syndrome/projection checks but fails 13 of 171 d5 weight-two inputs
+under saved min_sum settings; product_sum fixes these inputs. No universal
+accuracy claim follows. Cap removal alone worsens this finite test.
+Full total LER cannot be recovered from saved null converged-shot labels;
+convergence is not logical correctness. Preserve the requested all-shot
+denominator while distinguishing saved failure contribution from total LER.
+One-round Z-memory global DEM has only active Z checks and equals the CSS
+DEM, so no additional X/Z correlation information is available. Independent
+full d5 enumeration validates counts and includes converged failures.
+Retained next gate: full failure recording and paired objective/settings
+comparisons before attributing degradation to the code family.
+
 ## Native stage-1 perturbation audit — 2026-09-29
 
 Same-agent source review and independent oracles (not external peer review)
