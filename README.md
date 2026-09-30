@@ -26,8 +26,11 @@ Use branch `bp_predecoding` in all three repositories, including the two
 external checkouts. The [release notes](notes/support/BP_PREDECODING_RELEASE.md)
 summarize the implementation, subsequent corrections and audit artifacts.
 
-For this isolated checkout, activate `color_code_so`, install `ldpc>=2,<3`,
-and select its sources without changing the installed original checkouts:
+For this isolated checkout, create/update `color_code_so` from
+`environment.yml` or install the root project with `python -m pip install -e .`.
+`ldpc>=2,<3` is a required project dependency and is therefore installed by
+the normal package installation. Then select the local sources without
+changing the installed original checkouts:
 
 ```bash
 export PYTHONPATH="$PWD/src:$PWD/external_libs/color-code-stim/src:$PWD/external_libs/PyMatching/src"

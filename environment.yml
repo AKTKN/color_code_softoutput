@@ -16,6 +16,7 @@ dependencies:
       - rsmf==0.2.1
       - stim==1.16.0
       - sinter==1.16.0
+      - ldpc==2.4.1
       - PyYAML==6.0.3
       - networkx==3.6.1
       - python-igraph==1.0.0
