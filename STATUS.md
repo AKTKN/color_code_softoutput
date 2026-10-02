@@ -1,3 +1,23 @@
+## Even SWIM and central errors (2026-10-01)
+
+Exhausted all 524,288 physical d=5 bit-flip configurations and all 512
+syndromes at p=.02/.04. Even scalar SWIM does not require a central error:
+boundary errors {16,17} give 2w; a center-free weight-5 stabilizer-equivalent
+configuration gives 4w. Exact probabilities and reproducible checks are in
+[the center audit](notes/support/swim_even_center_d5_20261001/report.md).
+
+## Cross-color SWIM strategy study (2026-09-30)
+
+Completed the user-requested d=5 investigation of shared coverage, path
+intersections, physical rescoring, odd path XORs and bounded face-stabilizer
+search. All 45 strategies were evaluated on all 512 syndromes at p=.02/.04,
+with exact physical-probability weighting. Production sources, notebooks and
+saved experiments remain unchanged. The
+[report](notes/support/cross_color_swim_d5_20260930/report.md) records the
+maximum-coverage regression, promising two-face candidate strategy, absolute
+gap versus class-weight distinction, tie sensitivity and reproducible artifacts.
+No larger-distance validation, performance benchmark or deployment is implied.
+
 ## BP stage-1-only priors and native integration (2026-09-30)
 
 The user requested BP posterior generation in stage 1 only, with original

@@ -206,7 +206,11 @@ to write `logical_gap.parquet` instead. See
 frequency points, conditional logical error probability and post-selection
 scatter plots with Wilson shades, filters and groups. All three views accept
 `metrics=["swim_distance", "logical_gap"]` for comparison; distribution errors
-can optionally be displayed at negative scores.
+can optionally be displayed at negative scores. Blue/red metric hues, paired
+distance-gradient/marker legends, and any multi-decoder size legend are exported
+separately from the 300-dpi/vector main figures, together with an editable TeX
+figure snippet. A dedicated standalone TeX file also compiles the legends and
+all three panels into one captionless PDF and 300-dpi PNG.
 Correlated points produce
 that file plus `default_logical_error.parquet`,
 `better_weight_by_color_correlated_decoding.parquet`, and

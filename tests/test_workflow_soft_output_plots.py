@@ -62,6 +62,17 @@ def test_signed_distribution_counts_normalization_and_scatter(saved_scores):
     assert len(figure.axes[0].collections) == 4
     assert all(isinstance(item, PathCollection) for item in figure.axes[0].collections)
     assert figure.axes[0].get_yscale() == "log"
+    assert figure.axes[0].get_legend() is None
+    assert figure.dpi == 300
+    collections = figure.axes[0].collections
+    # Every series shares one marker. Signed success/error points also share
+    # their fill, while the two metrics retain distinct blue/red base hues.
+    for item in collections[1:]:
+        np.testing.assert_array_equal(collections[0].get_paths()[0].vertices,
+                                      item.get_paths()[0].vertices)
+    colors = [tuple(item.get_edgecolor()[0]) for item in collections]
+    assert colors[0] == colors[1] and colors[2] == colors[3]
+    assert colors[0] != colors[2]
     for metric, (scores, failures) in shots.items():
         rows = table[table.metric == metric]
         assert rows.shots.sum() == 6
@@ -77,6 +88,54 @@ def test_signed_distribution_counts_normalization_and_scatter(saved_scores):
         point = run.run.catalog[run.run.catalog.decoder_type == rows.decoder_type.iloc[0]].iloc[0]
         np.testing.assert_array_equal(pq.read_table(run.run.run_directory / point.point_directory
                                                     / f"{metric}.parquet")[metric].to_numpy(), scores)
+
+    legends = run.plot_legends(table, ncol={"distance": 1, "metric": 2, "decoder_type": 2})
+    assert set(legends) == {"distance", "metric", "decoder_type"}
+    assert [text.get_text() for text in legends["metric"][1].get_legend().get_texts()] == [
+        "SWIM distance", "Logical gap"]
+    assert [handle.get_color() for handle in legends["metric"][1].get_legend().legend_handles] == [
+        "#1f77b4", "#d62728"]
+    assert legends["metric"][1].get_legend()._ncols == 2
+    for legend_figure, _ in legends.values():
+        assert legend_figure.dpi == 300
+        frame = legend_figure.axes[0].get_legend().get_frame()
+        assert frame.get_edgecolor() == (0., 0., 0., 1.)
+        assert frame.get_linewidth() == pytest.approx(.6)
+        plt.close(legend_figure)
+
+
+def test_unsigned_distribution_outcome_legend_and_single_decoder_omission(saved_scores):
+    run, _ = saved_scores
+    figure, table = run.plot_distribution(
+        metric="logical_gap", filter={"decoder_type": "concat_mwpm"})
+    success, error = figure.axes[0].collections
+    np.testing.assert_array_equal(success.get_paths()[0].vertices, error.get_paths()[0].vertices)
+    assert len(success.get_facecolors()) == 1
+    assert len(error.get_facecolors()) == 0
+    legends = run.plot_legends(table)
+    assert set(legends) == {"distance", "metric", "logical_error"}
+    assert "decoder_type" not in legends
+    for legend_figure, _ in legends.values():
+        plt.close(legend_figure)
+
+
+def test_metric_hues_and_distance_gradients_are_restrained(saved_scores):
+    run, _ = saved_scores
+    catalog = run.run.catalog.copy()
+    run.run.catalog = catalog.loc[[catalog.index[0], catalog.index[0]]].copy()
+    run.run.catalog["distance"] = [3, 5]
+    colors = run._series_colors()
+    swim_light, swim_dark = map(np.asarray, (
+        colors["swim_distance"][3], colors["swim_distance"][5]))
+    gap_light, gap_dark = map(np.asarray, (
+        colors["logical_gap"][3], colors["logical_gap"][5]))
+    assert swim_light[2] > swim_light[0] and gap_light[0] > gap_light[2]
+    assert swim_light.sum() > swim_dark.sum() and gap_light.sum() > gap_dark.sum()
+    assert np.linalg.norm(swim_light - swim_dark) > .5
+    assert np.linalg.norm(gap_light - gap_dark) > .5
+    assert max(swim_light.mean(), gap_light.mean()) < .7
+    markers = run._distance_markers()
+    assert markers[3] != markers[5]
 
 
 def test_common_histogram_edges_and_single_metric_compatibility(saved_scores):
@@ -97,7 +156,7 @@ def test_conditional_probability_uses_each_decoders_labels_and_wilson_bands(save
     run, shots = saved_scores
     figure, table = run.plot_conditional_ler(metrics=["swim_distance", "logical_gap"])
     ax = figure.axes[0]
-    assert not ax.lines
+    assert len(ax.lines) == 2
     assert sum(isinstance(item, PolyCollection) for item in ax.collections) == 2
     assert sum(isinstance(item, PathCollection) for item in ax.collections) == 2
     for metric, (scores, failures) in shots.items():
@@ -125,7 +184,7 @@ def test_postselection_scatter_bands_exact_thresholds_and_display_sign_isolation
     run.plot_distribution(metrics=["swim_distance", "logical_gap"], signed_logical_errors=True)
     figure, table = run.plot_postselection(metrics=["swim_distance", "logical_gap"], xlim=(0, .8))
     ax = figure.axes[0]
-    assert not ax.lines
+    assert len(ax.lines) == 2
     assert ax.get_xlim() == (0, .8)
     assert sum(isinstance(item, PolyCollection) for item in ax.collections) == 2
     assert sum(isinstance(item, PathCollection) for item in ax.collections) == 2

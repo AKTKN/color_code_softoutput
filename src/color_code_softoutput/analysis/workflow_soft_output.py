@@ -4,6 +4,9 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+from matplotlib.colors import to_rgb
+from matplotlib.legend_handler import HandlerTuple
+from matplotlib.lines import Line2D
 import numpy as np
 import pandas as pd
 import pyarrow as pa
@@ -15,8 +18,17 @@ from .statistics import CONFIDENCE_LEVEL, grouped_rates, rounded_scores
 
 
 METRICS = ("swim_distance", "logical_gap")
-METRIC_MARKERS = {"swim_distance": "D", "logical_gap": "s"}
 METRIC_LABELS = {"swim_distance": "SWIM distance", "logical_gap": "Logical gap"}
+METRIC_MAIN_COLORS = {"swim_distance": "#1f77b4", "logical_gap": "#d62728"}
+DISTANCE_MARKERS = ("o", "s", "^", "D", "v", "P", "X", "<", ">", "h")
+DISTANCE_TONE_LIMIT = .34
+FIGURE_DPI = 300
+_LEGEND_TITLES = {
+    "distance": "Code distance",
+    "metric": "Soft-output metric",
+    "decoder_type": "Decoder type",
+    "logical_error": "Outcome",
+}
 
 
 class WorkflowSoftOutputRun:
@@ -124,11 +136,23 @@ class WorkflowSoftOutputRun:
                 if len(scopes) > 1:
                     raise ValueError("Soft-output groups must separate BP sampling scopes; group by decoder_alias")
                 key = key if isinstance(key, tuple) else (key,)
+                condition = dict(zip(names, key))
+                # Distance and decoder type have fixed visual channels in the
+                # paper plots.  Never pool either field into an unlabelled
+                # series when it varies inside a user-selected group.
+                for style_field in ("distance", "decoder_type"):
+                    if style_field not in condition:
+                        values = frame[style_field].unique()
+                        if len(values) != 1:
+                            raise ValueError(
+                                f"group_by must include {style_field!r} when it varies"
+                            )
+                        condition[style_field] = values[0]
                 data = [self._point(row, current) for row in frame.itertuples()]
                 if not any(len(item[0]) for item in data):
                     raise ValueError("No scored shots: BP converged on all selected shots")
                 scope = next(iter(scopes))[0]
-                series.append((dict(zip(names, key)) | {"metric": current},
+                series.append((condition | {"metric": current},
                                np.concatenate([item[0] for item in data]),
                                np.concatenate([item[1] for item in data])))
                 if scope != "all shots":
@@ -140,28 +164,146 @@ class WorkflowSoftOutputRun:
         if yscale not in ("linear", "log"):
             raise ValueError("yscale must be 'linear' or 'log'")
         if ax is None:
-            figure, ax = plt.subplots(figsize=(7.2, 4.5))
+            figure, ax = plt.subplots(figsize=(7.2, 4.5), dpi=FIGURE_DPI)
         else:
             figure = ax.figure
+            figure.set_dpi(FIGURE_DPI)
         ax.set_yscale(yscale)
         return figure, ax
 
     @staticmethod
-    def _color(index, count):
-        cmap = plt.colormaps["tab10"] if count <= 10 else plt.colormaps["turbo"].resampled(count)
-        return cmap(index)
+    def _tone(color, amount):
+        """Lighten a negative amount or darken a positive amount."""
+        rgb = np.asarray(to_rgb(color))
+        return tuple(rgb * (1 - amount) if amount >= 0
+                     else rgb + (1 - rgb) * -amount)
+
+    def _series_colors(self):
+        """Use restrained light-to-dark metric hues as distance increases."""
+        distances = sorted(self.run.catalog["distance"].unique())
+        tones = (np.array([0.0]) if len(distances) == 1 else
+                 np.linspace(-DISTANCE_TONE_LIMIT, DISTANCE_TONE_LIMIT, len(distances)))
+        return {
+            metric: {
+                distance: self._tone(METRIC_MAIN_COLORS[metric], tone)
+                for distance, tone in zip(distances, tones)
+            }
+            for metric in METRICS
+        }
+
+    def _distance_markers(self):
+        distances = sorted(self.run.catalog["distance"].unique())
+        if len(distances) > len(DISTANCE_MARKERS):
+            raise ValueError(
+                f"At most {len(DISTANCE_MARKERS)} distances can be distinguished by marker"
+            )
+        return dict(zip(distances, DISTANCE_MARKERS))
+
+    def _decoder_sizes(self):
+        values = sorted(self.run.catalog["decoder_type"].unique())
+        return {value: 42 + 24 * index for index, value in enumerate(values)}
+
+    def _style(self, condition):
+        return (self._series_colors()[condition["metric"]][condition["distance"]],
+                self._distance_markers()[condition["distance"]],
+                self._decoder_sizes()[condition["decoder_type"]])
 
     @staticmethod
-    def _finish(figure, ax, *, legend_columns=1):
-        # Keep score points and Wilson bands visible beneath the legend.
-        ax.legend(loc="lower center", bbox_to_anchor=(.5, 1.02),
-                  ncol=legend_columns, fontsize=8, frameon=False)
+    def _finish(figure, ax):
+        # Legends are deliberately separate figures; this keeps the data axes
+        # at a stable manuscript size and avoids covering points or bands.
         figure.tight_layout()
 
-    @staticmethod
-    def _label(condition):
-        return METRIC_LABELS[condition["metric"]] + ", " + (
-            ", ".join(f"{name}={value}" for name, value in condition.items() if name != "metric") or "all")
+    def plot_legends(self, table, *, fontsize=10, row_height=.35,
+                     width=3.0, ncol=1, frame_linewidth=.6):
+        """Return independent legend figures for the visual encodings.
+
+        Metric is encoded by a blue/red base hue. Distance uses both a clear
+        light-to-dark gradient within that hue and a marker shape; the same
+        distance has the same marker for both metrics.  (Only when more than
+        one is plotted) decoder type uses marker size.  Unsigned
+        distribution plots additionally use filled/hollow markers for
+        success/error.  Signed distributions need no outcome legend because
+        both outcomes deliberately use the same marker and errors lie at
+        negative score.
+        """
+        required = {"distance", "metric", "decoder_type"}
+        missing = required - set(table.columns)
+        if missing:
+            raise ValueError(f"Legend table is missing columns: {sorted(missing)}")
+        if (any(not np.isfinite(v) or v <= 0 for v in (fontsize, row_height, width))
+                or not np.isfinite(frame_linewidth) or frame_linewidth <= 0):
+            raise ValueError("Legend sizes and ncol must be positive")
+        if isinstance(ncol, Mapping):
+            if (any(name not in _LEGEND_TITLES for name in ncol)
+                    or any(isinstance(value, bool) or not isinstance(value, int) or value < 1
+                           for value in ncol.values())):
+                raise ValueError("Legend sizes and ncol must be positive")
+            columns_for = lambda name: ncol.get(name, 1)
+        elif isinstance(ncol, bool) or not isinstance(ncol, int) or ncol < 1:
+            raise ValueError("Legend sizes and ncol must be positive")
+        else:
+            columns_for = lambda name: ncol
+
+        series_colors = self._series_colors()
+        distance_markers = self._distance_markers()
+        decoder_sizes = self._decoder_sizes()
+        metrics = [value for value in METRICS if value in set(table["metric"])]
+
+        def distance_handle(value):
+            handles = tuple(Line2D([], [], color=series_colors[metric][value], linewidth=2.5,
+                                   marker=distance_markers[value], markersize=6)
+                            for metric in metrics)
+            return handles[0] if len(handles) == 1 else handles
+
+        entries = {
+            "distance": (
+                sorted(table["distance"].unique()),
+                distance_handle,
+                lambda value: f"$d={value}$",
+            ),
+            "metric": (
+                metrics,
+                lambda value: Line2D([], [], color=METRIC_MAIN_COLORS[value], linewidth=2.5),
+                lambda value: METRIC_LABELS[value],
+            ),
+        }
+        decoder_values = sorted(table["decoder_type"].unique())
+        if len(decoder_values) > 1:
+            entries["decoder_type"] = (
+                decoder_values,
+                lambda value: Line2D([], [], color="black", marker="o", linestyle="none",
+                                     markersize=np.sqrt(decoder_sizes[value])),
+                str,
+            )
+        if ("logical_error" in table
+                and not bool(table.get("signed_logical_errors", pd.Series(False)).all())):
+            entries["logical_error"] = (
+                [False, True],
+                lambda value: Line2D([], [], color="black", marker="o", linestyle="none",
+                                     markerfacecolor="none" if value else "black", markersize=7),
+                lambda value: "Logical error" if value else "Success",
+            )
+
+        legends = {}
+        for name, (values, handle_for, label_for) in entries.items():
+            columns = columns_for(name)
+            height = (int(np.ceil(len(values) / columns)) + 1.8) * row_height
+            figure, legend_ax = plt.subplots(figsize=(width, height), dpi=FIGURE_DPI)
+            legend_ax.axis("off")
+            legend = legend_ax.legend(
+                [handle_for(value) for value in values],
+                [label_for(value) for value in values],
+                title=_LEGEND_TITLES[name], loc="center", frameon=True,
+                fontsize=fontsize, title_fontsize=fontsize, ncol=columns,
+                handler_map={tuple: HandlerTuple(ndivide=None, pad=.5)},
+            )
+            legend.get_frame().set_edgecolor("black")
+            legend.get_frame().set_facecolor("white")
+            legend.get_frame().set_alpha(1)
+            legend.get_frame().set_linewidth(frame_linewidth)
+            legends[name] = (figure, legend_ax)
+        return legends
 
     @staticmethod
     def _score_label(series):
@@ -195,7 +337,7 @@ class WorkflowSoftOutputRun:
                           signed_logical_errors: bool = False,
                           normalize_frequency: bool = False, density: bool | None = None,
                           round_digits: int | None = None, yscale="log", ax=None):
-        """Return (figure, outcome-frequency table) with success o/error x points.
+        """Return a legend-free figure and its outcome-frequency table.
 
         Use metrics=['swim_distance', 'logical_gap'] to overlay saved series.
         With neither metric argument, use SWIM alone for compatibility.
@@ -203,8 +345,13 @@ class WorkflowSoftOutputRun:
         every selected point and every requested metric must have usable data.
         Each metric is joined to its own decoder's logical_error.parquet.
 
-        signed_logical_errors negates only error scores for display, after
-        grouping the nonnegative scores; storage and selection stay unchanged.
+        Metric controls the blue/red base hue. Increasing distance darkens
+        that hue within a restrained range and changes marker shape; a given
+        distance uses the same marker for both metrics. Decoder type controls
+        marker size only when multiple types are present. Unsigned
+        views distinguish errors with hollow markers; signed_logical_errors
+        negates only error scores for display and uses the same filled marker
+        for successes and errors. Storage and selection stay unchanged.
         normalize_frequency divides outcome counts by all shots in each
         series. Legacy density is an alias for this normalization. Tables keep
         empty outcome rows; only positive counts are plotted. Auto grouping
@@ -218,20 +365,22 @@ class WorkflowSoftOutputRun:
         edges = self._bins(series, bins, round_digits)
         figure, ax = self._axes(ax, yscale)
         tables = []
-        for index, (condition, scores, failures) in enumerate(series):
+        for condition, scores, failures in series:
             rates = grouped_rates(scores, failures, bins=edges, round_digits=round_digits)
-            color = self._color(index, len(series))
-            for failure, marker in ((False, "o"), (True, "x")):
+            color, marker, marker_size = self._style(condition)
+            for failure in (False, True):
                 counts = rates.failures if failure else rates.shots - rates.failures
                 frequency = counts / len(scores) if normalize_frequency else counts
                 display_score = -rates.score if failure and signed_logical_errors else rates.score
                 keep = counts > 0
                 ax.scatter(display_score[keep], frequency[keep], marker=marker, color=color,
-                           alpha=.75, label=self._label(condition) + (", error" if failure else ", success"))
+                           facecolors=color if signed_logical_errors or not failure else "none",
+                           edgecolors=color, s=marker_size, alpha=.8)
                 table = pd.DataFrame(dict(score=display_score, raw_score=rates.score,
                     logical_error=failure, count=counts, shots=counts,
                     failures=counts if failure else np.zeros(len(rates), dtype=int),
-                    frequency=frequency, density=frequency, total_shots=len(scores)))
+                    frequency=frequency, density=frequency, total_shots=len(scores),
+                    signed_logical_errors=signed_logical_errors))
                 # For exact grouping the interval degenerates to the actual score.
                 if isinstance(edges, str):
                     table["bin_left"] = rates.score
@@ -246,17 +395,23 @@ class WorkflowSoftOutputRun:
                 tables.append(table)
         ax.set(xlabel=self._score_label(series) + (" (errors negated)" if signed_logical_errors else ""),
                ylabel="Relative frequency" if normalize_frequency else "Frequency")
-        self._finish(figure, ax, legend_columns=2)
+        self._finish(figure, ax)
         return figure, pd.concat(tables, ignore_index=True)
 
     @staticmethod
-    def _rate_points(ax, x, rates, low, high, *, color, marker, label):
+    def _rate_points(ax, x, rates, low, high, *, color, marker, marker_size):
         """Show positive empirical estimates and all Wilson bands, including zero."""
-        ax.fill_between(np.asarray(x, dtype=float), np.asarray(low, dtype=float),
-                        np.asarray(high, dtype=float), color=color, alpha=.2, linewidth=0, zorder=1)
-        keep = np.asarray(rates) > 0
-        ax.scatter(np.asarray(x)[keep], np.asarray(rates)[keep], color=color,
-                   marker=marker, label=label, zorder=2)
+        x = np.asarray(x, dtype=float)
+        rates = np.asarray(rates, dtype=float)
+        ax.fill_between(x, np.asarray(low, dtype=float), np.asarray(high, dtype=float),
+                        color=color, alpha=.18, linewidth=0, zorder=1)
+        keep = rates > 0
+        # NaNs break the line at unplotted zero-rate bins on both linear and
+        # logarithmic axes instead of visually bridging missing estimates.
+        ax.plot(x, np.where(keep, rates, np.nan), color=color,
+                linewidth=1.4, alpha=.9, zorder=2)
+        ax.scatter(x[keep], rates[keep], color=color,
+                   marker=marker, s=marker_size, zorder=2)
 
     def plot_conditional_ler(self, *, metric: str | None = None,
                              metrics: Sequence[str] | None = None,
@@ -276,12 +431,12 @@ class WorkflowSoftOutputRun:
         edges = self._bins(series, bins, round_digits)
         figure, ax = self._axes(ax, yscale)
         tables = []
-        for index, (condition, scores, failures) in enumerate(series):
+        for condition, scores, failures in series:
             rates = grouped_rates(scores, failures, bins=edges, round_digits=round_digits,
                                   confidence_level=confidence_level)
+            color, marker, marker_size = self._style(condition)
             self._rate_points(ax, rates.score, rates.logical_error_rate, rates.low, rates.high,
-                              color=self._color(index, len(series)),
-                              marker=METRIC_MARKERS[condition["metric"]], label=self._label(condition))
+                              color=color, marker=marker, marker_size=marker_size)
             for name, value in condition.items():
                 rates[name] = value
             tables.append(rates)
@@ -308,11 +463,12 @@ class WorkflowSoftOutputRun:
         series = self._series(metric, metrics, filter, group_by)
         figure, ax = self._axes(ax, yscale)
         tables = []
-        for index, (condition, scores, failures) in enumerate(series):
+        for condition, scores, failures in series:
             curve = postselection_curve(scores, failures, confidence_level, round_digits=round_digits)
+            color, marker, marker_size = self._style(condition)
             self._rate_points(ax, curve.abort_rate, curve.residual_logical_error_rate,
-                              curve.low, curve.high, color=self._color(index, len(series)),
-                              marker=METRIC_MARKERS[condition["metric"]], label=self._label(condition))
+                              curve.low, curve.high, color=color, marker=marker,
+                              marker_size=marker_size)
             for name, value in condition.items():
                 curve[name] = value
             tables.append(curve)

@@ -1,0 +1,9488 @@
+{
+  "p": 0.02,
+  "reference_error": 2.220446049250313e-16,
+  "normalization_rounding_error": 2.220446049250313e-16,
+  "paths_per_color": [
+    15,
+    15,
+    15
+  ],
+  "ordinary_comparative_disagreements": 1,
+  "physical_qubit_columns": {
+    "0": 11,
+    "1": 1,
+    "2": 12,
+    "3": 4,
+    "4": 15,
+    "5": 5,
+    "6": 16,
+    "7": 8,
+    "8": 17,
+    "9": 0,
+    "10": 20,
+    "11": 21,
+    "12": 25,
+    "13": 24,
+    "14": 28,
+    "15": 31,
+    "16": 32,
+    "17": 33,
+    "18": 36
+  },
+  "witness_examples": {
+    "0": {
+      "record": {
+        "p": 0.02,
+        "syndrome_id": 0,
+        "detectors": [],
+        "representative_qids": [],
+        "final_qids": [],
+        "final_class": 0,
+        "comparative_class": 0,
+        "final_color": "r",
+        "candidate_qids": [
+          [],
+          [],
+          []
+        ],
+        "candidate_classes": [
+          0,
+          0,
+          0
+        ],
+        "exact_class_weights": [
+          0,
+          5
+        ],
+        "target_gap_over_w": 5
+      },
+      "original_residuals_by_qid": {
+        "11": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "1": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "12": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "4": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "15": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "5": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "16": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "8": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "17": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "0": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "20": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "21": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "25": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "24": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "28": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "31": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "32": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "33": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "36": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "transferred_residuals_by_qid": {
+        "11": 1.0,
+        "1": 1.0,
+        "12": 1.0,
+        "4": 1.0,
+        "15": 1.0,
+        "5": 1.0,
+        "16": 1.0,
+        "8": 1.0,
+        "17": 1.0,
+        "0": 1.0,
+        "20": 1.0,
+        "21": 1.0,
+        "25": 1.0,
+        "24": 1.0,
+        "28": 1.0,
+        "31": 1.0,
+        "32": 1.0,
+        "33": 1.0,
+        "36": 1.0
+      },
+      "path_qids": {
+        "original_graph": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "coverage_max": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "coverage_same_class": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "coverage_mean": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "coverage_median": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "coverage_min": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "coverage_blend_0.25": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "coverage_blend_0.5": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "coverage_blend_0.75": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "witness_coverage_max": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "intersection_zero": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "correction_erased": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ]
+      },
+      "per_color_costs": {
+        "original_graph": [
+          5.0,
+          5.0,
+          5.0
+        ],
+        "coverage_max": [
+          5.0,
+          5.0,
+          5.0
+        ],
+        "coverage_same_class": [
+          5.0,
+          5.0,
+          5.0
+        ],
+        "coverage_mean": [
+          5.0,
+          5.0,
+          5.0
+        ],
+        "coverage_median": [
+          5.0,
+          5.0,
+          5.0
+        ],
+        "coverage_min": [
+          5.0,
+          5.0,
+          5.0
+        ],
+        "coverage_blend_0.25": [
+          5.0,
+          5.0,
+          5.0
+        ],
+        "coverage_blend_0.5": [
+          5.0,
+          5.0,
+          5.0
+        ],
+        "coverage_blend_0.75": [
+          5.0,
+          5.0,
+          5.0
+        ],
+        "witness_coverage_max": [
+          5.0,
+          5.0,
+          5.0
+        ],
+        "intersection_zero": [
+          4.0,
+          4.0,
+          4.0
+        ],
+        "correction_erased": [
+          5.0,
+          5.0,
+          5.0
+        ]
+      },
+      "families": {
+        "rescore_native3": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_original3": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_transferred3": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_union6": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_erased3": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_original3_xor": {
+          "path_count": 4,
+          "correction_count": 5,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_union6_odd_xor": {
+          "path_count": 4,
+          "correction_count": 5,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_k1": {
+          "path_count": 2,
+          "correction_count": 3,
+          "best_qids": [
+            [],
+            [
+              8,
+              16,
+              28,
+              32,
+              36
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_k2": {
+          "path_count": 5,
+          "correction_count": 6,
+          "best_qids": [
+            [],
+            [
+              0,
+              17,
+              24,
+              31,
+              32
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_k3": {
+          "path_count": 7,
+          "correction_count": 8,
+          "best_qids": [
+            [],
+            [
+              0,
+              1,
+              4,
+              21,
+              28
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_k5": {
+          "path_count": 13,
+          "correction_count": 14,
+          "best_qids": [
+            [],
+            [
+              0,
+              1,
+              4,
+              5,
+              8
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_k15": {
+          "path_count": 42,
+          "correction_count": 43,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_all_shortest": {
+          "path_count": 21,
+          "correction_count": 22,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_union6_all_anchors": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_union6_face_polish": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_original3_all_anchors": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_original3_final_face_polish": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_original3_all_face_polish": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_original3_one_face": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_union6_one_face": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_erased3_face_polish": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_all_shortest_one_face": {
+          "path_count": 21,
+          "correction_count": 22,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_original3_two_faces": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_native3_two_faces": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_union6_two_faces": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_all_shortest_two_faces": {
+          "path_count": 21,
+          "correction_count": 22,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_original3_three_faces": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_union6_odd_xor_all_anchors": {
+          "path_count": 4,
+          "correction_count": 5,
+          "best_qids": [
+            [],
+            [
+              4,
+              5,
+              8,
+              11,
+              17
+            ]
+          ],
+          "class_weights": [
+            0,
+            5
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        }
+      }
+    },
+    "54": {
+      "record": {
+        "p": 0.02,
+        "syndrome_id": 54,
+        "detectors": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "representative_qids": [
+          16,
+          17
+        ],
+        "final_qids": [
+          16,
+          17
+        ],
+        "final_class": 0,
+        "comparative_class": 0,
+        "final_color": "r",
+        "candidate_qids": [
+          [
+            16,
+            17
+          ],
+          [
+            16,
+            17
+          ],
+          [
+            16,
+            17
+          ]
+        ],
+        "candidate_classes": [
+          0,
+          0,
+          0
+        ],
+        "exact_class_weights": [
+          2,
+          3
+        ],
+        "target_gap_over_w": 1
+      },
+      "original_residuals_by_qid": {
+        "11": [
+          0.5,
+          0.0,
+          0.5
+        ],
+        "1": [
+          1.0,
+          1.0,
+          0.5
+        ],
+        "12": [
+          0.5,
+          1.0,
+          1.0
+        ],
+        "4": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "15": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "5": [
+          1.0,
+          0.5,
+          1.0
+        ],
+        "16": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "8": [
+          0.5,
+          0.5,
+          1.0
+        ],
+        "17": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "0": [
+          0.5,
+          1.0,
+          0.5
+        ],
+        "20": [
+          0.5,
+          1.0,
+          1.0
+        ],
+        "21": [
+          0.5,
+          1.0,
+          1.0
+        ],
+        "25": [
+          0.5,
+          1.0,
+          1.0
+        ],
+        "24": [
+          0.5,
+          1.0,
+          0.5
+        ],
+        "28": [
+          0.5,
+          0.5,
+          1.0
+        ],
+        "31": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "32": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "33": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "36": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "transferred_residuals_by_qid": {
+        "11": 0.0,
+        "1": 0.5,
+        "12": 0.5,
+        "4": 1.0,
+        "15": 0.0,
+        "5": 0.5,
+        "16": 0.0,
+        "8": 0.5,
+        "17": 0.0,
+        "0": 0.5,
+        "20": 0.5,
+        "21": 0.5,
+        "25": 0.5,
+        "24": 0.5,
+        "28": 0.5,
+        "31": 1.0,
+        "32": 1.0,
+        "33": 1.0,
+        "36": 1.0
+      },
+      "path_qids": {
+        "original_graph": [
+          [
+            0,
+            17,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "coverage_max": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "coverage_same_class": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "coverage_mean": [
+          [
+            0,
+            17,
+            24,
+            33,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "coverage_median": [
+          [
+            0,
+            17,
+            24,
+            33,
+            36
+          ],
+          [
+            8,
+            16,
+            24,
+            25,
+            28
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "coverage_min": [
+          [
+            0,
+            17,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "coverage_blend_0.25": [
+          [
+            0,
+            17,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "coverage_blend_0.5": [
+          [
+            0,
+            17,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "coverage_blend_0.75": [
+          [
+            0,
+            17,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "witness_coverage_max": [
+          [
+            0,
+            17,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "intersection_zero": [
+          [
+            0,
+            17,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "correction_erased": [
+          [
+            0,
+            17,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ]
+      },
+      "per_color_costs": {
+        "original_graph": [
+          3.0,
+          2.0,
+          2.0
+        ],
+        "coverage_max": [
+          3.0,
+          2.0,
+          1.0
+        ],
+        "coverage_same_class": [
+          3.0,
+          2.0,
+          1.0
+        ],
+        "coverage_mean": [
+          3.333333333333333,
+          2.833333333333333,
+          2.1666666666666665
+        ],
+        "coverage_median": [
+          3.0,
+          2.5,
+          2.5
+        ],
+        "coverage_min": [
+          4.0,
+          3.5,
+          3.0
+        ],
+        "coverage_blend_0.25": [
+          3.0,
+          2.0,
+          1.75
+        ],
+        "coverage_blend_0.5": [
+          3.0,
+          2.0,
+          1.5
+        ],
+        "coverage_blend_0.75": [
+          3.0,
+          2.0,
+          1.25
+        ],
+        "witness_coverage_max": [
+          3.0,
+          2.0,
+          1.5
+        ],
+        "intersection_zero": [
+          2.5,
+          2.0,
+          1.0
+        ],
+        "correction_erased": [
+          4.0,
+          4.0,
+          4.0
+        ]
+      },
+      "families": {
+        "rescore_native3": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              16
+            ]
+          ],
+          "class_weights": [
+            2,
+            5
+          ],
+          "signed_gap_over_w": 3,
+          "polish_traces": []
+        },
+        "rescore_original3": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              16
+            ]
+          ],
+          "class_weights": [
+            2,
+            5
+          ],
+          "signed_gap_over_w": 3,
+          "polish_traces": []
+        },
+        "rescore_transferred3": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              16
+            ]
+          ],
+          "class_weights": [
+            2,
+            5
+          ],
+          "signed_gap_over_w": 3,
+          "polish_traces": []
+        },
+        "rescore_union6": {
+          "path_count": 4,
+          "correction_count": 5,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              16
+            ]
+          ],
+          "class_weights": [
+            2,
+            5
+          ],
+          "signed_gap_over_w": 3,
+          "polish_traces": []
+        },
+        "rescore_erased3": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              16
+            ]
+          ],
+          "class_weights": [
+            2,
+            5
+          ],
+          "signed_gap_over_w": 3,
+          "polish_traces": []
+        },
+        "rescore_original3_xor": {
+          "path_count": 4,
+          "correction_count": 5,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              16
+            ]
+          ],
+          "class_weights": [
+            2,
+            5
+          ],
+          "signed_gap_over_w": 3,
+          "polish_traces": []
+        },
+        "rescore_union6_odd_xor": {
+          "path_count": 8,
+          "correction_count": 9,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              1,
+              12,
+              15
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_k1": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              16
+            ]
+          ],
+          "class_weights": [
+            2,
+            5
+          ],
+          "signed_gap_over_w": 3,
+          "polish_traces": []
+        },
+        "rescore_k2": {
+          "path_count": 6,
+          "correction_count": 7,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              16
+            ]
+          ],
+          "class_weights": [
+            2,
+            5
+          ],
+          "signed_gap_over_w": 3,
+          "polish_traces": []
+        },
+        "rescore_k3": {
+          "path_count": 7,
+          "correction_count": 8,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              16
+            ]
+          ],
+          "class_weights": [
+            2,
+            5
+          ],
+          "signed_gap_over_w": 3,
+          "polish_traces": []
+        },
+        "rescore_k5": {
+          "path_count": 13,
+          "correction_count": 14,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              16
+            ]
+          ],
+          "class_weights": [
+            2,
+            5
+          ],
+          "signed_gap_over_w": 3,
+          "polish_traces": []
+        },
+        "rescore_k15": {
+          "path_count": 42,
+          "correction_count": 43,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              16
+            ]
+          ],
+          "class_weights": [
+            2,
+            5
+          ],
+          "signed_gap_over_w": 3,
+          "polish_traces": []
+        },
+        "rescore_all_shortest": {
+          "path_count": 6,
+          "correction_count": 7,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              16
+            ]
+          ],
+          "class_weights": [
+            2,
+            5
+          ],
+          "signed_gap_over_w": 3,
+          "polish_traces": []
+        },
+        "rescore_union6_all_anchors": {
+          "path_count": 4,
+          "correction_count": 5,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              16
+            ]
+          ],
+          "class_weights": [
+            2,
+            5
+          ],
+          "signed_gap_over_w": 3,
+          "polish_traces": []
+        },
+        "rescore_union6_face_polish": {
+          "path_count": 4,
+          "correction_count": 7,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              1,
+              12,
+              15
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                16
+              ],
+              "face_flips": [
+                [
+                  5,
+                  8,
+                  15,
+                  16
+                ]
+              ],
+              "result_qids": [
+                4,
+                11,
+                15
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                15,
+                17
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                1,
+                12,
+                15
+              ]
+            },
+            {
+              "start_qids": [
+                1,
+                11,
+                16,
+                17,
+                25,
+                31,
+                36
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                0,
+                16,
+                25,
+                31,
+                36
+              ]
+            }
+          ]
+        },
+        "rescore_original3_all_anchors": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              16
+            ]
+          ],
+          "class_weights": [
+            2,
+            5
+          ],
+          "signed_gap_over_w": 3,
+          "polish_traces": []
+        },
+        "rescore_original3_final_face_polish": {
+          "path_count": 3,
+          "correction_count": 6,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              1,
+              12,
+              15
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                16
+              ],
+              "face_flips": [
+                [
+                  5,
+                  8,
+                  15,
+                  16
+                ]
+              ],
+              "result_qids": [
+                4,
+                11,
+                15
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                15,
+                17
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                1,
+                12,
+                15
+              ]
+            }
+          ]
+        },
+        "rescore_original3_all_face_polish": {
+          "path_count": 3,
+          "correction_count": 6,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              1,
+              12,
+              15
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                16
+              ],
+              "face_flips": [
+                [
+                  5,
+                  8,
+                  15,
+                  16
+                ]
+              ],
+              "result_qids": [
+                4,
+                11,
+                15
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                15,
+                17
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                1,
+                12,
+                15
+              ]
+            }
+          ]
+        },
+        "rescore_original3_one_face": {
+          "path_count": 3,
+          "correction_count": 6,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              1,
+              12,
+              15
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                16
+              ],
+              "face_flips": [
+                [
+                  5,
+                  8,
+                  15,
+                  16
+                ]
+              ],
+              "result_qids": [
+                4,
+                11,
+                15
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                15,
+                17
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                1,
+                12,
+                15
+              ]
+            }
+          ]
+        },
+        "rescore_union6_one_face": {
+          "path_count": 4,
+          "correction_count": 7,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              1,
+              12,
+              15
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                16
+              ],
+              "face_flips": [
+                [
+                  5,
+                  8,
+                  15,
+                  16
+                ]
+              ],
+              "result_qids": [
+                4,
+                11,
+                15
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                15,
+                17
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                1,
+                12,
+                15
+              ]
+            },
+            {
+              "start_qids": [
+                1,
+                11,
+                16,
+                17,
+                25,
+                31,
+                36
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                0,
+                16,
+                25,
+                31,
+                36
+              ]
+            }
+          ]
+        },
+        "rescore_erased3_face_polish": {
+          "path_count": 3,
+          "correction_count": 6,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              1,
+              12,
+              15
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                16
+              ],
+              "face_flips": [
+                [
+                  5,
+                  8,
+                  15,
+                  16
+                ]
+              ],
+              "result_qids": [
+                4,
+                11,
+                15
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                15,
+                17
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                1,
+                12,
+                15
+              ]
+            }
+          ]
+        },
+        "rescore_all_shortest_one_face": {
+          "path_count": 6,
+          "correction_count": 9,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              1,
+              12,
+              15
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                16
+              ],
+              "face_flips": [
+                [
+                  5,
+                  8,
+                  15,
+                  16
+                ]
+              ],
+              "result_qids": [
+                4,
+                11,
+                15
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                15,
+                17
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                1,
+                12,
+                15
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                1,
+                4,
+                15,
+                17
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                4,
+                11,
+                15
+              ]
+            }
+          ]
+        },
+        "rescore_original3_two_faces": {
+          "path_count": 3,
+          "correction_count": 5,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              1,
+              12,
+              15
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                16
+              ],
+              "face_flips": [
+                [
+                  1,
+                  4,
+                  11,
+                  12
+                ],
+                [
+                  5,
+                  8,
+                  15,
+                  16
+                ]
+              ],
+              "result_qids": [
+                1,
+                12,
+                15
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                15,
+                17
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                1,
+                12,
+                15
+              ]
+            }
+          ]
+        },
+        "rescore_native3_two_faces": {
+          "path_count": 3,
+          "correction_count": 5,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              1,
+              12,
+              15
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                16
+              ],
+              "face_flips": [
+                [
+                  1,
+                  4,
+                  11,
+                  12
+                ],
+                [
+                  5,
+                  8,
+                  15,
+                  16
+                ]
+              ],
+              "result_qids": [
+                1,
+                12,
+                15
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                15,
+                17
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                1,
+                12,
+                15
+              ]
+            }
+          ]
+        },
+        "rescore_union6_two_faces": {
+          "path_count": 4,
+          "correction_count": 7,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              1,
+              12,
+              15
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                16
+              ],
+              "face_flips": [
+                [
+                  1,
+                  4,
+                  11,
+                  12
+                ],
+                [
+                  5,
+                  8,
+                  15,
+                  16
+                ]
+              ],
+              "result_qids": [
+                1,
+                12,
+                15
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                15,
+                17
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                1,
+                12,
+                15
+              ]
+            },
+            {
+              "start_qids": [
+                1,
+                11,
+                16,
+                17,
+                25,
+                31,
+                36
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                16,
+                25,
+                32,
+                33
+              ]
+            }
+          ]
+        },
+        "rescore_all_shortest_two_faces": {
+          "path_count": 6,
+          "correction_count": 8,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              1,
+              12,
+              15
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                16
+              ],
+              "face_flips": [
+                [
+                  1,
+                  4,
+                  11,
+                  12
+                ],
+                [
+                  5,
+                  8,
+                  15,
+                  16
+                ]
+              ],
+              "result_qids": [
+                1,
+                12,
+                15
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                15,
+                17
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                1,
+                12,
+                15
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                1,
+                4,
+                15,
+                17
+              ],
+              "face_flips": [
+                [
+                  1,
+                  4,
+                  11,
+                  12
+                ],
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                1,
+                12,
+                15
+              ]
+            }
+          ]
+        },
+        "rescore_original3_three_faces": {
+          "path_count": 3,
+          "correction_count": 5,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              1,
+              12,
+              15
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                16
+              ],
+              "face_flips": [
+                [
+                  1,
+                  4,
+                  11,
+                  12
+                ],
+                [
+                  5,
+                  8,
+                  15,
+                  16
+                ]
+              ],
+              "result_qids": [
+                1,
+                12,
+                15
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                15,
+                17
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                1,
+                12,
+                15
+              ]
+            }
+          ]
+        },
+        "rescore_union6_odd_xor_all_anchors": {
+          "path_count": 8,
+          "correction_count": 9,
+          "best_qids": [
+            [
+              16,
+              17
+            ],
+            [
+              1,
+              12,
+              15
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        }
+      }
+    },
+    "88": {
+      "record": {
+        "p": 0.02,
+        "syndrome_id": 88,
+        "detectors": [
+          3,
+          4,
+          6
+        ],
+        "representative_qids": [
+          20
+        ],
+        "final_qids": [
+          20
+        ],
+        "final_class": 0,
+        "comparative_class": 0,
+        "final_color": "r",
+        "candidate_qids": [
+          [
+            20
+          ],
+          [
+            20
+          ],
+          [
+            20
+          ]
+        ],
+        "candidate_classes": [
+          0,
+          0,
+          0
+        ],
+        "exact_class_weights": [
+          1,
+          6
+        ],
+        "target_gap_over_w": 5
+      },
+      "original_residuals_by_qid": {
+        "11": [
+          0.5,
+          1.0,
+          1.0
+        ],
+        "1": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "12": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "4": [
+          1.0,
+          1.0,
+          0.5
+        ],
+        "15": [
+          1.0,
+          1.0,
+          0.5
+        ],
+        "5": [
+          1.0,
+          1.0,
+          0.5
+        ],
+        "16": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "8": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "17": [
+          0.5,
+          1.0,
+          1.0
+        ],
+        "0": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "20": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "21": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "25": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "24": [
+          0.5,
+          1.0,
+          1.0
+        ],
+        "28": [
+          1.0,
+          0.5,
+          1.0
+        ],
+        "31": [
+          1.0,
+          0.5,
+          1.0
+        ],
+        "32": [
+          1.0,
+          0.5,
+          1.0
+        ],
+        "33": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "36": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "transferred_residuals_by_qid": {
+        "11": 0.5,
+        "1": 1.0,
+        "12": 0.5,
+        "4": 0.5,
+        "15": 0.5,
+        "5": 0.5,
+        "16": 1.0,
+        "8": 1.0,
+        "17": 0.5,
+        "0": 1.0,
+        "20": 0.0,
+        "21": 0.5,
+        "25": 0.5,
+        "24": 0.5,
+        "28": 0.5,
+        "31": 0.5,
+        "32": 0.5,
+        "33": 1.0,
+        "36": 1.0
+      },
+      "path_qids": {
+        "original_graph": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            8,
+            15,
+            21,
+            24,
+            25
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "coverage_max": [
+          [
+            4,
+            12,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            21,
+            28
+          ]
+        ],
+        "coverage_same_class": [
+          [
+            4,
+            12,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            21,
+            28
+          ]
+        ],
+        "coverage_mean": [
+          [
+            4,
+            12,
+            25,
+            31,
+            36
+          ],
+          [
+            8,
+            15,
+            21,
+            24,
+            25
+          ],
+          [
+            0,
+            11,
+            12,
+            21,
+            28
+          ]
+        ],
+        "coverage_median": [
+          [
+            4,
+            12,
+            25,
+            31,
+            36
+          ],
+          [
+            8,
+            15,
+            21,
+            24,
+            25
+          ],
+          [
+            0,
+            11,
+            12,
+            21,
+            28
+          ]
+        ],
+        "coverage_min": [
+          [
+            4,
+            12,
+            25,
+            31,
+            36
+          ],
+          [
+            8,
+            15,
+            21,
+            24,
+            25
+          ],
+          [
+            0,
+            11,
+            12,
+            21,
+            28
+          ]
+        ],
+        "coverage_blend_0.25": [
+          [
+            4,
+            12,
+            25,
+            31,
+            36
+          ],
+          [
+            8,
+            15,
+            21,
+            24,
+            25
+          ],
+          [
+            0,
+            11,
+            12,
+            21,
+            28
+          ]
+        ],
+        "coverage_blend_0.5": [
+          [
+            4,
+            12,
+            25,
+            31,
+            36
+          ],
+          [
+            8,
+            15,
+            21,
+            24,
+            25
+          ],
+          [
+            0,
+            11,
+            12,
+            21,
+            28
+          ]
+        ],
+        "coverage_blend_0.75": [
+          [
+            4,
+            12,
+            25,
+            31,
+            36
+          ],
+          [
+            8,
+            15,
+            21,
+            24,
+            25
+          ],
+          [
+            0,
+            11,
+            12,
+            21,
+            28
+          ]
+        ],
+        "witness_coverage_max": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            8,
+            15,
+            21,
+            24,
+            25
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "intersection_zero": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            8,
+            15,
+            21,
+            24,
+            25
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "correction_erased": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ]
+      },
+      "per_color_costs": {
+        "original_graph": [
+          4.0,
+          4.0,
+          4.0
+        ],
+        "coverage_max": [
+          3.0,
+          3.0,
+          3.0
+        ],
+        "coverage_same_class": [
+          3.0,
+          3.0,
+          3.0
+        ],
+        "coverage_mean": [
+          3.666666666666667,
+          3.666666666666667,
+          3.666666666666667
+        ],
+        "coverage_median": [
+          4.0,
+          4.0,
+          4.0
+        ],
+        "coverage_min": [
+          4.0,
+          4.0,
+          4.0
+        ],
+        "coverage_blend_0.25": [
+          3.75,
+          3.75,
+          3.75
+        ],
+        "coverage_blend_0.5": [
+          3.5,
+          3.5,
+          3.5
+        ],
+        "coverage_blend_0.75": [
+          3.25,
+          3.25,
+          3.25
+        ],
+        "witness_coverage_max": [
+          4.0,
+          3.5,
+          3.5
+        ],
+        "intersection_zero": [
+          3.0,
+          2.5,
+          2.5
+        ],
+        "correction_erased": [
+          5.0,
+          5.0,
+          5.0
+        ]
+      },
+      "families": {
+        "rescore_native3": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              0,
+              11,
+              12,
+              15,
+              16,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_original3": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              0,
+              11,
+              12,
+              15,
+              16,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_transferred3": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              17,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_union6": {
+          "path_count": 6,
+          "correction_count": 7,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              17,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_erased3": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              17,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_original3_xor": {
+          "path_count": 4,
+          "correction_count": 5,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              0,
+              11,
+              12,
+              15,
+              16,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_union6_odd_xor": {
+          "path_count": 32,
+          "correction_count": 33,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              1,
+              5,
+              8,
+              12,
+              17,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_k1": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              0,
+              1,
+              4,
+              20,
+              21,
+              28
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_k2": {
+          "path_count": 6,
+          "correction_count": 7,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              0,
+              11,
+              12,
+              20,
+              21,
+              28
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_k3": {
+          "path_count": 9,
+          "correction_count": 10,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              0,
+              1,
+              4,
+              5,
+              8,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_k5": {
+          "path_count": 15,
+          "correction_count": 16,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              0,
+              1,
+              4,
+              15,
+              16,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_k15": {
+          "path_count": 42,
+          "correction_count": 43,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              17,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_all_shortest": {
+          "path_count": 18,
+          "correction_count": 19,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              0,
+              11,
+              12,
+              15,
+              16,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_union6_all_anchors": {
+          "path_count": 6,
+          "correction_count": 7,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              17,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_union6_face_polish": {
+          "path_count": 6,
+          "correction_count": 7,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              17,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_original3_all_anchors": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              0,
+              11,
+              12,
+              15,
+              16,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_original3_final_face_polish": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              0,
+              11,
+              12,
+              15,
+              16,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_original3_all_face_polish": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              0,
+              11,
+              12,
+              15,
+              16,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_original3_one_face": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              0,
+              11,
+              12,
+              15,
+              16,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_union6_one_face": {
+          "path_count": 6,
+          "correction_count": 7,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              17,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_erased3_face_polish": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              17,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_all_shortest_one_face": {
+          "path_count": 18,
+          "correction_count": 19,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              0,
+              11,
+              12,
+              15,
+              16,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_original3_two_faces": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              0,
+              11,
+              12,
+              15,
+              16,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_native3_two_faces": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              0,
+              11,
+              12,
+              15,
+              16,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_union6_two_faces": {
+          "path_count": 6,
+          "correction_count": 7,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              4,
+              5,
+              8,
+              11,
+              17,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_all_shortest_two_faces": {
+          "path_count": 18,
+          "correction_count": 19,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              0,
+              11,
+              12,
+              15,
+              16,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_original3_three_faces": {
+          "path_count": 3,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              0,
+              11,
+              12,
+              15,
+              16,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        },
+        "rescore_union6_odd_xor_all_anchors": {
+          "path_count": 32,
+          "correction_count": 33,
+          "best_qids": [
+            [
+              20
+            ],
+            [
+              1,
+              5,
+              8,
+              12,
+              17,
+              20
+            ]
+          ],
+          "class_weights": [
+            1,
+            6
+          ],
+          "signed_gap_over_w": 5,
+          "polish_traces": []
+        }
+      }
+    },
+    "249": {
+      "record": {
+        "p": 0.02,
+        "syndrome_id": 249,
+        "detectors": [
+          0,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "representative_qids": [
+          4,
+          24,
+          28
+        ],
+        "final_qids": [
+          12,
+          28,
+          31,
+          32
+        ],
+        "final_class": 0,
+        "comparative_class": 1,
+        "final_color": "r",
+        "candidate_qids": [
+          [
+            12,
+            28,
+            31,
+            32
+          ],
+          [
+            11,
+            17,
+            21,
+            24
+          ],
+          [
+            12,
+            20,
+            21,
+            25
+          ]
+        ],
+        "candidate_classes": [
+          0,
+          0,
+          0
+        ],
+        "exact_class_weights": [
+          4,
+          3
+        ],
+        "target_gap_over_w": 1
+      },
+      "original_residuals_by_qid": {
+        "11": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "1": [
+          1.0,
+          0.0,
+          1.0
+        ],
+        "12": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "4": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "15": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "5": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "16": [
+          0.0,
+          1.0,
+          1.0
+        ],
+        "8": [
+          0.0,
+          1.0,
+          1.0
+        ],
+        "17": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "0": [
+          1.0,
+          0.0,
+          1.0
+        ],
+        "20": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "21": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "25": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "24": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "28": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "31": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "32": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "33": [
+          1.0,
+          1.0,
+          0.0
+        ],
+        "36": [
+          1.0,
+          1.0,
+          0.0
+        ]
+      },
+      "transferred_residuals_by_qid": {
+        "11": 0.0,
+        "1": 0.0,
+        "12": 0.0,
+        "4": 0.0,
+        "15": 0.0,
+        "5": 0.0,
+        "16": 0.0,
+        "8": 0.0,
+        "17": 0.0,
+        "0": 0.0,
+        "20": 0.0,
+        "21": 0.0,
+        "25": 0.0,
+        "24": 0.0,
+        "28": 0.0,
+        "31": 0.0,
+        "32": 0.0,
+        "33": 0.0,
+        "36": 0.0
+      },
+      "path_qids": {
+        "original_graph": [
+          [
+            4,
+            12,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            21,
+            28
+          ]
+        ],
+        "coverage_max": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "coverage_same_class": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            15,
+            16
+          ]
+        ],
+        "coverage_mean": [
+          [
+            4,
+            12,
+            25,
+            31,
+            36
+          ],
+          [
+            8,
+            15,
+            21,
+            24,
+            25
+          ],
+          [
+            0,
+            11,
+            12,
+            21,
+            28
+          ]
+        ],
+        "coverage_median": [
+          [
+            4,
+            12,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            21,
+            28
+          ]
+        ],
+        "coverage_min": [
+          [
+            4,
+            12,
+            25,
+            31,
+            36
+          ],
+          [
+            8,
+            15,
+            21,
+            24,
+            25
+          ],
+          [
+            0,
+            11,
+            12,
+            21,
+            28
+          ]
+        ],
+        "coverage_blend_0.25": [
+          [
+            4,
+            12,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            21,
+            28
+          ]
+        ],
+        "coverage_blend_0.5": [
+          [
+            4,
+            12,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            21,
+            28
+          ]
+        ],
+        "coverage_blend_0.75": [
+          [
+            4,
+            12,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            21,
+            28
+          ]
+        ],
+        "witness_coverage_max": [
+          [
+            4,
+            12,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            21,
+            28
+          ]
+        ],
+        "intersection_zero": [
+          [
+            4,
+            12,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            21,
+            28
+          ]
+        ],
+        "correction_erased": [
+          [
+            4,
+            12,
+            25,
+            31,
+            36
+          ],
+          [
+            8,
+            16,
+            28,
+            31,
+            33
+          ],
+          [
+            0,
+            11,
+            12,
+            21,
+            28
+          ]
+        ]
+      },
+      "per_color_costs": {
+        "original_graph": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "coverage_max": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "coverage_same_class": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "coverage_mean": [
+          1.3333333333333333,
+          1.3333333333333333,
+          1.3333333333333333
+        ],
+        "coverage_median": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "coverage_min": [
+          3.0,
+          3.0,
+          3.0
+        ],
+        "coverage_blend_0.25": [
+          0.75,
+          0.75,
+          0.75
+        ],
+        "coverage_blend_0.5": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "coverage_blend_0.75": [
+          0.25,
+          0.25,
+          0.25
+        ],
+        "witness_coverage_max": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "intersection_zero": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "correction_erased": [
+          3.0,
+          3.0,
+          3.0
+        ]
+      },
+      "families": {
+        "rescore_native3": {
+          "path_count": 3,
+          "correction_count": 6,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              0,
+              11,
+              21,
+              31,
+              32
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_original3": {
+          "path_count": 3,
+          "correction_count": 6,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              0,
+              11,
+              21,
+              31,
+              32
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_transferred3": {
+          "path_count": 3,
+          "correction_count": 6,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              0,
+              11,
+              15,
+              16,
+              28,
+              31,
+              32
+            ]
+          ],
+          "class_weights": [
+            4,
+            7
+          ],
+          "signed_gap_over_w": 3,
+          "polish_traces": []
+        },
+        "rescore_union6": {
+          "path_count": 5,
+          "correction_count": 8,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              0,
+              11,
+              21,
+              31,
+              32
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_erased3": {
+          "path_count": 3,
+          "correction_count": 6,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              0,
+              11,
+              21,
+              31,
+              32
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_original3_xor": {
+          "path_count": 4,
+          "correction_count": 7,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              0,
+              11,
+              21,
+              31,
+              32
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_union6_odd_xor": {
+          "path_count": 16,
+          "correction_count": 19,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              0,
+              11,
+              21,
+              31,
+              32
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_k1": {
+          "path_count": 3,
+          "correction_count": 6,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              8,
+              12,
+              16,
+              31,
+              36
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_k2": {
+          "path_count": 6,
+          "correction_count": 9,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              8,
+              12,
+              16,
+              31,
+              36
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_k3": {
+          "path_count": 9,
+          "correction_count": 12,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              0,
+              12,
+              17,
+              24,
+              28
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_k5": {
+          "path_count": 15,
+          "correction_count": 18,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              0,
+              11,
+              20,
+              25,
+              28
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_k15": {
+          "path_count": 42,
+          "correction_count": 45,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              0,
+              11,
+              20,
+              25,
+              28
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_all_shortest": {
+          "path_count": 18,
+          "correction_count": 21,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              0,
+              11,
+              20,
+              25,
+              28
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_union6_all_anchors": {
+          "path_count": 5,
+          "correction_count": 18,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              4,
+              5,
+              8,
+              21,
+              24
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_union6_face_polish": {
+          "path_count": 5,
+          "correction_count": 21,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              8,
+              11,
+              15,
+              17,
+              25
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                12,
+                17,
+                20,
+                21,
+                25
+              ],
+              "face_flips": [
+                [
+                  4,
+                  5,
+                  12,
+                  15,
+                  20,
+                  21
+                ]
+              ],
+              "result_qids": [
+                8,
+                11,
+                15,
+                17,
+                25
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                15,
+                16,
+                20,
+                21,
+                25
+              ],
+              "face_flips": [
+                [
+                  15,
+                  16,
+                  21,
+                  28
+                ]
+              ],
+              "result_qids": [
+                0,
+                11,
+                20,
+                25,
+                28
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                12,
+                15,
+                16,
+                17,
+                21,
+                24
+              ],
+              "face_flips": [
+                [
+                  15,
+                  16,
+                  21,
+                  28
+                ]
+              ],
+              "result_qids": [
+                0,
+                12,
+                17,
+                24,
+                28
+              ]
+            },
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                12,
+                17,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  1,
+                  4,
+                  11,
+                  12
+                ]
+              ],
+              "result_qids": [
+                1,
+                5,
+                8,
+                17,
+                28,
+                31,
+                32
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                15,
+                16,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  15,
+                  16,
+                  21,
+                  28
+                ]
+              ],
+              "result_qids": [
+                0,
+                11,
+                21,
+                31,
+                32
+              ]
+            },
+            {
+              "start_qids": [
+                1,
+                11,
+                12,
+                20,
+                21,
+                31,
+                36
+              ],
+              "face_flips": [
+                [
+                  1,
+                  4,
+                  11,
+                  12
+                ]
+              ],
+              "result_qids": [
+                4,
+                20,
+                21,
+                31,
+                36
+              ]
+            },
+            {
+              "start_qids": [
+                1,
+                17,
+                21,
+                24,
+                25,
+                31,
+                36
+              ],
+              "face_flips": [
+                [
+                  24,
+                  25,
+                  31,
+                  33
+                ]
+              ],
+              "result_qids": [
+                1,
+                17,
+                21,
+                33,
+                36
+              ]
+            },
+            {
+              "start_qids": [
+                4,
+                11,
+                12,
+                17,
+                21,
+                24,
+                25,
+                31,
+                36
+              ],
+              "face_flips": [
+                [
+                  11,
+                  12,
+                  17,
+                  20,
+                  24,
+                  25
+                ]
+              ],
+              "result_qids": [
+                4,
+                20,
+                21,
+                31,
+                36
+              ]
+            },
+            {
+              "start_qids": [
+                1,
+                11,
+                12,
+                25,
+                28,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  1,
+                  4,
+                  11,
+                  12
+                ]
+              ],
+              "result_qids": [
+                4,
+                25,
+                28,
+                32,
+                36
+              ]
+            }
+          ]
+        },
+        "rescore_original3_all_anchors": {
+          "path_count": 3,
+          "correction_count": 12,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              4,
+              5,
+              8,
+              21,
+              24
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_original3_final_face_polish": {
+          "path_count": 3,
+          "correction_count": 7,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              0,
+              11,
+              21,
+              31,
+              32
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                12,
+                17,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  1,
+                  4,
+                  11,
+                  12
+                ]
+              ],
+              "result_qids": [
+                1,
+                5,
+                8,
+                17,
+                28,
+                31,
+                32
+              ]
+            }
+          ]
+        },
+        "rescore_original3_all_face_polish": {
+          "path_count": 3,
+          "correction_count": 14,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              8,
+              11,
+              15,
+              17,
+              25
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                12,
+                17,
+                20,
+                21,
+                25
+              ],
+              "face_flips": [
+                [
+                  4,
+                  5,
+                  12,
+                  15,
+                  20,
+                  21
+                ]
+              ],
+              "result_qids": [
+                8,
+                11,
+                15,
+                17,
+                25
+              ]
+            },
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                12,
+                17,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  1,
+                  4,
+                  11,
+                  12
+                ]
+              ],
+              "result_qids": [
+                1,
+                5,
+                8,
+                17,
+                28,
+                31,
+                32
+              ]
+            },
+            {
+              "start_qids": [
+                4,
+                11,
+                12,
+                17,
+                21,
+                24,
+                25,
+                31,
+                36
+              ],
+              "face_flips": [
+                [
+                  11,
+                  12,
+                  17,
+                  20,
+                  24,
+                  25
+                ]
+              ],
+              "result_qids": [
+                4,
+                20,
+                21,
+                31,
+                36
+              ]
+            }
+          ]
+        },
+        "rescore_original3_one_face": {
+          "path_count": 3,
+          "correction_count": 7,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              0,
+              11,
+              21,
+              31,
+              32
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                12,
+                17,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  1,
+                  4,
+                  11,
+                  12
+                ]
+              ],
+              "result_qids": [
+                1,
+                5,
+                8,
+                17,
+                28,
+                31,
+                32
+              ]
+            }
+          ]
+        },
+        "rescore_union6_one_face": {
+          "path_count": 5,
+          "correction_count": 21,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              8,
+              11,
+              15,
+              17,
+              25
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                12,
+                17,
+                20,
+                21,
+                25
+              ],
+              "face_flips": [
+                [
+                  4,
+                  5,
+                  12,
+                  15,
+                  20,
+                  21
+                ]
+              ],
+              "result_qids": [
+                8,
+                11,
+                15,
+                17,
+                25
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                15,
+                16,
+                20,
+                21,
+                25
+              ],
+              "face_flips": [
+                [
+                  15,
+                  16,
+                  21,
+                  28
+                ]
+              ],
+              "result_qids": [
+                0,
+                11,
+                20,
+                25,
+                28
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                12,
+                15,
+                16,
+                17,
+                21,
+                24
+              ],
+              "face_flips": [
+                [
+                  15,
+                  16,
+                  21,
+                  28
+                ]
+              ],
+              "result_qids": [
+                0,
+                12,
+                17,
+                24,
+                28
+              ]
+            },
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                12,
+                17,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  1,
+                  4,
+                  11,
+                  12
+                ]
+              ],
+              "result_qids": [
+                1,
+                5,
+                8,
+                17,
+                28,
+                31,
+                32
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                15,
+                16,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  15,
+                  16,
+                  21,
+                  28
+                ]
+              ],
+              "result_qids": [
+                0,
+                11,
+                21,
+                31,
+                32
+              ]
+            },
+            {
+              "start_qids": [
+                1,
+                11,
+                12,
+                20,
+                21,
+                31,
+                36
+              ],
+              "face_flips": [
+                [
+                  1,
+                  4,
+                  11,
+                  12
+                ]
+              ],
+              "result_qids": [
+                4,
+                20,
+                21,
+                31,
+                36
+              ]
+            },
+            {
+              "start_qids": [
+                1,
+                17,
+                21,
+                24,
+                25,
+                31,
+                36
+              ],
+              "face_flips": [
+                [
+                  24,
+                  25,
+                  31,
+                  33
+                ]
+              ],
+              "result_qids": [
+                1,
+                17,
+                21,
+                33,
+                36
+              ]
+            },
+            {
+              "start_qids": [
+                4,
+                11,
+                12,
+                17,
+                21,
+                24,
+                25,
+                31,
+                36
+              ],
+              "face_flips": [
+                [
+                  11,
+                  12,
+                  17,
+                  20,
+                  24,
+                  25
+                ]
+              ],
+              "result_qids": [
+                4,
+                20,
+                21,
+                31,
+                36
+              ]
+            },
+            {
+              "start_qids": [
+                1,
+                11,
+                12,
+                25,
+                28,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  1,
+                  4,
+                  11,
+                  12
+                ]
+              ],
+              "result_qids": [
+                4,
+                25,
+                28,
+                32,
+                36
+              ]
+            }
+          ]
+        },
+        "rescore_erased3_face_polish": {
+          "path_count": 3,
+          "correction_count": 6,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              0,
+              11,
+              21,
+              31,
+              32
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_all_shortest_one_face": {
+          "path_count": 18,
+          "correction_count": 27,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              8,
+              11,
+              15,
+              17,
+              25
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                0,
+                12,
+                17,
+                20,
+                21,
+                24,
+                25,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ]
+              ],
+              "result_qids": [
+                0,
+                12,
+                17,
+                24,
+                28
+              ]
+            },
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                12,
+                17,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  1,
+                  4,
+                  11,
+                  12
+                ]
+              ],
+              "result_qids": [
+                1,
+                5,
+                8,
+                17,
+                28,
+                31,
+                32
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                1,
+                4,
+                5,
+                8,
+                12,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  1,
+                  4,
+                  11,
+                  12
+                ]
+              ],
+              "result_qids": [
+                0,
+                5,
+                8,
+                11,
+                28,
+                31,
+                32
+              ]
+            },
+            {
+              "start_qids": [
+                8,
+                11,
+                15,
+                17,
+                20,
+                21,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ]
+              ],
+              "result_qids": [
+                8,
+                11,
+                15,
+                17,
+                25
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                1,
+                8,
+                15,
+                20,
+                21,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ]
+              ],
+              "result_qids": [
+                0,
+                1,
+                8,
+                15,
+                25
+              ]
+            },
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                20,
+                24,
+                25,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ]
+              ],
+              "result_qids": [
+                4,
+                5,
+                8,
+                21,
+                24
+              ]
+            },
+            {
+              "start_qids": [
+                8,
+                12,
+                15,
+                21,
+                24,
+                25,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ]
+              ],
+              "result_qids": [
+                8,
+                12,
+                15,
+                20,
+                24
+              ]
+            },
+            {
+              "start_qids": [
+                5,
+                12,
+                15,
+                20,
+                21,
+                25,
+                28,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ]
+              ],
+              "result_qids": [
+                5,
+                12,
+                15,
+                31,
+                36
+              ]
+            },
+            {
+              "start_qids": [
+                8,
+                12,
+                16,
+                20,
+                21,
+                25,
+                28,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ]
+              ],
+              "result_qids": [
+                8,
+                12,
+                16,
+                31,
+                36
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                20,
+                25,
+                28,
+                31,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                11,
+                20,
+                25,
+                28
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                12,
+                17,
+                24,
+                28,
+                31,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                12,
+                17,
+                24,
+                28
+              ]
+            }
+          ]
+        },
+        "rescore_original3_two_faces": {
+          "path_count": 3,
+          "correction_count": 8,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              4,
+              24,
+              28
+            ]
+          ],
+          "class_weights": [
+            4,
+            3
+          ],
+          "signed_gap_over_w": -1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                12,
+                17,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  4,
+                  5,
+                  12,
+                  15,
+                  20,
+                  21
+                ],
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ]
+              ],
+              "result_qids": [
+                8,
+                11,
+                15,
+                17,
+                25
+              ]
+            },
+            {
+              "start_qids": [
+                4,
+                25,
+                28,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  24,
+                  25,
+                  31,
+                  33
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                4,
+                24,
+                28
+              ]
+            }
+          ]
+        },
+        "rescore_native3_two_faces": {
+          "path_count": 3,
+          "correction_count": 8,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              4,
+              24,
+              28
+            ]
+          ],
+          "class_weights": [
+            4,
+            3
+          ],
+          "signed_gap_over_w": -1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                12,
+                17,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  4,
+                  5,
+                  12,
+                  15,
+                  20,
+                  21
+                ],
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ]
+              ],
+              "result_qids": [
+                8,
+                11,
+                15,
+                17,
+                25
+              ]
+            },
+            {
+              "start_qids": [
+                4,
+                25,
+                28,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  24,
+                  25,
+                  31,
+                  33
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                4,
+                24,
+                28
+              ]
+            }
+          ]
+        },
+        "rescore_union6_two_faces": {
+          "path_count": 5,
+          "correction_count": 12,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              4,
+              24,
+              28
+            ]
+          ],
+          "class_weights": [
+            4,
+            3
+          ],
+          "signed_gap_over_w": -1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                12,
+                17,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  4,
+                  5,
+                  12,
+                  15,
+                  20,
+                  21
+                ],
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ]
+              ],
+              "result_qids": [
+                8,
+                11,
+                15,
+                17,
+                25
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                15,
+                16,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  15,
+                  16,
+                  21,
+                  28
+                ],
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ]
+              ],
+              "result_qids": [
+                0,
+                11,
+                20,
+                25,
+                28
+              ]
+            },
+            {
+              "start_qids": [
+                1,
+                11,
+                12,
+                25,
+                28,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  24,
+                  25,
+                  31,
+                  33
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                1,
+                11,
+                12,
+                24,
+                28
+              ]
+            },
+            {
+              "start_qids": [
+                4,
+                25,
+                28,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  24,
+                  25,
+                  31,
+                  33
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                4,
+                24,
+                28
+              ]
+            }
+          ]
+        },
+        "rescore_all_shortest_two_faces": {
+          "path_count": 18,
+          "correction_count": 29,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              4,
+              24,
+              28
+            ]
+          ],
+          "class_weights": [
+            4,
+            3
+          ],
+          "signed_gap_over_w": -1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                0,
+                12,
+                17,
+                24,
+                28
+              ],
+              "face_flips": [
+                [
+                  1,
+                  4,
+                  11,
+                  12
+                ],
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                4,
+                24,
+                28
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                12,
+                17,
+                20,
+                21,
+                24,
+                25,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  11,
+                  12,
+                  17,
+                  20,
+                  24,
+                  25
+                ],
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ]
+              ],
+              "result_qids": [
+                0,
+                11,
+                20,
+                25,
+                28
+              ]
+            },
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                12,
+                17,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  4,
+                  5,
+                  12,
+                  15,
+                  20,
+                  21
+                ],
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ]
+              ],
+              "result_qids": [
+                8,
+                11,
+                15,
+                17,
+                25
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                1,
+                4,
+                5,
+                8,
+                12,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  4,
+                  5,
+                  12,
+                  15,
+                  20,
+                  21
+                ],
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ]
+              ],
+              "result_qids": [
+                0,
+                1,
+                8,
+                15,
+                25
+              ]
+            },
+            {
+              "start_qids": [
+                8,
+                11,
+                15,
+                17,
+                20,
+                21,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  5,
+                  8,
+                  15,
+                  16
+                ],
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ]
+              ],
+              "result_qids": [
+                5,
+                11,
+                16,
+                17,
+                25
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                1,
+                8,
+                15,
+                20,
+                21,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ],
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ]
+              ],
+              "result_qids": [
+                8,
+                11,
+                15,
+                17,
+                25
+              ]
+            },
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                20,
+                24,
+                25,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  4,
+                  5,
+                  12,
+                  15,
+                  20,
+                  21
+                ],
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ]
+              ],
+              "result_qids": [
+                8,
+                12,
+                15,
+                20,
+                24
+              ]
+            },
+            {
+              "start_qids": [
+                8,
+                12,
+                15,
+                21,
+                24,
+                25,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  11,
+                  12,
+                  17,
+                  20,
+                  24,
+                  25
+                ],
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ]
+              ],
+              "result_qids": [
+                8,
+                11,
+                15,
+                17,
+                25
+              ]
+            },
+            {
+              "start_qids": [
+                4,
+                25,
+                28,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  24,
+                  25,
+                  31,
+                  33
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                4,
+                24,
+                28
+              ]
+            },
+            {
+              "start_qids": [
+                5,
+                12,
+                15,
+                20,
+                21,
+                25,
+                28,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  4,
+                  5,
+                  12,
+                  15,
+                  20,
+                  21
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                4,
+                25,
+                28,
+                31,
+                33
+              ]
+            },
+            {
+              "start_qids": [
+                8,
+                12,
+                16,
+                20,
+                21,
+                25,
+                28,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                8,
+                12,
+                16,
+                32,
+                33
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                20,
+                25,
+                28,
+                31,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                1,
+                17,
+                20,
+                25,
+                28
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                12,
+                17,
+                24,
+                28,
+                31,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  11,
+                  12,
+                  17,
+                  20,
+                  24,
+                  25
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                11,
+                20,
+                25,
+                28
+              ]
+            }
+          ]
+        },
+        "rescore_original3_three_faces": {
+          "path_count": 3,
+          "correction_count": 8,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              4,
+              24,
+              28
+            ]
+          ],
+          "class_weights": [
+            4,
+            3
+          ],
+          "signed_gap_over_w": -1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                4,
+                5,
+                8,
+                11,
+                12,
+                17,
+                28,
+                31,
+                32
+              ],
+              "face_flips": [
+                [
+                  5,
+                  8,
+                  15,
+                  16
+                ],
+                [
+                  4,
+                  5,
+                  12,
+                  15,
+                  20,
+                  21
+                ],
+                [
+                  20,
+                  21,
+                  25,
+                  28,
+                  31,
+                  32
+                ]
+              ],
+              "result_qids": [
+                5,
+                11,
+                16,
+                17,
+                25
+              ]
+            },
+            {
+              "start_qids": [
+                4,
+                25,
+                28,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  24,
+                  25,
+                  31,
+                  33
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                4,
+                24,
+                28
+              ]
+            }
+          ]
+        },
+        "rescore_union6_odd_xor_all_anchors": {
+          "path_count": 16,
+          "correction_count": 51,
+          "best_qids": [
+            [
+              12,
+              20,
+              21,
+              25
+            ],
+            [
+              4,
+              5,
+              8,
+              21,
+              24
+            ]
+          ],
+          "class_weights": [
+            4,
+            5
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        }
+      }
+    },
+    "340": {
+      "record": {
+        "p": 0.02,
+        "syndrome_id": 340,
+        "detectors": [
+          2,
+          4,
+          6,
+          8
+        ],
+        "representative_qids": [
+          17,
+          32
+        ],
+        "final_qids": [
+          17,
+          32
+        ],
+        "final_class": 0,
+        "comparative_class": 0,
+        "final_color": "r",
+        "candidate_qids": [
+          [
+            17,
+            32
+          ],
+          [
+            17,
+            32
+          ],
+          [
+            0,
+            25,
+            33
+          ]
+        ],
+        "candidate_classes": [
+          0,
+          0,
+          1
+        ],
+        "exact_class_weights": [
+          2,
+          3
+        ],
+        "target_gap_over_w": 1
+      },
+      "original_residuals_by_qid": {
+        "11": [
+          0.5,
+          0.0,
+          0.0
+        ],
+        "1": [
+          1.0,
+          1.0,
+          0.0
+        ],
+        "12": [
+          0.5,
+          1.0,
+          1.0
+        ],
+        "4": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "15": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "5": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "16": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "8": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "17": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "0": [
+          0.5,
+          1.0,
+          0.0
+        ],
+        "20": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "21": [
+          1.0,
+          0.5,
+          1.0
+        ],
+        "25": [
+          0.5,
+          0.5,
+          0.0
+        ],
+        "24": [
+          0.5,
+          1.0,
+          1.0
+        ],
+        "28": [
+          0.5,
+          0.5,
+          1.0
+        ],
+        "31": [
+          0.5,
+          0.5,
+          1.0
+        ],
+        "32": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "33": [
+          0.5,
+          1.0,
+          0.0
+        ],
+        "36": [
+          0.5,
+          0.5,
+          0.0
+        ]
+      },
+      "transferred_residuals_by_qid": {
+        "11": 0.0,
+        "1": 0.0,
+        "12": 0.5,
+        "4": 1.0,
+        "15": 1.0,
+        "5": 1.0,
+        "16": 1.0,
+        "8": 1.0,
+        "17": 0.0,
+        "0": 0.0,
+        "20": 0.0,
+        "21": 0.5,
+        "25": 0.0,
+        "24": 0.5,
+        "28": 0.5,
+        "31": 0.5,
+        "32": 0.0,
+        "33": 0.0,
+        "36": 0.0
+      },
+      "path_qids": {
+        "original_graph": [
+          [
+            0,
+            17,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            20,
+            25,
+            33,
+            36
+          ]
+        ],
+        "coverage_max": [
+          [
+            1,
+            11,
+            25,
+            31,
+            36
+          ],
+          [
+            8,
+            15,
+            21,
+            32,
+            36
+          ],
+          [
+            0,
+            11,
+            12,
+            20,
+            25,
+            33,
+            36
+          ]
+        ],
+        "coverage_same_class": [
+          [
+            0,
+            17,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            11,
+            12,
+            20,
+            25,
+            33,
+            36
+          ]
+        ],
+        "coverage_mean": [
+          [
+            0,
+            17,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            17,
+            24,
+            33,
+            36
+          ]
+        ],
+        "coverage_median": [
+          [
+            0,
+            17,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            17,
+            24,
+            31,
+            32
+          ]
+        ],
+        "coverage_min": [
+          [
+            0,
+            17,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            17,
+            24,
+            33,
+            36
+          ]
+        ],
+        "coverage_blend_0.25": [
+          [
+            0,
+            17,
+            25,
+            31,
+            36
+          ],
+          [
+            8,
+            15,
+            21,
+            32,
+            36
+          ],
+          [
+            0,
+            11,
+            12,
+            20,
+            25,
+            33,
+            36
+          ]
+        ],
+        "coverage_blend_0.5": [
+          [
+            0,
+            17,
+            25,
+            31,
+            36
+          ],
+          [
+            8,
+            15,
+            21,
+            32,
+            36
+          ],
+          [
+            0,
+            11,
+            12,
+            20,
+            25,
+            33,
+            36
+          ]
+        ],
+        "coverage_blend_0.75": [
+          [
+            0,
+            17,
+            25,
+            31,
+            36
+          ],
+          [
+            8,
+            15,
+            21,
+            32,
+            36
+          ],
+          [
+            0,
+            11,
+            12,
+            20,
+            25,
+            33,
+            36
+          ]
+        ],
+        "witness_coverage_max": [
+          [
+            0,
+            17,
+            25,
+            31,
+            36
+          ],
+          [
+            8,
+            15,
+            21,
+            32,
+            36
+          ],
+          [
+            0,
+            11,
+            12,
+            20,
+            25,
+            33,
+            36
+          ]
+        ],
+        "intersection_zero": [
+          [
+            0,
+            17,
+            25,
+            31,
+            36
+          ],
+          [
+            8,
+            15,
+            21,
+            32,
+            36
+          ],
+          [
+            0,
+            11,
+            12,
+            20,
+            25,
+            33,
+            36
+          ]
+        ],
+        "correction_erased": [
+          [
+            0,
+            17,
+            25,
+            31,
+            36
+          ],
+          [
+            4,
+            5,
+            8,
+            11,
+            17
+          ],
+          [
+            0,
+            17,
+            24,
+            31,
+            32
+          ]
+        ]
+      },
+      "per_color_costs": {
+        "original_graph": [
+          2.0,
+          3.0,
+          1.0
+        ],
+        "coverage_max": [
+          0.5,
+          2.5,
+          0.5
+        ],
+        "coverage_same_class": [
+          2.0,
+          3.0,
+          0.5
+        ],
+        "coverage_mean": [
+          1.8333333333333333,
+          3.166666666666667,
+          2.1666666666666665
+        ],
+        "coverage_median": [
+          2.0,
+          3.0,
+          2.0
+        ],
+        "coverage_min": [
+          3.0,
+          3.5,
+          3.5
+        ],
+        "coverage_blend_0.25": [
+          1.625,
+          2.875,
+          0.875
+        ],
+        "coverage_blend_0.5": [
+          1.25,
+          2.75,
+          0.75
+        ],
+        "coverage_blend_0.75": [
+          0.875,
+          2.625,
+          0.625
+        ],
+        "witness_coverage_max": [
+          0.5,
+          2.5,
+          1.0
+        ],
+        "intersection_zero": [
+          0.5,
+          2.5,
+          1.0
+        ],
+        "correction_erased": [
+          4.0,
+          4.0,
+          3.0
+        ]
+      },
+      "families": {
+        "rescore_native3": {
+          "path_count": 3,
+          "correction_count": 5,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              25,
+              33
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_original3": {
+          "path_count": 3,
+          "correction_count": 5,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              25,
+              33
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_transferred3": {
+          "path_count": 3,
+          "correction_count": 5,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              25,
+              33
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_union6": {
+          "path_count": 5,
+          "correction_count": 7,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              25,
+              33
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_erased3": {
+          "path_count": 3,
+          "correction_count": 5,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              24,
+              31
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_original3_xor": {
+          "path_count": 4,
+          "correction_count": 6,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              25,
+              33
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_union6_odd_xor": {
+          "path_count": 16,
+          "correction_count": 18,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              25,
+              33
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_k1": {
+          "path_count": 2,
+          "correction_count": 4,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              25,
+              33
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_k2": {
+          "path_count": 5,
+          "correction_count": 7,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              25,
+              33
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_k3": {
+          "path_count": 8,
+          "correction_count": 10,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              25,
+              33
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_k5": {
+          "path_count": 13,
+          "correction_count": 15,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              24,
+              31
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_k15": {
+          "path_count": 42,
+          "correction_count": 44,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              24,
+              31
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_all_shortest": {
+          "path_count": 7,
+          "correction_count": 9,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              25,
+              33
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_union6_all_anchors": {
+          "path_count": 5,
+          "correction_count": 12,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              25,
+              33
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_union6_face_polish": {
+          "path_count": 5,
+          "correction_count": 15,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              24,
+              31
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                0,
+                4,
+                5,
+                8,
+                11,
+                17,
+                25,
+                33
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                1,
+                4,
+                5,
+                8,
+                25,
+                33
+              ]
+            },
+            {
+              "start_qids": [
+                1,
+                11,
+                17,
+                25,
+                31,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ],
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                0,
+                25,
+                33
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                25,
+                31,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                25,
+                33
+              ]
+            },
+            {
+              "start_qids": [
+                17,
+                31,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                17,
+                32
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                1,
+                11,
+                31,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ],
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                17,
+                32
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                17,
+                20,
+                25,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  11,
+                  12,
+                  17,
+                  20,
+                  24,
+                  25
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                24,
+                31
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                8,
+                15,
+                21,
+                25,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                8,
+                15,
+                21,
+                25,
+                31
+              ]
+            }
+          ]
+        },
+        "rescore_original3_all_anchors": {
+          "path_count": 3,
+          "correction_count": 8,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              25,
+              33
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        },
+        "rescore_original3_final_face_polish": {
+          "path_count": 3,
+          "correction_count": 6,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              24,
+              31
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                0,
+                25,
+                31,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                25,
+                33
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                17,
+                20,
+                25,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  11,
+                  12,
+                  17,
+                  20,
+                  24,
+                  25
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                24,
+                31
+              ]
+            }
+          ]
+        },
+        "rescore_original3_all_face_polish": {
+          "path_count": 3,
+          "correction_count": 10,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              24,
+              31
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                0,
+                4,
+                5,
+                8,
+                11,
+                17,
+                25,
+                33
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                1,
+                4,
+                5,
+                8,
+                25,
+                33
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                25,
+                31,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                25,
+                33
+              ]
+            },
+            {
+              "start_qids": [
+                17,
+                31,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                17,
+                32
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                17,
+                20,
+                25,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  11,
+                  12,
+                  17,
+                  20,
+                  24,
+                  25
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                24,
+                31
+              ]
+            }
+          ]
+        },
+        "rescore_original3_one_face": {
+          "path_count": 3,
+          "correction_count": 6,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              25,
+              33
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                0,
+                25,
+                31,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                25,
+                33
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                17,
+                20,
+                25,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  11,
+                  12,
+                  17,
+                  20,
+                  24,
+                  25
+                ]
+              ],
+              "result_qids": [
+                0,
+                24,
+                32,
+                33,
+                36
+              ]
+            }
+          ]
+        },
+        "rescore_union6_one_face": {
+          "path_count": 5,
+          "correction_count": 17,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              25,
+              33
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                0,
+                4,
+                5,
+                8,
+                11,
+                17,
+                25,
+                33
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ]
+              ],
+              "result_qids": [
+                1,
+                4,
+                5,
+                8,
+                25,
+                33
+              ]
+            },
+            {
+              "start_qids": [
+                1,
+                11,
+                17,
+                25,
+                31,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                1,
+                11,
+                17,
+                25,
+                33
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                25,
+                31,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                25,
+                33
+              ]
+            },
+            {
+              "start_qids": [
+                17,
+                31,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                17,
+                32
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                1,
+                11,
+                31,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                1,
+                11,
+                32
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                17,
+                20,
+                25,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  11,
+                  12,
+                  17,
+                  20,
+                  24,
+                  25
+                ]
+              ],
+              "result_qids": [
+                0,
+                24,
+                32,
+                33,
+                36
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                8,
+                15,
+                21,
+                25,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                8,
+                15,
+                21,
+                25,
+                31
+              ]
+            }
+          ]
+        },
+        "rescore_erased3_face_polish": {
+          "path_count": 3,
+          "correction_count": 5,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              24,
+              31
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                0,
+                25,
+                31,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                25,
+                33
+              ]
+            }
+          ]
+        },
+        "rescore_all_shortest_one_face": {
+          "path_count": 7,
+          "correction_count": 11,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              24,
+              31
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                0,
+                25,
+                31,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                25,
+                33
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                17,
+                20,
+                25,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  11,
+                  12,
+                  17,
+                  20,
+                  24,
+                  25
+                ]
+              ],
+              "result_qids": [
+                0,
+                24,
+                32,
+                33,
+                36
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                1,
+                4,
+                17,
+                20,
+                25,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                1,
+                4,
+                17,
+                20,
+                25,
+                31
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                24,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                24,
+                31
+              ]
+            }
+          ]
+        },
+        "rescore_original3_two_faces": {
+          "path_count": 3,
+          "correction_count": 6,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              24,
+              31
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                0,
+                25,
+                31,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  24,
+                  25,
+                  31,
+                  33
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                24,
+                31
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                17,
+                20,
+                25,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  11,
+                  12,
+                  17,
+                  20,
+                  24,
+                  25
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                24,
+                31
+              ]
+            }
+          ]
+        },
+        "rescore_native3_two_faces": {
+          "path_count": 3,
+          "correction_count": 6,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              24,
+              31
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                0,
+                25,
+                31,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  24,
+                  25,
+                  31,
+                  33
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                24,
+                31
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                17,
+                20,
+                25,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  11,
+                  12,
+                  17,
+                  20,
+                  24,
+                  25
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                24,
+                31
+              ]
+            }
+          ]
+        },
+        "rescore_union6_two_faces": {
+          "path_count": 5,
+          "correction_count": 8,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              24,
+              31
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                1,
+                11,
+                17,
+                25,
+                31,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                25,
+                33
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                25,
+                31,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  24,
+                  25,
+                  31,
+                  33
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                24,
+                31
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                17,
+                20,
+                25,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  11,
+                  12,
+                  17,
+                  20,
+                  24,
+                  25
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                24,
+                31
+              ]
+            }
+          ]
+        },
+        "rescore_all_shortest_two_faces": {
+          "path_count": 7,
+          "correction_count": 11,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              24,
+              31
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                0,
+                25,
+                31,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  24,
+                  25,
+                  31,
+                  33
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                24,
+                31
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                17,
+                20,
+                25,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  11,
+                  12,
+                  17,
+                  20,
+                  24,
+                  25
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                24,
+                31
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                1,
+                4,
+                17,
+                20,
+                25,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  0,
+                  1,
+                  11,
+                  17
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                4,
+                11,
+                20,
+                25,
+                31
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                24,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                24,
+                31
+              ]
+            }
+          ]
+        },
+        "rescore_original3_three_faces": {
+          "path_count": 3,
+          "correction_count": 6,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              24,
+              31
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": [
+            {
+              "start_qids": [
+                0,
+                25,
+                31,
+                32,
+                36
+              ],
+              "face_flips": [
+                [
+                  24,
+                  25,
+                  31,
+                  33
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                24,
+                31
+              ]
+            },
+            {
+              "start_qids": [
+                0,
+                11,
+                12,
+                17,
+                20,
+                25,
+                32,
+                33,
+                36
+              ],
+              "face_flips": [
+                [
+                  11,
+                  12,
+                  17,
+                  20,
+                  24,
+                  25
+                ],
+                [
+                  31,
+                  32,
+                  33,
+                  36
+                ]
+              ],
+              "result_qids": [
+                0,
+                24,
+                31
+              ]
+            }
+          ]
+        },
+        "rescore_union6_odd_xor_all_anchors": {
+          "path_count": 16,
+          "correction_count": 34,
+          "best_qids": [
+            [
+              17,
+              32
+            ],
+            [
+              0,
+              25,
+              33
+            ]
+          ],
+          "class_weights": [
+            2,
+            3
+          ],
+          "signed_gap_over_w": 1,
+          "polish_traces": []
+        }
+      }
+    }
+  },
+  "family_path_counts": {
+    "rescore_native3": [
+      2,
+      3,
+      2.95703125
+    ],
+    "rescore_original3": [
+      2,
+      3,
+      2.95703125
+    ],
+    "rescore_transferred3": [
+      3,
+      3,
+      3.0
+    ],
+    "rescore_union6": [
+      3,
+      6,
+      4.71875
+    ],
+    "rescore_erased3": [
+      2,
+      3,
+      2.931640625
+    ],
+    "rescore_original3_xor": [
+      2,
+      4,
+      3.9140625
+    ],
+    "rescore_union6_odd_xor": [
+      4,
+      32,
+      14.4375
+    ],
+    "rescore_k1": [
+      2,
+      3,
+      2.6484375
+    ],
+    "rescore_k2": [
+      4,
+      6,
+      5.42578125
+    ],
+    "rescore_k3": [
+      6,
+      9,
+      8.232421875
+    ],
+    "rescore_k5": [
+      12,
+      15,
+      13.724609375
+    ],
+    "rescore_k15": [
+      42,
+      42,
+      42.0
+    ],
+    "rescore_all_shortest": [
+      2,
+      37,
+      10.609375
+    ],
+    "rescore_union6_all_anchors": [
+      3,
+      6,
+      4.71875
+    ],
+    "rescore_union6_face_polish": [
+      3,
+      6,
+      4.71875
+    ],
+    "rescore_original3_all_anchors": [
+      2,
+      3,
+      2.95703125
+    ],
+    "rescore_original3_final_face_polish": [
+      2,
+      3,
+      2.95703125
+    ],
+    "rescore_original3_all_face_polish": [
+      2,
+      3,
+      2.95703125
+    ],
+    "rescore_original3_one_face": [
+      2,
+      3,
+      2.95703125
+    ],
+    "rescore_union6_one_face": [
+      3,
+      6,
+      4.71875
+    ],
+    "rescore_erased3_face_polish": [
+      2,
+      3,
+      2.931640625
+    ],
+    "rescore_all_shortest_one_face": [
+      2,
+      37,
+      10.609375
+    ],
+    "rescore_original3_two_faces": [
+      2,
+      3,
+      2.95703125
+    ],
+    "rescore_native3_two_faces": [
+      2,
+      3,
+      2.95703125
+    ],
+    "rescore_union6_two_faces": [
+      3,
+      6,
+      4.71875
+    ],
+    "rescore_all_shortest_two_faces": [
+      2,
+      37,
+      10.609375
+    ],
+    "rescore_original3_three_faces": [
+      2,
+      3,
+      2.95703125
+    ],
+    "rescore_union6_odd_xor_all_anchors": [
+      4,
+      32,
+      14.4375
+    ]
+  },
+  "family_class_weight_mismatches": {
+    "rescore_native3": 33,
+    "rescore_original3": 33,
+    "rescore_transferred3": 155,
+    "rescore_union6": 33,
+    "rescore_erased3": 13,
+    "rescore_original3_xor": 33,
+    "rescore_union6_odd_xor": 21,
+    "rescore_k1": 36,
+    "rescore_k2": 25,
+    "rescore_k3": 20,
+    "rescore_k5": 15,
+    "rescore_k15": 13,
+    "rescore_all_shortest": 14,
+    "rescore_union6_all_anchors": 13,
+    "rescore_union6_face_polish": 1,
+    "rescore_original3_all_anchors": 13,
+    "rescore_original3_final_face_polish": 1,
+    "rescore_original3_all_face_polish": 1,
+    "rescore_original3_one_face": 1,
+    "rescore_union6_one_face": 1,
+    "rescore_erased3_face_polish": 1,
+    "rescore_all_shortest_one_face": 1,
+    "rescore_original3_two_faces": 0,
+    "rescore_native3_two_faces": 0,
+    "rescore_union6_two_faces": 0,
+    "rescore_all_shortest_two_faces": 0,
+    "rescore_original3_three_faces": 0,
+    "rescore_union6_odd_xor_all_anchors": 3
+  },
+  "family_max_face_flips": {
+    "rescore_native3": 0,
+    "rescore_original3": 0,
+    "rescore_transferred3": 0,
+    "rescore_union6": 0,
+    "rescore_erased3": 0,
+    "rescore_original3_xor": 0,
+    "rescore_union6_odd_xor": 0,
+    "rescore_k1": 0,
+    "rescore_k2": 0,
+    "rescore_k3": 0,
+    "rescore_k5": 0,
+    "rescore_k15": 0,
+    "rescore_all_shortest": 0,
+    "rescore_union6_all_anchors": 0,
+    "rescore_union6_face_polish": 3,
+    "rescore_original3_all_anchors": 0,
+    "rescore_original3_final_face_polish": 3,
+    "rescore_original3_all_face_polish": 3,
+    "rescore_original3_one_face": 1,
+    "rescore_union6_one_face": 1,
+    "rescore_erased3_face_polish": 1,
+    "rescore_all_shortest_one_face": 1,
+    "rescore_original3_two_faces": 2,
+    "rescore_native3_two_faces": 2,
+    "rescore_union6_two_faces": 2,
+    "rescore_all_shortest_two_faces": 2,
+    "rescore_original3_three_faces": 3,
+    "rescore_union6_odd_xor_all_anchors": 0
+  },
+  "one_face_any_shortest_tie_wrong_syndromes": [
+    8,
+    24,
+    37,
+    58,
+    80,
+    216,
+    232,
+    249,
+    264,
+    312,
+    328,
+    368,
+    456,
+    504
+  ],
+  "2_faces_any_shortest_tie_wrong_syndromes": [
+    249
+  ],
+  "3_faces_any_shortest_tie_wrong_syndromes": [
+    249
+  ]
+}

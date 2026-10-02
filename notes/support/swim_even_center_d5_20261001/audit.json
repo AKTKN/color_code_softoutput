@@ -1,0 +1,135 @@
+{
+  "error_configurations": 524288,
+  "syndromes": 512,
+  "central_qid": 20,
+  "center_toggling_stabilizer": [
+    4,
+    5,
+    12,
+    15,
+    20,
+    21
+  ],
+  "verified_probabilities": [
+    0.02,
+    0.04
+  ],
+  "summaries": [
+    {
+      "p": 0.02,
+      "probability_even": 0.01832228311549668,
+      "probability_center_given_even": 0.7899676972406577,
+      "probability_even_given_center": 0.7237005900470148,
+      "probability_even_given_no_center": 0.003926807463833038
+    },
+    {
+      "p": 0.04,
+      "probability_even": 0.03220789509442128,
+      "probability_center_given_even": 0.6467998029842831,
+      "probability_even_given_center": 0.5208015050402535,
+      "probability_even_given_no_center": 0.011849828013344934
+    }
+  ],
+  "examples": [
+    {
+      "error_qids": [
+        16,
+        17
+      ],
+      "syndrome_id": 54,
+      "detectors": [
+        1,
+        2,
+        4,
+        5
+      ],
+      "physical_logical_class": 0,
+      "final_qids": [
+        16,
+        17
+      ],
+      "scalar_swim_over_w": 2,
+      "per_color_swim_over_w": [
+        3.000000000000001,
+        2.0000000000000004,
+        2.0000000000000004
+      ]
+    },
+    {
+      "error_qids": [
+        20
+      ],
+      "syndrome_id": 88,
+      "detectors": [
+        3,
+        4,
+        6
+      ],
+      "physical_logical_class": 0,
+      "final_qids": [
+        20
+      ],
+      "scalar_swim_over_w": 4,
+      "per_color_swim_over_w": [
+        4.000000000000001,
+        4.000000000000001,
+        4.000000000000001
+      ]
+    },
+    {
+      "error_qids": [
+        4,
+        5,
+        12,
+        15,
+        21
+      ],
+      "syndrome_id": 88,
+      "detectors": [
+        3,
+        4,
+        6
+      ],
+      "physical_logical_class": 0,
+      "final_qids": [
+        20
+      ],
+      "scalar_swim_over_w": 4,
+      "per_color_swim_over_w": [
+        4.000000000000001,
+        4.000000000000001,
+        4.000000000000001
+      ]
+    },
+    {
+      "error_qids": [
+        1,
+        20
+      ],
+      "syndrome_id": 93,
+      "detectors": [
+        0,
+        2,
+        3,
+        4,
+        6
+      ],
+      "physical_logical_class": 1,
+      "final_qids": [
+        1,
+        20
+      ],
+      "scalar_swim_over_w": 1,
+      "per_color_swim_over_w": [
+        3.000000000000001,
+        1.0000000000000002,
+        2.0000000000000004
+      ]
+    }
+  ],
+  "source_commits": {
+    ".": "4938554d189b4f3a326736f23bbc7cde27a361ef",
+    "external_libs/color-code-stim": "7eef18bcef15aeb8e766a5a7c6a462fddfae2bf7",
+    "external_libs/PyMatching": "ed05dab890fd498fb3461dbde037edac9b130efa"
+  }
+}

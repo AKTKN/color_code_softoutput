@@ -76,8 +76,17 @@ one requested metric, and every requested metric must be present somewhere
 in the selection. Each series uses its own decoder's failure labels; separate
 YAML decoder points do not imply paired physical shots.
 
-Distributions show success `o` and logical-error `x` frequency points.
-`signed_logical_errors=True` negates error scores for display only;
+The main figures contain no embedded legend. SWIM distance uses a blue base
+hue and logical gap a red base hue; increasing code distance darkens each hue
+within a range that avoids faint lines and changes marker shape. A given
+distance has the same marker for both metrics; multiple decoder types use
+marker size. `plot_legends(table, ...)` returns separate metric-hue and paired
+distance-gradient/marker figures. It omits the
+decoder-type legend when the table has only one type; `ncol` may be one integer
+or a mapping by legend name. All figures use 300 dpi. Distributions use filled
+success and hollow error markers.
+`signed_logical_errors=True` negates error scores for display only and uses the
+same filled metric marker for success and error;
 `normalize_frequency=True` divides outcome counts by all shots in the series.
 The older `density` argument is now an alias for that normalization, without
 division by bin width. The returned table has `logical_error`, `raw_score`,
@@ -86,15 +95,19 @@ display `score`, outcome `count`/`shots`, `frequency` and bin boundaries.
 across plotted series. `round_digits` optionally rounds before grouping.
 
 Conditional logical error probability uses failures / shots at each score
-group. Conditional and post-selection figures use scatter points and 99%
-Wilson shades, with consistent series colors and diamond SWIM/square gap
-markers. Zero rates retain their bands but have no plotted point. Log axes
+group. Conditional and post-selection figures connect same-series scatter
+points and use 99% Wilson shades, with consistent metric hues and distance
+gradients/markers. Zero rates retain their bands but have no plotted point;
+connecting lines break at those bins. Log axes
 are the default; use `yscale="linear"` to change the scale. Post-selection
 retains scores >= each exact threshold, keeps ties together and omits empty
 retention. `round_digits` changes threshold ties only when supplied; the
 distribution sign option never changes conditional rates or selection.
 `xlim=(0, 1)` controls the visible abort-rate range without changing the table.
-See `notebooks/workflow_swim_soft_output.ipynb` for all three comparison views.
+See `notebooks/workflow_swim_soft_output.ipynb` for all three comparison views,
+editable manuscript styling, separate legends, and PDF/300-dpi PNG/TeX export.
+Its standalone TeX composition places every generated legend above the three
+panels and compiles one captionless composite PDF plus a 300-dpi PNG.
 
 Run `./scripts/run_experiment.sh configs/example.yaml` in `color_code_so`, or
 `python -m color_code_softoutput.simulation.cli --config configs/example.yaml`.

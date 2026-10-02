@@ -1,31 +1,57 @@
 simulation:
-  output_root: results
-  shots: 100
-  workers: 1
-  master_seed: 20260927
-  buffer_shots: 10
+  output_root: results/bitflip_swim
+  shots: 100000
+  workers: 6
+  master_seed: 0
+  buffer_shots: 5000
   verbose: true
 chunking:
   calibration_shots: 10
   target_chunk_seconds: 4.0
   min_chunk_shots: 1
-  max_chunk_shots: 10
+  max_chunk_shots: 5000
   throughput_ema_alpha: 0.5
 sweep:
-  distance: [9, 11]
-  physical_error_rate: [0.001]
-  noise_model: uniform
-  rounds: distance
+  distance: [5, 7, 9, 11, 13]
+  physical_error_rate: [0.02, 0.04]
+  noise_model: bitflip
+  rounds: 1
   circuit_type: tri
   cnot_schedule: tri_optimal
 color_code_options:
   temp_bdry_type: Z
 decoders:
-  # - type: concat_mwpm
+  - decoder_alias: concat_mwpm_comparative
+    type: concat_mwpm
+    # Comparative decoding writes logical_gap.parquet for ordinary concat MWPM.
+    # This point is kept separate from SWIM scoring (the options cannot be
+    # enabled together for one decoder point).
+    options:
+      comparative_decoding: true
+      color_correlated_weight_basis: original_dem
+    decode_options:
+      colors: all
+      compute_swim_distance: false
+
+  - decoder_alias: concat_mwpm_swim
+    type: concat_mwpm
+    # Comparative decoding writes logical_gap.parquet for ordinary concat MWPM.
+    # This point is kept separate from SWIM scoring (the options cannot be
+    # enabled together for one decoder point).
+    options:
+      comparative_decoding: false
+      color_correlated_weight_basis: original_dem
+    decode_options:
+      colors: all
+      compute_swim_distance: true
+
+  # - type: concat_mwpm_stage2_base
+  #   # SWIM distance writes swim_distance.parquet for this baseline point.
   #   options:
-  #     color_correlated_weight_basis: original_dem
+  #     color_correlated_weight_basis: stage2
   #   decode_options:
   #     colors: all
+  #     compute_swim_distance: true
 
   # - type: concat_mwpm_stage2_base
   #   options:
@@ -38,23 +64,23 @@ decoders:
   #     remove_non_edge_like_errors: true
   #     color_correlated_b: 2.0
 
-  - type: perturbation
-    options:
-      enable_prior_perturbation: true
-      # M includes the unperturbed baseline member (member 0).
-      perturbation_ensemble_size: 12
-      perturbation_alpha: 1.0
-      perturbation_seed: 20260927
-      color_correlated_weight_basis: original_dem
-      remove_non_edge_like_errors: true
+  # - type: perturbation
+  #   options:
+  #     enable_prior_perturbation: true
+  #     # M includes the unperturbed baseline member (member 0).
+  #     perturbation_ensemble_size: 12
+  #     perturbation_alpha: 1.0
+  #     perturbation_seed: 20260927
+  #     color_correlated_weight_basis: original_dem
+  #     remove_non_edge_like_errors: true
 
-  - type: tesseract
-    options:
-      pqlimit: 1000000
-      det_beam: 20
-      beam_climbing: true
-      no_revisit_dets: true
-      num_det_orders: 21
-      det_order_method: Index
-      seed: 2384753
-      sparsify_errors: false
+  # - type: tesseract
+  #   options:
+  #     pqlimit: 1000000
+  #     det_beam: 20
+  #     beam_climbing: true
+  #     no_revisit_dets: true
+  #     num_det_orders: 21
+  #     det_order_method: Index
+  #     seed: 2384753
+  #     sparsify_errors: false

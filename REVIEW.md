@@ -1,5 +1,30 @@
 # REVIEW.md
 
+## Even SWIM and center occupation — 2026-10-01
+
+All d=5 physical bit-flip errors were checked against all syndrome scores.
+Neither necessity nor sufficiency holds between an even scalar SWIM/w and an
+actual error on central q20. A face-stabilizer bijection preserves syndrome
+and logical class while toggling q20. In particular, the 4w syndrome's unique
+minimum representative {20} does not identify the actual error support.
+Exact probability-weighted correlations at p=.02/.04 are finite-model results;
+uniform configuration counts must not be interpreted as physical probabilities.
+See [the audit](notes/support/swim_even_center_d5_20261001/report.md).
+
+## Cross-color SWIM approximation audit — 2026-09-30
+
+The user requested bounded d=5 strategy exploration using all three covered
+graphs and path witnesses. All 512 syndromes, 524,288 physical X-error patterns,
+and p=.02/.04 were checked without changing production decoding. Maximum
+cross-color coverage reduces the score monotonically and worsens overall
+comparative-gap agreement. Physical candidate rescoring with up to two X-face
+stabilizers is more promising: the tested fixed path choice recovers both
+class minima, and retaining all tied shortest paths also recovers them.
+One-face variants have perfect absolute-gap agreement but miss the class
+ordering for syndrome 249; arbitrary tied-path choices can also fail. These
+finite results are not a general theorem, posterior estimate, or runtime claim.
+See [definitions, complete results and counterexamples](notes/support/cross_color_swim_d5_20260930/report.md).
+
 ## BP stage-1-only priors and native integration (2026-09-30)
 
 The user requested BP posterior generation in stage 1 only, with original
